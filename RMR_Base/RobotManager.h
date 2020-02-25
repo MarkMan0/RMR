@@ -2,7 +2,6 @@
 #include "rplidar.h"
 #include "CKobuki.h"
 #include <string>
-//#include <Windows.h>
 #include <vector>
 #include <memory>
 
@@ -11,6 +10,13 @@ struct LRPos
 {
 	T left = 0;
 	T right = 0;
+
+	LRPos<T> operator-(const LRPos<T>& rhs) const {
+		LRPos<T> ret;
+		ret.left = this->left - rhs.left;
+		ret.right = this->right - rhs.right;
+		return ret;
+	}
 };
 
 class RobotManager {
@@ -79,10 +85,7 @@ public:
 	}
 
 	const EncType getEncs() const {
-		EncType cpy = mmSinceStart;
-		cpy.left -= encZero.left;
-		cpy.right -= encZero.right;
-		return cpy;
+		return mmSinceStart - encZero;;
 	}
 
 };
