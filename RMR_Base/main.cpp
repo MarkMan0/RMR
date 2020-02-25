@@ -6,6 +6,7 @@
 #include <string.h>
 #include "main.h"
 #include <stdlib.h>
+#include <algorithm>
 
 int main() {
 	using namespace std;
@@ -16,29 +17,17 @@ int main() {
 	
 
 	rob.init();
-	while (!rob.ready()) {}
-	Sleep(1000);
-	rob.resetEncoders();
-	//rob.translation(250);
-	const double kp = 2;
-	const int target = 500;
-	RobotManager::EncType pos = rob.getEncs();
-	int cnt = 0;
-	do {
-		pos = rob.getEncs();
-		auto act = kp * (target - pos.left);
-		if (act > 300) act = 300;
-		if (act < -300) act = -300;
-		rob.translation((int)800);
-		if (cnt > 500) cnt = 0;
-		//cout << "Pos: \t" << pos.left << "\t" << pos.right << "\n";
-		Sleep(10);
-	} while (1);
-	rob.stop();
-	while (1)
+	
+	const int kp = 2, target = 300, lo = -500, hi = 500;
+	while (true)
 	{
-		pos = rob.getEncs();
-		cout << "Pos: \t" << pos.left << "\t" << pos.right << "\n";
+		double e = target - (int) rob.encoderL().getPosition();
+		double u = kp * e;
+		u = u <= lo ? lo : u >= hi ? hi : u;
+		rob.translation((int)u);
+		Sleep(200);
 	}
+
+	rob.stop();
 	return 0;
 }

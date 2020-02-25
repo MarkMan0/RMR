@@ -5,23 +5,12 @@
 #include <vector>
 #include <memory>
 
-template<class T>
-struct LRPos
-{
-	T left = 0;
-	T right = 0;
+#include "Encoder.h"
 
-	LRPos<T> operator-(const LRPos<T>& rhs) const {
-		LRPos<T> ret;
-		ret.left = this->left - rhs.left;
-		ret.right = this->right - rhs.right;
-		return ret;
-	}
-};
 
 class RobotManager {
 public:
-	typedef typename LRPos<double> EncType;
+	typedef typename Encoder<unsigned short, double> EncType;
 private:
 	
 	LaserMeasurement measure;
@@ -31,8 +20,8 @@ private:
 	const std::string ipAddress;
 
 	bool robotRdy = false;
-	EncType encZero, mmSinceStart;
-	LRPos<unsigned short> encDiffHelper;
+
+	EncType leftEnc, rightEnc;
 
 	bool sendCmd(const std::vector<unsigned char>& msg);
 
@@ -66,7 +55,7 @@ private:
 
 
 public:
-	RobotManager(const std::string& _ipAddress) : ipAddress(_ipAddress) { }
+	RobotManager(const std::string& _ipAddress) : ipAddress(_ipAddress), leftEnc(robot.tickToMeter*1000), rightEnc(robot.tickToMeter*1000) { }
 
 	void init();
 	void translation(int spd);
@@ -79,13 +68,11 @@ public:
 		return robot.robotData;
 	}
 
-	void resetEncoders() {
-		encZero.left = mmSinceStart.left;
-		encZero.right = mmSinceStart.right;
+	const EncType& encoderL() const {
+		return leftEnc;
 	}
-
-	const EncType getEncs() const {
-		return mmSinceStart - encZero;;
+	const EncType& encoderR() const {
+		return rightEnc;
 	}
 
 };

@@ -101,12 +101,8 @@ void RobotManager::receiveLidarData() {
 
 void RobotManager::processRobot() {
 	++dataCounter;
-	double spd = (robot.robotData.EncoderLeft - encDiffHelper.left) *  50.0 * robot.tickToMeter * 1000;
-	std::cout << "\t\t\t" << spd << std::endl;
-	mmSinceStart.left += (robot.robotData.EncoderLeft - encDiffHelper.left) * robot.tickToMeter * 1000;
-	encDiffHelper.left = robot.robotData.EncoderLeft;;
-	mmSinceStart.right += (robot.robotData.EncoderRight - encDiffHelper.right) * robot.tickToMeter*1000;
-	encDiffHelper.right = robot.robotData.EncoderRight;
+	leftEnc.tick(robot.robotData.EncoderLeft);
+	rightEnc.tick(robot.robotData.EncoderRight);
 }
 
 void RobotManager::processLidar(const LaserMeasurement& data) {
@@ -121,6 +117,16 @@ bool RobotManager::sendCmd(const std::vector<unsigned char>& msg)
 void RobotManager::init() {
 	robotthreadHandle = CreateThread(NULL, 0, robotUDPThread, (void*)this, 0, &robotthreadID);
 	laserthreadHandle = CreateThread(NULL, 0, lidarUDPThread, (void*)this, 0, &laserthreadID);
+
+
+	while (!ready()) {} //wait for first message
+	leftEnc.begin();
+	rightEnc.begin();
+
+	//wait a bit
+	Sleep(200);
+	leftEnc.zeroNow();
+	rightEnc.zeroNow();
 }
 
 

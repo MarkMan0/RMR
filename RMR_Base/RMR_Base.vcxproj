@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CKobuki.h" />
+    <ClInclude Include="Encoder.h" />
     <ClInclude Include="RobotManager.h" />
     <ClInclude Include="rplidar.h" />
   </ItemGroup>

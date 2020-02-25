@@ -13,7 +13,7 @@
 
 //#define _WINSOCK_DEPRECATED_NO_WARNINGS
 //#include <WinSock2.h>
-
+#define NOMINMAX
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
