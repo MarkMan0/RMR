@@ -43,11 +43,6 @@ void RobotManager::receiveRobotData() {
 
 			continue;
 		}
-		//tu mame data..zavolame si funkciu
-
-		//     memcpy(&sens,buff,sizeof(sens));
-		struct timespec t;
-		//      clock_gettime(CLOCK_REALTIME,&t);
 
 		int returnval = robot.fillData();
 		if (returnval == 0)
@@ -106,6 +101,12 @@ void RobotManager::receiveLidarData() {
 
 void RobotManager::processRobot() {
 	++dataCounter;
+	double spd = (robot.robotData.EncoderLeft - encDiffHelper.left) *  50.0 * robot.tickToMeter * 1000;
+	std::cout << "\t\t\t" << spd << std::endl;
+	mmSinceStart.left += (robot.robotData.EncoderLeft - encDiffHelper.left) * robot.tickToMeter * 1000;
+	encDiffHelper.left = robot.robotData.EncoderLeft;;
+	mmSinceStart.right += (robot.robotData.EncoderRight - encDiffHelper.right) * robot.tickToMeter*1000;
+	encDiffHelper.right = robot.robotData.EncoderRight;
 }
 
 void RobotManager::processLidar(const LaserMeasurement& data) {

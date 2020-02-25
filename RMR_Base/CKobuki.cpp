@@ -9,6 +9,9 @@
 #pragma warning( disable : 4838)
 int CKobuki::checkChecksum(unsigned char* data) {
     unsigned char chckSum = 0;
+    if (data == NULL) {
+        return -1;
+    }
     for (int i = 0; i < data[0] + 2; i++)
     {
         chckSum ^= data[i];
