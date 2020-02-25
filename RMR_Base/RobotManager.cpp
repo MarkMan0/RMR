@@ -9,13 +9,13 @@ void RobotManager::receiveRobotData() {
 	// Initialize Winsock
 	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 
-	if ((rob_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+	if ((rob_s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
 	{
 
 	}
 
 	char rob_broadcastene = 1;
-	setsockopt(rob_socket, SOL_SOCKET, SO_BROADCAST, &rob_broadcastene, sizeof(rob_broadcastene));
+	setsockopt(rob_s, SOL_SOCKET, SO_BROADCAST, &rob_broadcastene, sizeof(rob_broadcastene));
 	// zero out the structure
 	memset((char*)&rob_si_me, 0, sizeof(rob_si_me));
 
@@ -25,32 +25,34 @@ void RobotManager::receiveRobotData() {
 
 	rob_si_posli.sin_family = AF_INET;
 	rob_si_posli.sin_port = htons(5300);
-	rob_si_posli.sin_addr.s_addr = inet_addr(ipAddress.data());
+	rob_si_posli.sin_addr.s_addr = inet_addr(ipAddress.data());//inet_addr("10.0.0.1");// htonl(INADDR_BROADCAST);
+	rob_slen = sizeof(rob_si_me);
 	bind(rob_s, (struct sockaddr*) & rob_si_me, sizeof(rob_si_me));
 
 	std::vector<unsigned char> mess = robot.getPIDCmd();
-	if (sendto(rob_s, (char*)mess.data(), sizeof(char) * mess.size(), 0, (struct sockaddr*) & rob_si_posli, sizeof(rob_si_posli)) == -1)
-	{
-
-	}
+	sendCmd(robot.getPIDCmd());
 	Sleep(100);
-	mess = robot.getSoundCmd(440, 1000);
-	if (sendto(rob_s, (char*)mess.data(), sizeof(char) * mess.size(), 0, (struct sockaddr*) & rob_si_posli, sizeof(rob_si_posli)) == -1)
-	{
+	
+	sendCmd(robot.getSoundCmd(440, 1000));
 
-	}
-	rob_slen = sizeof(rob_si_other);
 	while (1)
 	{
-		if ((rob_recv_len = recvfrom(rob_s, (char*) robot.robotBuff.get(), sizeof(char) * robot.buffSz, 0, (struct sockaddr*) & rob_si_other, (int*)&rob_slen)) == -1)
+
+		if ((rob_recv_len = recvfrom(rob_s, (char*)(robot.robotBuff), sizeof(char) * 50000, 0, (struct sockaddr*) & rob_si_other, (int*)&rob_slen)) == -1)
 		{
 
 			continue;
 		}
+		//tu mame data..zavolame si funkciu
+
+		//     memcpy(&sens,buff,sizeof(sens));
+		struct timespec t;
+		//      clock_gettime(CLOCK_REALTIME,&t);
 
 		int returnval = robot.fillData();
 		if (returnval == 0)
 		{
+			robotRdy = true;
 			processRobot();
 		}
 
@@ -116,8 +118,8 @@ bool RobotManager::sendCmd(const std::vector<unsigned char>& msg)
 }
 
 void RobotManager::init() {
-	laserthreadHandle = CreateThread(NULL, 0, lidarUDPThread, (void*)this, 0, &laserthreadID);
 	robotthreadHandle = CreateThread(NULL, 0, robotUDPThread, (void*)this, 0, &robotthreadID);
+	laserthreadHandle = CreateThread(NULL, 0, lidarUDPThread, (void*)this, 0, &laserthreadID);
 }
 
 

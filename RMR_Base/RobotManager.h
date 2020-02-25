@@ -2,7 +2,7 @@
 #include "rplidar.h"
 #include "CKobuki.h"
 #include <string>
-#include <Windows.h>
+//#include <Windows.h>
 #include <vector>
 #include <memory>
 
@@ -15,8 +15,11 @@ private:
 	unsigned int dataCounter = 0;
 	const std::string ipAddress;
 
-	SOCKET rob_socket = 0;
-	sockaddr_in rob_si_me = { 0 }, rob_si_posli = { 0 }, rob_si_other = { 0 };
+	bool robotRdy = false;
+
+
+	int rob_socket = 0;
+	struct sockaddr_in rob_si_me = { 0 }, rob_si_posli = { 0 }, rob_si_other = { 0 };
 	unsigned int rob_slen = 0;
 	int rob_s = 0, rob_recv_len = 0;
 
@@ -53,4 +56,7 @@ public:
 	void translation(int spd);
 	void rotation(double spd);
 	void stop();
+	bool ready() const {
+		return robotRdy;
+	}
 };

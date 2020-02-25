@@ -7,15 +7,14 @@
 
 int main() {
 	std::cout << "Hello world!" << std::endl;
-	{
-		RobotManager rob("");
-		LaserMeasurement laser;
-	}
-	std::unique_ptr<char[]> buff = std::make_unique<char[]>(100);
+	
+	RobotManager rob("192.168.1.12");
+	//LaserMeasurement laser;
+	
 
-	strcpy(buff.get(), "It's working");
-
-	printf("%s\n", buff.get());
-
+	rob.init();
+	while (!rob.ready()) {}
+	rob.translation(250);
+	while (1) {};
 	return 0;
 }

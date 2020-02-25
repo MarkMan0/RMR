@@ -86,27 +86,7 @@ void rplidar::recvCommandUDP()
         }
         printf("Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
         printf("Data: %s\n", buff.get());
-        if (buff[0] == 1)
-        {
-
-        }
-        else if (buff[0] == 2)
-        {
-
-        }
-        else if (buff[0] == 3)
-        {
-
-        }
-        else if (buff[0] == 4)
-        {
-
-        }
-        else if (buff[0] == 0)
-        {
-
-        }
-        else if (buff[0] == 5)
+        if (buff[0] == 5)
         {
             //reset spojenia
             stop();
@@ -115,8 +95,7 @@ void rplidar::recvCommandUDP()
             WasEnabled = 0;
             ktoreMeranie = -1;
             kdeJeCele = -1;
-            
-            = -1;
+            poslednePoslane = -1;
             ktoreZapisujem = -1;
             ktorePosielam = -1;
             stopMeasurement = 0;
