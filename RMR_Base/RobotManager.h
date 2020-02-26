@@ -23,6 +23,8 @@ private:
 	bool robotRdy = false;
 
 	EncType leftEnc, rightEnc;
+	double theta = 0;
+	double thetaLast = 0;
 
 	bool sendCmd(const std::vector<unsigned char>& msg);
 
@@ -76,4 +78,8 @@ public:
 		return rightEnc;
 	}
 
+	const double getAngle() const {
+		return theta / 100.0;
+	}
+	
 };

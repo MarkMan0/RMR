@@ -141,12 +141,14 @@
   <ItemGroup>
     <ClInclude Include="CKobuki.h" />
     <ClInclude Include="Encoder.h" />
+    <ClInclude Include="Orientation.h" />
     <ClInclude Include="RobotManager.h" />
     <ClInclude Include="rplidar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CKobuki.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Orientation.cpp" />
     <ClCompile Include="RobotManager.cpp" />
     <ClCompile Include="rplidar.cpp" />
   </ItemGroup>

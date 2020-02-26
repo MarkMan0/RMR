@@ -24,10 +24,11 @@ int main() {
 		double e = 1.0*target - (int) rob.encoderL().getPosition();
 		double u = kp * e;
 		u = u <= lo ? lo : u >= hi ? hi : u;
-		rob.translation((int)u);
+		//rob.translation((int)u);
 		Sleep(20);
 
-		cout << "EncL:\t" << rob.encoderL().getPosition() << "\tEncR:\t" << rob.encoderR().getPosition() << "\tSpdL:\t" << rob.encoderL().getSpeed() << endl;
+		//cout << "EncL:\t" << rob.encoderL().getPosition() << "\tEncR:\t" << rob.encoderR().getPosition() << "\tSpdL:\t" << rob.encoderL().getSpeed() << endl;
+		cout << "Angle:\t" << (rob.getAngle()) << endl;
 	}
 
 	rob.stop();
