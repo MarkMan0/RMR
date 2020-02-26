@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include "Encoder.h"
+#include "Orientation.h"
 
 
 class RobotManager {
@@ -23,8 +24,7 @@ private:
 	bool robotRdy = false;
 
 	EncType leftEnc, rightEnc;
-	double theta = 0;
-	double thetaLast = 0;
+	Orientation orientation;
 
 	bool sendCmd(const std::vector<unsigned char>& msg);
 
@@ -58,7 +58,7 @@ private:
 
 
 public:
-	RobotManager(const std::string& _ipAddress) : ipAddress(_ipAddress), leftEnc(robot.tickToMeter*1000), rightEnc(robot.tickToMeter*1000) { }
+	RobotManager(const std::string& _ipAddress) : orientation(0.23, 0.035), ipAddress(_ipAddress), leftEnc(robot.tickToMeter*1000), rightEnc(robot.tickToMeter*1000) { }
 
 	void init();
 	void translation(int spd);
@@ -79,7 +79,7 @@ public:
 	}
 
 	const double getAngle() const {
-		return theta / 100.0;
+		return orientation.getTheta();
 	}
 	
 };

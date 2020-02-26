@@ -19,6 +19,7 @@ int main() {
 	rob.init();
 	
 	const int kp = 5, target = 600, lo = -100, hi = 100;
+	rob.translation(200);
 	while (true)
 	{
 		double e = 1.0*target - (int) rob.encoderL().getPosition();
@@ -28,7 +29,7 @@ int main() {
 		Sleep(20);
 
 		//cout << "EncL:\t" << rob.encoderL().getPosition() << "\tEncR:\t" << rob.encoderR().getPosition() << "\tSpdL:\t" << rob.encoderL().getSpeed() << endl;
-		cout << "Angle:\t" << (rob.getAngle()) << endl;
+		//cout << "Angle:\t" << (rob.getAngle()) << endl;
 	}
 
 	rob.stop();

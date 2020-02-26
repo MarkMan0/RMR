@@ -21,7 +21,7 @@ public:
 		lastTime = std::chrono::steady_clock::now();
 	}
 
-	void tick(T measured) {
+	D tick(T measured) {
 		int diff = 0;
 		if (lastEnc > limit::max() - 1000 && measured < limit::min() + 1000) {
 			//overflow
@@ -43,6 +43,7 @@ public:
 		lastTime = now;
 		speed = (diff * tick2mm) / (dt.count()); // mm/s
 		position += (diff * tick2mm);
+		return (diff * tick2mm);
 
 	}
 

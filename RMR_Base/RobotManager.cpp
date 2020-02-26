@@ -103,10 +103,8 @@ void RobotManager::processRobot() {
 	++dataCounter;
 	leftEnc.tick(robot.robotData.EncoderLeft);
 	rightEnc.tick(robot.robotData.EncoderRight);
-	int diff = (robot.robotData.GyroAngle - thetaLast);
-	if (abs(diff) > 5000) diff = 0;
-	thetaLast = robot.robotData.GyroAngle;
-	theta += diff;
+	orientation.tick(robot.robotData.EncoderLeft, robot.robotData.EncoderRight, robot.robotData.GyroAngle);
+
 }
 
 void RobotManager::processLidar(const LaserMeasurement& data) {
