@@ -101,8 +101,6 @@ void RobotManager::receiveLidarData() {
 
 void RobotManager::processRobot() {
 	++dataCounter;
-	leftEnc.tick(robot.robotData.EncoderLeft);
-	rightEnc.tick(robot.robotData.EncoderRight);
 	orientation.tick(robot.robotData.EncoderLeft, robot.robotData.EncoderRight, robot.robotData.GyroAngle);
 
 }
@@ -122,13 +120,10 @@ void RobotManager::init() {
 
 
 	while (!ready()) {} //wait for first message
-	leftEnc.begin();
-	rightEnc.begin();
-
+	orientation.init();
 	//wait a bit
 	Sleep(200);
-	leftEnc.zeroNow();
-	rightEnc.zeroNow();
+	orientation.zeroHere();
 }
 
 
@@ -138,6 +133,10 @@ void RobotManager::translation(int spd) {
 
 void RobotManager::rotation(double spd) {
 	sendCmd(robot.getRotationCmd(spd));
+}
+
+void RobotManager::arc(int spd, int radius) {
+	sendCmd(robot.getArcCmd(spd, radius));
 }
 
 void RobotManager::stop() {

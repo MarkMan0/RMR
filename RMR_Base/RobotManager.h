@@ -11,8 +11,6 @@
 
 
 class RobotManager {
-public:
-	typedef typename Encoder<uint16_t, double> EncType;
 private:
 	
 	LaserMeasurement measure;
@@ -23,7 +21,6 @@ private:
 
 	bool robotRdy = false;
 
-	EncType leftEnc, rightEnc;
 	Orientation orientation;
 
 	bool sendCmd(const std::vector<unsigned char>& msg);
@@ -58,11 +55,12 @@ private:
 
 
 public:
-	RobotManager(const std::string& _ipAddress) : orientation(0.23, 0.035), ipAddress(_ipAddress), leftEnc(robot.tickToMeter*1000), rightEnc(robot.tickToMeter*1000) { }
+	RobotManager(const std::string& _ipAddress) : orientation(230, 35, robot.tickToMeter*1000), ipAddress(_ipAddress) { }
 
 	void init();
 	void translation(int spd);
 	void rotation(double spd);
+	void arc(int spd, int radius);
 	void stop();
 	bool ready() const {
 		return robotRdy;
@@ -71,14 +69,14 @@ public:
 		return robot.robotData;
 	}
 
-	const EncType& encoderL() const {
-		return leftEnc;
+	const Orientation::EncType& encoderL() const {
+		return orientation.getLeft();
 	}
-	const EncType& encoderR() const {
-		return rightEnc;
+	const Orientation::EncType& encoderR() const {
+		return orientation.getRight();
 	}
 
-	const double getAngle() const {
+	double getAngle() const {
 		return orientation.getTheta();
 	}
 	
