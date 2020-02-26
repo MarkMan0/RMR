@@ -12,20 +12,22 @@ int main() {
 	using namespace std;
 	std::cout << "Hello world!" << std::endl;
 	
-	RobotManager rob("192.168.1.12");
+	RobotManager rob("192.168.1.11");
 	//LaserMeasurement laser;
 	
 
 	rob.init();
 	
-	const int kp = 2, target = 300, lo = -500, hi = 500;
+	const int kp = 5, target = 600, lo = -100, hi = 100;
 	while (true)
 	{
-		double e = target - (int) rob.encoderL().getPosition();
+		double e = 1.0*target - (int) rob.encoderL().getPosition();
 		double u = kp * e;
 		u = u <= lo ? lo : u >= hi ? hi : u;
 		rob.translation((int)u);
-		Sleep(200);
+		Sleep(20);
+
+		cout << "EncL:\t" << rob.encoderL().getPosition() << "\tEncR:\t" << rob.encoderR().getPosition() << "\tSpdL:\t" << rob.encoderL().getSpeed() << endl;
 	}
 
 	rob.stop();

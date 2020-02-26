@@ -22,15 +22,15 @@ public:
 	}
 
 	void tick(T measured) {
-		T diff = 0;
-		if (lastEnc > limit::max() - 10000 && measured < limit::min() + 10000) {
+		int diff = 0;
+		if (lastEnc > limit::max() - 1000 && measured < limit::min() + 1000) {
 			//overflow
-			diff = (T)(lastEnc - measured);
+			diff = limit::max() - lastEnc + measured;
 		}
-		else if (lastEnc < limit::min() + 10000 && measured > limit::max() - 10000) {
+		else if (lastEnc < limit::min() + 1000 && measured > limit::max() - 1000) {
 			//underflow
-			diff = -1 * (T)(lastEnc - measured);
-
+			diff = lastEnc + limit::max() - measured;
+			diff *= -1;
 		}
 		else {
 			//normal behaviour

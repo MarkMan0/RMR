@@ -18,6 +18,7 @@
 //#include <chrono>
 #include <sstream>
 #include <math.h>
+#include <cstdint>
 
 #define PI          M_PI
 #define MS_INSTRUCTION_DELAY 25
@@ -70,8 +71,8 @@ typedef struct
 	bool WheelDropLeft;
 	bool WheelDropRight;
 	//tocenie kolies
-	unsigned short EncoderRight;
-	unsigned short EncoderLeft;
+	uint16_t EncoderRight;
+	uint16_t EncoderLeft;
 	unsigned char PWMright;
 	unsigned char PWMleft;
 	//gombiky

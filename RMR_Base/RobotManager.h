@@ -5,12 +5,13 @@
 #include <vector>
 #include <memory>
 
+#include <cstdint>
 #include "Encoder.h"
 
 
 class RobotManager {
 public:
-	typedef typename Encoder<unsigned short, double> EncType;
+	typedef typename Encoder<uint16_t, double> EncType;
 private:
 	
 	LaserMeasurement measure;
