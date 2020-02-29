@@ -39,12 +39,12 @@ namespace OrientationTests {
 			double distMM = d/2.0 *  deg2rad(angle);	// each wheel has to move this distance
 			int ticksToTurn = abs((int)(distMM / mmPerTick));	//the required ticks to move the distance
 
-			if (abs((ticksToTurn + 1u) * mmPerTick - distMM) < abs((ticksToTurn)*mmPerTick - distMM)
-				&& abs((ticksToTurn + 1u) * mmPerTick - distMM) < abs((ticksToTurn - 1u) * mmPerTick - distMM)) {
+			if (abs((ticksToTurn + 1.0) * mmPerTick - distMM) < abs((ticksToTurn)*mmPerTick - distMM)
+				&& abs((ticksToTurn + 1.0) * mmPerTick - distMM) < abs((ticksToTurn - 1.0) * mmPerTick - distMM)) {
 				++ticksToTurn;
 			}
-			else if(abs((ticksToTurn - 1) * mmPerTick - distMM) < abs((ticksToTurn)*mmPerTick - distMM)
-				&& abs((ticksToTurn - 1) * mmPerTick - distMM) < abs((ticksToTurn + 1) * mmPerTick - distMM)) {
+			else if(abs((ticksToTurn - 1.0) * mmPerTick - distMM) < abs((ticksToTurn)*mmPerTick - distMM)
+				&& abs((ticksToTurn - 1.0) * mmPerTick - distMM) < abs((ticksToTurn + 1.0) * mmPerTick - distMM)) {
 				--ticksToTurn;
 			}
 			
@@ -53,11 +53,12 @@ namespace OrientationTests {
 			
 
 			int dir = angle > 0 ? 1 : -1;
-
+			double tickBuff = angleTicks;
 			for (int i = 0; i < abs(ticksToTurn); ++i) {
 				ticksL -= dir;
 				ticksR += dir;
-				angleTicks += thetaPerTick;
+				tickBuff += thetaPerTick;		//to eliminate orunding errors over time
+				angleTicks = (signed short) tickBuff;
 				o.tick(ticksL, ticksR, angleTicks);
 			}
 		}
