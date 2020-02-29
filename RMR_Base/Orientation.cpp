@@ -26,7 +26,7 @@ void Orientation::tick(uint16_t l, uint16_t r, signed short angle) {
 	double thetaNow = theta.getPosition();
 	
 
-	if ( abs(dr-dl) > 0.001 && (abs(dl - dr) > 0.1 || abs(thetaNow - thetaLast) > 0.2) ) {
+	if ( abs(dr-dl) > 1e-5) {
 		x += d * (dr + dl) / (2.0 * (dr - dl)) * ( sin(thetaNow/360.0*2*M_PI) - sin(thetaLast/360.0*2*M_PI) );
 		y -= d * (dr + dl) / (2.0 * (dr - dl)) * ( cos(thetaNow/360.0*2*M_PI) - cos(thetaLast/360.0*2*M_PI) );
 	}

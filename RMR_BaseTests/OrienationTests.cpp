@@ -11,6 +11,9 @@ namespace OrientationTests {
 
 	TEST_CLASS(OrientationTests) {
 	private:
+		const double mmPerTickKobuki = 0.000085292090497737556558 * 1000.0,
+			dKobuki = 230, rKobuki = 35;
+
 		bool compareDoubles(double d1, double d2, double delta = 0.01) {
 			return (abs(d1 - d2) < abs(delta));
 		}
@@ -58,7 +61,7 @@ namespace OrientationTests {
 				ticksL -= dir;
 				ticksR += dir;
 				tickBuff += thetaPerTick;		//to eliminate orunding errors over time
-				angleTicks = (signed short) tickBuff;
+				angleTicks = (signed short) round(tickBuff);
 				o.tick(ticksL, ticksR, angleTicks);
 			}
 		}
@@ -68,8 +71,8 @@ namespace OrientationTests {
 	public:
 
 		TEST_METHOD(TestTranslation) {
-
-			Orientation o(1, 1, 0.1);
+			double r = rKobuki, d = dKobuki, mmPerTick = mmPerTickKobuki;
+			Orientation o(d, r, mmPerTick);
 
 			o.init();
 
@@ -78,7 +81,7 @@ namespace OrientationTests {
 
 			moveLinear(o, 500, xTick, yTick, angleTicks);
 
-			Assert::IsTrue(compareDoubles(0.1 * 500, o.getPosition().x),
+			Assert::IsTrue(compareDoubles(mmPerTick * 500, o.getPosition().x),
 				L"FWD: Coordinate X is not as expected");
 			Assert::IsTrue(compareDoubles(0.0, o.getPosition().y), 
 				L"FWD: Coordinate Y is not as expected");
@@ -88,7 +91,7 @@ namespace OrientationTests {
 
 			moveLinear(o, -1000, xTick, yTick, angleTicks);
 
-			Assert::IsTrue(compareDoubles(-500 * 0.1, o.getPosition().x),
+			Assert::IsTrue(compareDoubles(-500 * mmPerTick, o.getPosition().x),
 				L"REV: Reverse: Coordinate X is not as expected");
 			Assert::IsTrue(compareDoubles(0.0, o.getPosition().y),
 				L"REV: Coordinate Y is not as expected");
@@ -100,7 +103,7 @@ namespace OrientationTests {
 
 		TEST_METHOD(TestRotation) {
 			//Counter clockwise
-			double r = 1, d = 1, mmPerTick = 0.1;
+			double r = rKobuki, d = dKobuki, mmPerTick = mmPerTickKobuki;
 			Orientation o(d, r, mmPerTick);
 			o.init();
 			unsigned short xTicks = 0, yTicks = 0;
@@ -126,7 +129,7 @@ namespace OrientationTests {
 
 		TEST_METHOD(TestTurnAndForward) {
 			//Counter clockwise
-			double r = 1, d = 1, mmPerTick = 0.1;
+			double r = rKobuki, d = dKobuki, mmPerTick = mmPerTickKobuki;
 			Orientation o(d, r, mmPerTick);
 			unsigned short xTicks = 0, yTicks = 0;
 			signed short angleTicks = 0;
