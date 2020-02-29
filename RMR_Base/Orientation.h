@@ -11,14 +11,14 @@ public:
 
 private:
 	EncType left, right;
+	Encoder<signed short, double> theta;
 	double x = 0, y = 0;
-	double theta = 0, thetaLast = 0;
 
 	const double d, radius;
 
 
 public:
-	Orientation(double _d, double _radius, double tick2mm) : left(tick2mm), right(tick2mm), d(_d), radius(_radius) { }
+	Orientation(double _d, double _radius, double tick2mm) : left(tick2mm), right(tick2mm), theta(1.0/100.0), d(_d), radius(_radius) { }
 
 	void init();
 	void zeroHere();	
@@ -32,11 +32,11 @@ public:
 	}
 	
 	double getTheta() const {
-		return theta/100;
+		return theta.getPosition()/100;
 	}
 
 	Position getPosition() const {
-		Position p = { x, y, theta };
+		Position p = { x, y, theta.getPosition() };
 		return p;
 	}
 
