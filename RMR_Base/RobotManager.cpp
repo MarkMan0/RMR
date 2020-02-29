@@ -1,4 +1,5 @@
 #include "RobotManager.h"
+#include <thread>
 
 void RobotManager::receiveRobotData() {
 	WSADATA wsaData = { 0 };
@@ -88,13 +89,13 @@ void RobotManager::receiveLidarData() {
 	}
 	while (1)
 	{
-		if ((las_recv_len = recvfrom(las_s, (char*)(measure.data.get()), sizeof(LaserData) * 1000, 0, (struct sockaddr*) & las_si_other, (int*)&las_slen)) == -1)
+		if ((las_recv_len = recvfrom(las_s, (char*)(measure.data.get()), sizeof(LaserData) * measure.buffSz, 0, (struct sockaddr*) & las_si_other, (int*)&las_slen)) == -1)
 		{
 
 			continue;
 		}
 		measure.numberOfScans = las_recv_len / sizeof(LaserData);
-		processLidar(measure);
+		processLidar();
 	}
 }
 
@@ -104,7 +105,7 @@ void RobotManager::processRobot() {
 
 }
 
-void RobotManager::processLidar(const LaserMeasurement& data) {
+void RobotManager::processLidar() {
 	return;
 }
 
@@ -114,15 +115,18 @@ bool RobotManager::sendCmd(const std::vector<unsigned char>& msg)
 }
 
 void RobotManager::init() {
-	robotthreadHandle = CreateThread(NULL, 0, robotUDPThread, (void*)this, 0, &robotthreadID);
-	laserthreadHandle = CreateThread(NULL, 0, lidarUDPThread, (void*)this, 0, &laserthreadID);
+	if (!robotThread.joinable()) {
+		robotThread = std::thread(&RobotManager::receiveRobotData, this);
+	}
+	if (!lidarThread.joinable()) {
+		lidarThread = std::thread(&RobotManager::receiveLidarData, this);
+	}
 
 
 	while (!ready()) {} //wait for first message
-	orientation.init();
 	//wait a bit
 	Sleep(200);
-	orientation.zeroHere();
+	orientation.init(robot.robotData.EncoderLeft, robot.robotData.EncoderRight, robot.robotData.GyroAngle);
 }
 
 
