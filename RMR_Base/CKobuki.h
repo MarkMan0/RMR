@@ -115,7 +115,10 @@ class CKobuki
 {
 	friend class RobotManager;
 public:
-	CKobuki() : robotBuff(new unsigned char[buffSz]) { };
+	CKobuki() : robotBuff(std::make_unique<unsigned char[]>(buffSz)) { 
+		for (size_t i = 0; i < buffSz; ++i)
+			robotBuff[i] = 0;
+	};
 	virtual ~CKobuki() { };
 
 
@@ -141,7 +144,7 @@ public:
 
 private:
 	static constexpr size_t buffSz = 50000;
-	unsigned char* robotBuff = 0;
+	std::unique_ptr<unsigned char[]> robotBuff;
 	
 	TKobukiData robotData = { 0 };
 

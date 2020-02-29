@@ -91,8 +91,8 @@ std::vector<unsigned char> CKobuki::getPIDCmd() {
 
 
 int CKobuki::parseKobukiMessage() {
-    unsigned char* data = robotBuff;
-    int rtrnvalue = checkChecksum(robotBuff);
+    unsigned char* data = robotBuff.get();
+    int rtrnvalue = checkChecksum(data);
     //ak je zly checksum,tak kaslat na to
     if (rtrnvalue != 0)
         return -2;

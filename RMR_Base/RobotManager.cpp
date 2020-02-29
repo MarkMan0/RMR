@@ -29,16 +29,15 @@ void RobotManager::receiveRobotData() {
 	rob_slen = sizeof(rob_si_me);
 	bind(rob_s, (struct sockaddr*) & rob_si_me, sizeof(rob_si_me));
 
-	std::vector<unsigned char> mess = robot.getPIDCmd();
+
 	sendCmd(robot.getPIDCmd());
 	Sleep(100);
-	
 	sendCmd(robot.getSoundCmd(440, 1000));
 
 	while (1)
 	{
 
-		if ((rob_recv_len = recvfrom(rob_s, (char*)(robot.robotBuff), sizeof(char) * 50000, 0, (struct sockaddr*) & rob_si_other, (int*)&rob_slen)) == -1)
+		if ((rob_recv_len = recvfrom(rob_s, (char*)(robot.robotBuff.get()), sizeof(char) * robot.buffSz, 0, (struct sockaddr*) & rob_si_other, (int*)&rob_slen)) == -1)
 		{
 
 			continue;
