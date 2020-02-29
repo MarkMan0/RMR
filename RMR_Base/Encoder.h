@@ -28,11 +28,12 @@ public:
 		int diff = 0;
 		if (lastEnc > limit::max() - 1000 && measured < limit::min() + 1000) {
 			//overflow
-			diff = limit::max() - lastEnc + measured + 1;
+			diff = (limit::max() - lastEnc) + (limit::min() - measured) + 1;
 		}
 		else if (lastEnc < limit::min() + 1000 && measured > limit::max() - 1000) {
 			//underflow
-			diff = lastEnc + limit::max() - measured + 1;
+			//diff is the absolute distance between min() and last + between max() and now
+			diff = (limit::min() - lastEnc) + (limit::max() - measured) + 1;
 			diff *= -1;
 		}
 		else {
