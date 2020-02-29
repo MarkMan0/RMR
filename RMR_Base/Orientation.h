@@ -18,7 +18,7 @@ private:
 
 
 public:
-	Orientation(double _d, double _radius, double tick2mm) : left(tick2mm), right(tick2mm), theta(1.0/100.0), d(_d), radius(_radius) { }
+	Orientation(double _d, double _radius, double mmPerTick) : left(mmPerTick), right(mmPerTick), theta(1.0/100.0), d(_d), radius(_radius) { }
 
 	void init();
 	void zeroHere();	
@@ -32,7 +32,7 @@ public:
 	}
 	
 	double getTheta() const {
-		return theta.getPosition()/100;
+		return theta.getPosition();
 	}
 
 	Position getPosition() const {

@@ -10,140 +10,176 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 namespace OrientationTests {
 
 	TEST_CLASS(OrientationTests) {
-	public:
-
-		TEST_METHOD(TestForwardMovement) {
-			/* Forward movement conditions:
-				theta = 0, x = 0, y = 0
-			  Expected behaviour:
-				theta = 0, x >> 0, y ~= 0
-			*/
-
-			Orientation o(1, 1, 1);
-
-			o.init();
-
-			unsigned short xyTick = 0;
-			signed short angleTick = 0;
-
-			for (int i = 0; i < 100; ++i) {
-				//move 100 ticks with both wheels
-				++xyTick;
-				o.tick(xyTick, xyTick, angleTick);
-			}
-			Assert::AreEqual(1.0 * xyTick, o.getPosition().x, L"Coordinate X is not as expected");
-			Assert::AreEqual(0.0, o.getPosition().y, L"Coordinate Y is not as expected");
-			Assert::AreEqual(0.0, o.getPosition().theta, L"Coordinate THETA is not as expected");
-
-		}
-
-		TEST_METHOD(TestReverseMovement) {
-			Orientation o(1, 1, 1);
-
-			o.init();
-
-			unsigned short xyTick = 100;
-			signed short angleTick = 0;
-			int dist = xyTick;
-			for (int i = 0; i < 500; ++i) {
-				//move 100 ticks with both wheels
-				--xyTick;
-				o.tick(xyTick, xyTick, angleTick);
-				--dist;
-			}
-			Assert::AreEqual(1.0 * dist, o.getPosition().x, L"Coordinate X is not as expected");
-			Assert::AreEqual(0.0, o.getPosition().y, L"Coordinate Y is not as expected");
-			Assert::AreEqual(0.0, o.getPosition().theta, L"Coordinate THETA is not as expected");
-		}
-
-		bool compareDoubles(double d1, double d2, double delta = 0.5) {
+	private:
+		bool compareDoubles(double d1, double d2, double delta = 0.01) {
 			return (abs(d1 - d2) < abs(delta));
 		}
 
-		TEST_METHOD(TestTurningPositive) {
-			//Counter clockwise
-			double r = 1, d = 1, t2m = 100;
-			Orientation o(d, r, 1/t2m);
+		double deg2rad(double deg) {
+			return (deg / 360 * 2 * M_PI);
+		}
+		double rad2deg(double rad) {
+			return (rad / 2 / M_PI * 360);
+		}
 
+		void moveLinear(Orientation& o, int ticks, unsigned short& ticksL, unsigned short& ticksR, signed short& angleTicks) {
+			int dir = ticks > 0 ? 1 : -1;
+			ticks = abs(ticks);
+			for (int i = 0; i < ticks; ++i) {
+				//move 100 ticks with both wheels
+				ticksL += dir;
+				ticksR += dir;
+				o.tick(ticksL, ticksR, angleTicks);
+			}
+		}
+
+		void moveRotate(Orientation& o, double angle, double d, double r, double mmPerTick,
+					unsigned short& ticksL, unsigned short& ticksR, signed short& angleTicks) {
+
+			double distMM = d/2.0 *  deg2rad(angle);	// each wheel has to move this distance
+			int ticksToTurn = abs((int)(distMM / mmPerTick));	//the required ticks to move the distance
+
+			if (abs((ticksToTurn + 1u) * mmPerTick - distMM) < abs((ticksToTurn)*mmPerTick - distMM)
+				&& abs((ticksToTurn + 1u) * mmPerTick - distMM) < abs((ticksToTurn - 1u) * mmPerTick - distMM)) {
+				++ticksToTurn;
+			}
+			else if(abs((ticksToTurn - 1) * mmPerTick - distMM) < abs((ticksToTurn)*mmPerTick - distMM)
+				&& abs((ticksToTurn - 1) * mmPerTick - distMM) < abs((ticksToTurn + 1) * mmPerTick - distMM)) {
+				--ticksToTurn;
+			}
+			
+			double thetaPerTick = 100 * angle / ticksToTurn;
+
+			
+
+			int dir = angle > 0 ? 1 : -1;
+
+			for (int i = 0; i < abs(ticksToTurn); ++i) {
+				ticksL -= dir;
+				ticksR += dir;
+				angleTicks += thetaPerTick;
+				o.tick(ticksL, ticksR, angleTicks);
+			}
+		}
+
+
+
+	public:
+
+		TEST_METHOD(TestTranslation) {
+
+			Orientation o(1, 1, 0.1);
+
+			o.init();
+
+			unsigned short xTick = 0, yTick = 0;
+			signed short angleTicks = 0;
+
+			moveLinear(o, 500, xTick, yTick, angleTicks);
+
+			Assert::IsTrue(compareDoubles(0.1 * 500, o.getPosition().x),
+				L"FWD: Coordinate X is not as expected");
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().y), 
+				L"FWD: Coordinate Y is not as expected");
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().theta), 
+				L"FWD: Coordinate THETA is not as expected");
+
+
+			moveLinear(o, -1000, xTick, yTick, angleTicks);
+
+			Assert::IsTrue(compareDoubles(-500 * 0.1, o.getPosition().x),
+				L"REV: Reverse: Coordinate X is not as expected");
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().y),
+				L"REV: Coordinate Y is not as expected");
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().theta),
+				L"REV: Coordinate THETA is not as expected");
+		}
+
+
+
+		TEST_METHOD(TestRotation) {
+			//Counter clockwise
+			double r = 1, d = 1, mmPerTick = 0.1;
+			Orientation o(d, r, mmPerTick);
+			o.init();
+			unsigned short xTicks = 0, yTicks = 0;
+			signed short angleTicks = 0;
 			//To turn the robot, left needs to got backwards, and right forward
 			//The distance for each wheel is 45deg on a unit circle
-			double distMM = M_PI * d / 4;	//quarter of circle
-			int ticksToTurn = (int)(distMM * t2m);
-			double thetaFinal = 45;
-			double thetaPerTick = thetaFinal / ticksToTurn;
-			o.init();
-			double thetaNow = 0.0;
-
-			unsigned short ticksL = 0, ticksR = 0;
-
-			for (int i = 0; i <= ticksToTurn; ++i, --ticksL, ++ticksR, thetaNow += thetaPerTick) {
-				o.tick(ticksL, ticksR, thetaNow * 100);
-			}
+			moveRotate(o, 45, d, r, mmPerTick, xTicks, yTicks, angleTicks);	//positive
 
 			Assert::IsTrue(compareDoubles(0.0, o.getPosition().x), L"X was not 0");
 			Assert::IsTrue(compareDoubles(0.0, o.getPosition().y), L"Y was not 0");
 			Assert::IsTrue(compareDoubles(45, o.getPosition().theta), L"Theta was not 45");
 
-		}
 
-		TEST_METHOD(TestTurningNegative) {
-			//clockwise
-			double r = 1, d = 1, t2m = 100;
-			Orientation o(d, r, 1 / t2m);
-
-			//To turn the robot, right needs to got backwards, and left forward
-			//The distance for each wheel is 45deg on a unit circle
-			double distMM = M_PI * d / 4;	//quarter of circle
-			int ticksToTurn = (int)(distMM * t2m);
-			double thetaFinal = -45;
-			double thetaPerTick = thetaFinal / ticksToTurn;
-			o.init();
-			double thetaNow = 0.0;
-
-			unsigned short ticksL = 0, ticksR = 0;
-
-			for (int i = 0; i <= ticksToTurn; ++i, ++ticksL, --ticksR, thetaNow += thetaPerTick) {
-				o.tick(ticksL, ticksR, thetaNow * 100);
-			}
-
+			moveRotate(o, -90, d, r, mmPerTick, xTicks, yTicks, angleTicks); //negative
+			
 			Assert::IsTrue(compareDoubles(0.0, o.getPosition().x), L"X was not 0");
 			Assert::IsTrue(compareDoubles(0.0, o.getPosition().y), L"Y was not 0");
-			Assert::IsTrue(compareDoubles(-45, o.getPosition().theta), L"Theta was not -45");
-
+			Assert::IsTrue(compareDoubles(-45, o.getPosition().theta, 1.0), L"Theta was not -45");
 		}
+
+
 
 
 		TEST_METHOD(TestTurnAndForward) {
 			//Counter clockwise
-			double r = 1, d = 1, t2m = 100;
-			Orientation o(d, r, 1 / t2m);
+			double r = 1, d = 1, mmPerTick = 0.1;
+			Orientation o(d, r, mmPerTick);
+			unsigned short xTicks = 0, yTicks = 0;
+			signed short angleTicks = 0;
 
-			//To turn the robot, left needs to got backwards, and right forward
-			//The distance for each wheel is 45deg on a unit circle
-			double distMM = M_PI * d / 2;	//quarter of circle
-			int ticksToTurn = (int)(distMM * t2m);
-			double thetaFinal = 90;
-			double thetaPerTick = thetaFinal / ticksToTurn;
 			o.init();
-			double thetaNow = 0.0;
 
-			unsigned short ticksL = 0, ticksR = 0;
+			// X-direction+
+			moveLinear(o, 500, xTicks, yTicks, angleTicks);
+			Assert::IsTrue(compareDoubles(500 * mmPerTick, o.getPosition().x), L"Move 1: X");
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().y), L"Move 1: Y");
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().theta), L"Move 1: Theta");
 
-			for (int i = 0; i <= ticksToTurn; ++i, --ticksL, ++ticksR, thetaNow += thetaPerTick) {
-				o.tick(ticksL, ticksR, thetaNow * 100);
-			}
-			//turn done
-			++ticksL; --ticksR; thetaNow -= thetaPerTick;
+			//turn to Y+
+			moveRotate(o, 90, d, r, mmPerTick, xTicks, yTicks, angleTicks);
+			Assert::IsTrue(compareDoubles(500 * mmPerTick, o.getPosition().x), L"Rotate 1: X");
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().y), L"Rotate 1: Y");
+			Assert::IsTrue(compareDoubles(90, o.getPosition().theta), L"Rotate 1: Theta");
 
-			//move forward, should increase Y
-			double dist = 0.0;
-			for (int i = 0; i < 500; ++i, dist += 1/t2m, ++ticksL, ++ticksR) {
-				o.tick(ticksL, ticksR, thetaNow * 100);
-			}
+			// move along Y+
+			moveLinear(o, 500, xTicks, yTicks, angleTicks);
+			Assert::IsTrue(compareDoubles(500 * mmPerTick, o.getPosition().x), L"Move 2: X");
+			Assert::IsTrue(compareDoubles(500 * mmPerTick, o.getPosition().y), L"Move 2: Y");
+			Assert::IsTrue(compareDoubles(90, o.getPosition().theta), L"Move 2: Theta");
 
-			Assert::IsTrue(compareDoubles(0.0, o.getPosition().x), L"X wasn't close to 0");
-			Assert::IsTrue(compareDoubles(dist, o.getPosition().y), L"Y wasn't close to dist");
-			Assert::IsTrue(compareDoubles(90, o.getPosition().theta), L"Theta wasn't close to 90");
+			//turn to X-
+			moveRotate(o, 90, d, r, mmPerTick, xTicks, yTicks, angleTicks);
+			Assert::IsTrue(compareDoubles(500 * mmPerTick, o.getPosition().x), L"Rotate 2: X");
+			Assert::IsTrue(compareDoubles(500 * mmPerTick, o.getPosition().y), L"Rotate 2: Y");
+			Assert::IsTrue(compareDoubles(180, o.getPosition().theta), L"Rotate 2: Theta");
+
+			//move along X-
+			moveLinear(o, 500, xTicks, yTicks, angleTicks);
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().x), L"Move 3: X");
+			Assert::IsTrue(compareDoubles(500 * mmPerTick, o.getPosition().y), L"Move 3: Y");
+			Assert::IsTrue(compareDoubles(180, o.getPosition().theta), L"Move 3: Theta");
+
+			//turn to Y-
+			moveRotate(o, 90, d, r, mmPerTick, xTicks, yTicks, angleTicks);
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().x), L"Rotate 3: X");
+			Assert::IsTrue(compareDoubles(500 * mmPerTick, o.getPosition().y), L"Rotate 3: Y");
+			Assert::IsTrue(compareDoubles(270, o.getPosition().theta), L"Rotate 3: Theta");
+
+			//move along Y-
+			moveLinear(o, 500, xTicks, yTicks, angleTicks);
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().x), L"Move 4: X");
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().y), L"Move 4: Y");
+			Assert::IsTrue(compareDoubles(270, o.getPosition().theta), L"Move 4: Theta");
+
+			//turn to X+
+			moveRotate(o, 90, d, r, mmPerTick, xTicks, yTicks, angleTicks);
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().x), L"Rotate 4: X");
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().y), L"Rotate 4: Y");
+			Assert::IsTrue(compareDoubles(360, o.getPosition().theta), L"Rotate 4: Theta");
+
 		}
 	};
 }

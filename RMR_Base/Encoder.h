@@ -11,11 +11,11 @@ private:
 	T lastEnc = 0;
 	decltype(std::chrono::steady_clock::now()) lastTime;
 	D position = 0, speed = 0;
-	const double tick2mm;
+	const double mmPerTick;
 
 public:
-	Encoder() : tick2mm(1) {}
-	Encoder(double _tick2mm) : tick2mm(_tick2mm) {};
+	Encoder() : mmPerTick(1) {}
+	Encoder(double _mmPerTick) : mmPerTick(_mmPerTick) {};
 
 	void begin(T val) {
 		lastTime = std::chrono::steady_clock::now();
@@ -27,12 +27,12 @@ public:
 		int diff = 0;
 		if (lastEnc > limit::max() - 1000 && measured < limit::min() + 1000) {
 			//overflow
-			diff = (limit::max() - lastEnc) + (limit::min() - measured) + 1;
+			diff = abs(limit::max() - lastEnc) + abs(limit::min() - measured) + 1;
 		}
 		else if (lastEnc < limit::min() + 1000 && measured > limit::max() - 1000) {
 			//underflow
 			//diff is the absolute distance between min() and last + between max() and now
-			diff = (limit::min() - lastEnc) + (limit::max() - measured) + 1;
+			diff = abs(limit::min() - lastEnc) + abs(limit::max() - measured) + 1;
 			diff *= -1;
 		}
 		else {
@@ -44,9 +44,9 @@ public:
 		auto now = std::chrono::steady_clock::now();
 		std::chrono::duration<float> dt = (now - lastTime);
 		lastTime = now;
-		speed = (diff * tick2mm) / (dt.count()); // mm/s
-		position += (diff * tick2mm);
-		return (diff * tick2mm);
+		speed = (diff * mmPerTick) / (dt.count()); // mm/s
+		position += (diff * mmPerTick);
+		return (diff * mmPerTick);
 
 	}
 
