@@ -5,7 +5,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace RMRBaseTests
+namespace EncoderTests
 {
 	TEST_CLASS(EncoderTests)
 	{
