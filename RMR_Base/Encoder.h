@@ -20,7 +20,7 @@ public:
 	void begin(T val) {
 		lastTime = std::chrono::steady_clock::now();
 		lastEnc = val;
-		position = val * tick2mm;
+		position = 0.0;
 	}
 
 	D tick(T measured) {
