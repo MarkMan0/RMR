@@ -5,8 +5,8 @@
 #include <math.h>
 
 void Orientation::init() {
-	left.begin();
-	right.begin();
+	left.begin(0);
+	right.begin(0);
 	theta = 0;
 }
 
@@ -25,10 +25,10 @@ void Orientation::tick(uint16_t l, uint16_t r, signed short angle) {
 
 	double diff = (1.0*angle - thetaLast);
 	if (abs(diff) > 5000) diff = 0;
-	thetaLast = angle;
+	
 	double theta2 = theta + diff;
 
-	if (dl != dr) {
+	if (abs(dl - dr) > 1) {
 		x += d * (dr + dl) / (2.0 * (dr - dl)) * ( sin(theta2/100.0/360.0*2*M_PI) - sin(theta/100.0/360.0*2*M_PI) );
 		y -= d * (dr + dl) / (2.0 * (dr - dl)) * ( cos(theta2/100.0/360.0*2*M_PI) - cos(theta/100.0/360.0*2*M_PI) );
 	}
@@ -37,5 +37,6 @@ void Orientation::tick(uint16_t l, uint16_t r, signed short angle) {
 		y += dr * sin(theta2 / 100.0 / 360.0 * 2 * M_PI);
 	}
 	std::cout << "x: \t" << x << "\ty: \t" << y << "\ttheta:\t" <<theta2/100.0 << std::endl;
+	thetaLast = angle;
 	theta = theta2;
 }

@@ -17,19 +17,22 @@ public:
 	Encoder() : tick2mm(1) {}
 	Encoder(double _tick2mm) : tick2mm(_tick2mm) {};
 
-	void begin() {
+	void begin(T val) {
 		lastTime = std::chrono::steady_clock::now();
+		lastEnc = val;
+		zeroVal = val * tick2mm;
+		position = zeroVal;
 	}
 
 	D tick(T measured) {
 		int diff = 0;
 		if (lastEnc > limit::max() - 1000 && measured < limit::min() + 1000) {
 			//overflow
-			diff = limit::max() - lastEnc + measured;
+			diff = limit::max() - lastEnc + measured + 1;
 		}
 		else if (lastEnc < limit::min() + 1000 && measured > limit::max() - 1000) {
 			//underflow
-			diff = lastEnc + limit::max() - measured;
+			diff = lastEnc + limit::max() - measured + 1;
 			diff *= -1;
 		}
 		else {
