@@ -107,5 +107,28 @@ namespace EncoderTests
 				Assert::AreEqual(1.0 * dist, enc.getPosition(), L"Underflow behaviour failed for Angle");
 			}
 		}
+
+
+		TEST_METHOD(TestZeroNow) {
+			Encoder<unsigned short, double> enc(1);
+
+			auto start = 500;
+			auto tick = start;
+			int dist = 0;
+			enc.begin(start);
+
+			for (int i = 0; i < 100; ++i, ++tick, ++dist) {
+				enc.tick(tick);
+				Assert::AreEqual(1.0 * dist, enc.getPosition(), L"Before zeroNow() failed");
+			}
+
+			enc.zeroNow();
+			dist = 1;
+
+			for (int i = 0; i < 100; ++i, ++tick, ++dist) {
+				enc.tick(tick);
+				Assert::AreEqual(1.0 * dist, enc.getPosition(), L"After zeroNow() failed");
+			}
+		}
 	};
 }
