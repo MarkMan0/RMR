@@ -185,5 +185,30 @@ namespace OrientationTests {
 			Assert::IsTrue(compareDoubles(360, o.getPosition().theta), L"Rotate 4: Theta");
 
 		}
+
+		TEST_METHOD(TestNonZeroStart) {
+			double r = rKobuki, d = dKobuki, mmPerTick = mmPerTickKobuki;
+
+			Orientation o(d, r, mmPerTick);
+
+			unsigned short lTicks = 5000, rTicks = 6000;
+			signed short angleTicks = 7000;
+
+			o.init(lTicks, rTicks, angleTicks);
+
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().x));
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().y));
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().theta));
+			
+			moveLinear(o, 1000, lTicks, rTicks, angleTicks);
+			Assert::IsTrue(compareDoubles(1000 * mmPerTick, o.getPosition().x));
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().y));
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().theta));
+
+			moveRotate(o, 90, d, r, mmPerTick, lTicks, rTicks, angleTicks);
+			Assert::IsTrue(compareDoubles(1000 * mmPerTick, o.getPosition().x));
+			Assert::IsTrue(compareDoubles(0.0, o.getPosition().y));
+			Assert::IsTrue(compareDoubles(90, o.getPosition().theta));
+		}
 	};
 }

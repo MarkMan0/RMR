@@ -4,18 +4,13 @@
 #include <limits>
 #include <math.h>
 
-void Orientation::init() {
-	left.begin(0);
-	right.begin(0);
-	theta.begin(0);
+void Orientation::init(unsigned short l, unsigned short r, signed short theta) {
+	left.begin(l);
+	right.begin(r);
+	this->theta.begin(theta);
 
 }
 
-
-void Orientation::zeroHere() {
-	x = 0;
-	y = 0;
-}
 
 void Orientation::tick(uint16_t l, uint16_t r, signed short angle) {
 	double dl = left.tick(l);
