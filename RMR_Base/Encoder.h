@@ -10,7 +10,7 @@ private:
 	using limit = std::numeric_limits<T>;
 	T lastEnc = 0;
 	decltype(std::chrono::steady_clock::now()) lastTime;
-	D position = 0, speed = 0, zeroVal = 0;
+	D position = 0, speed = 0;
 	const double tick2mm;
 
 public:
@@ -20,8 +20,7 @@ public:
 	void begin(T val) {
 		lastTime = std::chrono::steady_clock::now();
 		lastEnc = val;
-		zeroVal = val * tick2mm;
-		position = zeroVal;
+		position = val * tick2mm;
 	}
 
 	D tick(T measured) {
@@ -55,9 +54,6 @@ public:
 		return speed;
 	}
 	D getPosition() const {
-		return position - zeroVal;
-	}
-	void zeroNow() {
-		zeroVal = position;
+		return position;
 	}
 };

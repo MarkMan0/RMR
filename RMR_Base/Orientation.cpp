@@ -12,9 +12,6 @@ void Orientation::init() {
 
 
 void Orientation::zeroHere() {
-	left.zeroNow();
-	right.zeroNow();
-	theta = 0;
 	x = 0;
 	y = 0;
 }
