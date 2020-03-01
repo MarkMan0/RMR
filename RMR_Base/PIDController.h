@@ -1,15 +1,17 @@
 #pragma once
+#include <limits>
+
 class PIDController {
 
 private:
-	double Kp, Ki, Kd;
+	double Kp = 0, Ki = 0, Kd = 0;
 	double last = 0, integral = 0;
 
-	double upper, lower;
+	double upper = std::numeric_limits<double>::max(), lower = std::numeric_limits<double>::lowest();
 
-	double sampleT;
+	double sampleT= 1;
 
-	bool enabled;
+	bool enabled = false;
 
 public:
 	PIDController() = default;
