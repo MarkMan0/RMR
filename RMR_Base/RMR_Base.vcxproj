@@ -142,6 +142,8 @@
   <ItemGroup>
     <ClInclude Include="CKobuki.h" />
     <ClInclude Include="Encoder.h" />
+    <ClInclude Include="LoopRate.h" />
+    <ClInclude Include="MotionController.h" />
     <ClInclude Include="Orientation.h" />
     <ClInclude Include="PIDController.h" />
     <ClInclude Include="RobotManager.h" />
@@ -150,6 +152,7 @@
   <ItemGroup>
     <ClCompile Include="CKobuki.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MotionController.cpp" />
     <ClCompile Include="Orientation.cpp" />
     <ClCompile Include="PIDController.cpp" />
     <ClCompile Include="RobotManager.cpp" />

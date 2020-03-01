@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-
+#include "Helpers.h"
 #include "../RMR_Base/Orientation.h"
 #include "../RMR_Base/Orientation.cpp"
 
@@ -14,9 +14,7 @@ namespace OrientationTests {
 		const double mmPerTickKobuki = 0.000085292090497737556558 * 1000.0,
 			dKobuki = 230, rKobuki = 35;
 
-		bool compareDoubles(double d1, double d2, double delta = 0.01) {
-			return (abs(d1 - d2) < abs(delta));
-		}
+		
 
 		double deg2rad(double deg) {
 			return (deg / 360 * 2 * M_PI);
