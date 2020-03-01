@@ -7,6 +7,7 @@ public:
 
 	struct Position {
 		double x, y, theta;
+		double vx, vy, omega;
 	};
 
 private:
@@ -35,7 +36,7 @@ public:
 	}
 
 	Position getPosition() const {
-		Position p = { x, y, theta.getPosition() };
+		Position p = { x, y, theta.getPosition(), 0, 0, 0 };
 		return p;
 	}
 

@@ -12,6 +12,9 @@
 #include <atomic>
 
 class RobotManager {
+public:
+	typedef typename Orientation::Position Position;
+
 private:
 	
 	LaserMeasurement measure;
@@ -68,6 +71,10 @@ public:
 
 	double getAngle() const {
 		return orientation.getTheta();
+	}
+
+	Position getPosition() const {
+		return orientation.getPosition();
 	}
 	
 };
