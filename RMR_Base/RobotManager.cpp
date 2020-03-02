@@ -94,7 +94,7 @@ void RobotManager::receiveLidarData() {
 
 			continue;
 		}
-		measure.numberOfScans = las_recv_len / sizeof(LaserData);
+		measure.numberOfScans = (int)(las_recv_len) / sizeof(LaserData);
 		processLidar();
 	}
 }
@@ -111,7 +111,7 @@ void RobotManager::processLidar() {
 
 bool RobotManager::sendCmd(const std::vector<unsigned char>& msg)
 {
-	return sendto(rob_s, (char*)msg.data(), sizeof(char) * msg.size(), 0, (struct sockaddr*) & rob_si_posli, sizeof(rob_si_posli)) != SOCKET_ERROR;
+	return sendto(rob_s, (char*)msg.data(), (int)(sizeof(char) * msg.size()), 0, (struct sockaddr*) & rob_si_posli, sizeof(rob_si_posli)) != SOCKET_ERROR;
 }
 
 void RobotManager::init() {
