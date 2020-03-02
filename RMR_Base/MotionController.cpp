@@ -79,7 +79,7 @@ bool MotionController::moveForward(double dist) {
 			done = true;
 		}
 		else {
-			robot->translation(translationController.tick(e));
+			robot->translation((int)round(translationController.tick(e)));
 			rate.sleep();
 		}
 	}
