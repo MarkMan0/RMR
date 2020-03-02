@@ -7,31 +7,29 @@
 #include "main.h"
 #include <stdlib.h>
 #include <algorithm>
+#include "MotionController.h"
+#include "LoopRate.h"
 
 int main() {
 	using namespace std;
 	std::cout << "Hello world!" << std::endl;
 	
-	RobotManager rob("192.168.1.12");
+	std::shared_ptr<RobotManager> rob = std::make_shared<RobotManager>("192.168.1.12");
+	rob->init();
 	
+	MotionController mc(rob);
+	mc.init();
 
-	rob.init();
+	mc.moveForward(1000);
+	mc.rotateTo(-90);
+	mc.moveForward(1000);
+	mc.rotateTo(-180);
+	mc.moveForward(1000);
+	mc.rotateTo(-270);
+	mc.moveForward(1000);
+	mc.rotateTo(-360);
 	
-	const int kp = 5, target = 600, lo = -100, hi = 100;
-	int spd = 10;
-	while (true)
-	{
-		double e = 1.0*target - (int) rob.encoderL().getPosition();
-		double u = kp * e;
-		u = u <= lo ? lo : u >= hi ? hi : u;
-		//rob.translation((int)u);
-		Sleep(20);
-		if (spd > 300)
-			spd = 300;
-		//cout << "EncL:\t" << rob.encoderL().getPosition() << "\tEncR:\t" << rob.encoderR().getPosition() << "\tSpdL:\t" << rob.encoderL().getSpeed() << endl;
-		//cout << "Angle:\t" << (rob.getAngle()) << endl;
-	}
-
-	rob.stop();
+	rob->stop();
+	while (1);
 	return 0;
 }

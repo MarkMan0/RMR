@@ -4,6 +4,7 @@
 #include "RobotManager.h"
 
 #include "LoopRate.h"
+#include "ExitCondition.h"
 
 static inline double deg2rad(double deg) {
 	return deg / 180.0 * M_PI;
@@ -11,20 +12,20 @@ static inline double deg2rad(double deg) {
 
 void MotionController::init() {
 	translationController
-		.setKp(0.0)
+		.setKp(5)
 		.setKi(0.0)
 		.setKd(0.0)
-		.setLower(0.0)
-		.setUpper(0.0)
-		.setSampleT(0.0);
+		.setLower(-100)
+		.setUpper(100)
+		.setSampleT(1.0/50.0);
 
 	angleController
-		.setKp(0.0)
+		.setKp(0.2)
 		.setKi(0.0)
 		.setKd(0.0)
-		.setLower(0.0)
-		.setUpper(0.0)
-		.setSampleT(0.0);
+		.setLower(-1)
+		.setUpper(1)
+		.setSampleT(1.0/50.0);
 
 }
 
@@ -32,18 +33,22 @@ bool MotionController::rotateTo(double target)
 {
 	angleController.enable();
 	bool done = false;
+
+	ExitCondition cond(25, 0.5);
+
 	LoopRate rate(50);
 	while (!done) {
 		auto pos = robot->getPosition();
-		if (abs(target - pos.theta) < 2 && pos.omega < 10) {
-			//close to target and slow
+		double e = target - pos.theta;
+
+		if (cond.check(e)) {
 			done = true;
 		}
 		else {
-			double u = angleController.tick(target - pos.theta);
+			double u = angleController.tick(e);
 			robot->rotation(u);
+			rate.sleep();
 		}
-		rate.sleep();
 	}
 
 	robot->rotation(0);
@@ -62,15 +67,20 @@ bool MotionController::moveForward(double dist) {
 	translationController.enable();
 	
 	LoopRate rate(50);
+	ExitCondition cond(25, 10);
+	bool done = false;
 
-	while (abs(dist - getDistMoved()) < 10 && getSpd() < 10) {
-
-		double e = dist - getDistMoved();
-		
-		robot->translation(translationController.tick(e));
-
-		rate.sleep();
+	while (!done) {
 		pos = robot->getPosition();
+		double e = dist - getDistMoved();
+	
+		if (cond.check(e)) {
+			done = true;
+		}
+		else {
+			robot->translation(translationController.tick(e));
+			rate.sleep();
+		}
 	}
 
 	robot->translation(0);
