@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include <thread>
+#include <mutex>
 
 #include <cstdint>
 #include "Encoder.h"
@@ -35,6 +36,7 @@ private:
 	unsigned int rob_slen = 0;
 	int rob_s = 0, rob_recv_len = 0;
 	std::thread robotThread;
+	std::mutex robotMtx;
 	void receiveRobotData();
 
 	struct sockaddr_in las_si_me = { 0 }, las_si_other = { 0 }, las_si_posli = { 0 };
@@ -58,22 +60,27 @@ public:
 	bool ready() const {
 		return robotRdy;
 	}
-	const TKobukiData& getData() const {
+	TKobukiData getData() {
+		std::scoped_lock lck(robotMtx);
 		return robot.robotData;
 	}
 
-	const Orientation::EncType& encoderL() const {
+	Orientation::EncType encoderL() {
+		std::scoped_lock lck(robotMtx);
 		return orientation.getLeft();
 	}
-	const Orientation::EncType& encoderR() const {
+	Orientation::EncType encoderR() {
+		std::scoped_lock lck(robotMtx);
 		return orientation.getRight();
 	}
 
-	double getAngle() const {
+	double getAngle() {
+		std::scoped_lock lck(robotMtx);
 		return orientation.getTheta();
 	}
 
-	Position getPosition() const {
+	Position getPosition() {
+		std::scoped_lock lcd(robotMtx);
 		return orientation.getPosition();
 	}
 	
