@@ -1,30 +1,7 @@
 #pragma once
-
-
-
-#include <stdio.h>
-#include <stdlib.h>
 #include <vector>
-//#include "pthread.h"
-//#include "unistd.h"
-#include "fcntl.h"
-#include "string.h"
-#include <math.h>
-#include <stdint.h>
-#include <iostream>
-#include <fstream>
-#include <cmath>
-#include <iomanip>
-//#include <chrono>
-#include <sstream>
-#include <math.h>
+#include <memory>
 #include <cstdint>
-
-#define PI          M_PI
-#define MS_INSTRUCTION_DELAY 25
-
-
-using namespace std;
 
 typedef struct
 {

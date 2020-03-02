@@ -1,9 +1,6 @@
 #include "PIDController.h"
 
-template<class T>
-static inline T clamp(T what, T bot, T top) {
-	return what <= bot ? bot : what >= top ? top : what;
-}
+#include "Helpers.h"
 
 
 PIDController& PIDController::setKp(double k)

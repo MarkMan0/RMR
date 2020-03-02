@@ -1,4 +1,6 @@
 #pragma once
+#include <chrono>
+
 #include "Encoder.h"
 
 class Orientation {

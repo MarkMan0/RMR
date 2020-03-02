@@ -1,8 +1,9 @@
-#define _USE_MATH_DEFINES
-#include <math.h>
 #include "MotionController.h"
-#include "RobotManager.h"
 
+#include <cmath>
+
+
+#include "RobotManager.h"
 #include "LoopRate.h"
 #include "ExitCondition.h"
 

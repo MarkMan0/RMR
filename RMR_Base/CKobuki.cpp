@@ -1,8 +1,6 @@
 #include "CKobuki.h"
-//#include "termios.h"
-#include "errno.h"
-#include <cstddef>
-#include <iostream>
+
+#include <vector>
 
 
 #pragma warning( push )

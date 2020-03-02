@@ -10,25 +10,6 @@
 ////*************************************************************************************
 ////*************************************************************************************
 #pragma once
-
-//#define _WINSOCK_DEPRECATED_NO_WARNINGS
-//#include <WinSock2.h>
-#define NOMINMAX
-#include <windows.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-
-#include <fcntl.h>
-#include <string.h>
-#include <errno.h>
-#include <stdio.h>
-
-#include <iostream>
-#include <sys/types.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include <memory>
 
 typedef struct

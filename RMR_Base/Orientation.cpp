@@ -1,8 +1,9 @@
-#define _USE_MATH_DEFINES
+
 #include "Orientation.h"
+
 #include <iostream>
-#include <limits>
-#include <math.h>
+#include <cmath>
+
 #include "Helpers.h"
 
 void Orientation::init(unsigned short l, unsigned short r, signed short theta) {
