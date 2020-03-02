@@ -19,7 +19,7 @@ private:
 
 
 public:
-	Orientation(double _d, double _radius, double mmPerTick) : left(mmPerTick), right(mmPerTick), theta(1.0/100.0), d(_d), radius(_radius) { }
+	Orientation(double _d, double _radius, double mmPerTick) : left(mmPerTick), right(mmPerTick), theta(1.0/100.0, -17999, 17999), d(_d), radius(_radius) { }
 
 	void init(unsigned short l = 0, unsigned short r = 0, signed short theta = 0);	
 	void tick(uint16_t l, uint16_t r, signed short angle);
