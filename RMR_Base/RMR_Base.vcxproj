@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="CKobuki.h" />
     <ClInclude Include="Encoder.h" />
+    <ClInclude Include="Helpers.h" />
     <ClInclude Include="LoopRate.h" />
     <ClInclude Include="MotionController.h" />
     <ClInclude Include="Orientation.h" />
