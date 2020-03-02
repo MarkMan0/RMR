@@ -9,16 +9,19 @@ public:
 
 	struct Position {
 		double x, y, theta;
-		double vx, vy, omega;
+		double vx, vy, omega, v;
 	};
 
 private:
 	EncType left, right;
 	Encoder<signed short, double> theta;
-	double x = 0, y = 0;
+	Position pos = { 0 };
 
 	const double d, radius;
 
+	using clock = std::chrono::steady_clock;
+
+	decltype(clock::now()) lastTick;
 
 public:
 	Orientation(double _d, double _radius, double mmPerTick) : left(mmPerTick), right(mmPerTick), theta(1.0/100.0, -17999, 17999), d(_d), radius(_radius) { }
@@ -38,8 +41,7 @@ public:
 	}
 
 	Position getPosition() const {
-		Position p = { x, y, theta.getPosition(), 0, 0, 0 };
-		return p;
+		return pos;
 	}
 
 };
