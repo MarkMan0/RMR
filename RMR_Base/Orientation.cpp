@@ -24,19 +24,18 @@ void Orientation::tick(uint16_t l, uint16_t r, signed short angle) {
 	double thetaNow = deg2rad(theta.getPosition());
 	
 
-	if ( abs(dr-dl) > 1e-2 && abs(thetaNow - thetaLast) > deg2rad(0.05)) {
+	if ( abs(dr-dl) > 1e-1 && abs(thetaNow - thetaLast) > deg2rad(0.5)) {
 		x += d * (dr + dl) / (2.0 * (dr - dl)) * ( sin(thetaNow) - sin(thetaLast) );
 		y -= d * (dr + dl) / (2.0 * (dr - dl)) * ( cos(thetaNow) - cos(thetaLast) );
-		std::cout << "XXX: ";
+		//std::cout << "XXX: ";
 	}
 	else {
 		double l = (dl + dr) / 2;
 		x += l * cos(thetaNow);
 		y += l * sin(thetaNow);
-		std::cout << "OOO: ";
+		//std::cout << "OOO: ";
 	}
 
-	std::cout << "\t" << x << "\t\t" << y << "\t\t" << theta.getPosition() << "\n";
 	
 
 }
