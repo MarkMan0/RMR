@@ -14,7 +14,7 @@ int main() {
 	using namespace std;
 	std::cout << "Hello world!" << std::endl;
 	
-	std::shared_ptr<RobotManager> rob = std::make_shared<RobotManager>("192.168.1.12");
+	std::shared_ptr<RobotManager> rob = std::make_shared<RobotManager>("192.168.1.15");
 	rob->init();
 	
 	MotionController mc(rob);
