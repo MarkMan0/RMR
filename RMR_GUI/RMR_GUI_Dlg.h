@@ -14,9 +14,6 @@
 #include<string.h>
 #include<stdlib.h>
 #include<vector>
-#include "ckobuki.h"
-
-#include "rplidar.h"
 
 // CRMR_GUIDlg dialog
 class CRMR_GUIDlg : public CDialogEx
@@ -48,43 +45,6 @@ public:
 	afx_msg void OnBnClickedOk();
 
 
-	void robotprocess();
-	void laserprocess();
-	void processThisLidar(LaserMeasurement &laserData);
-
-	void processThisRobot();
-	HANDLE robotthreadHandle; // handle na vlakno
-	DWORD robotthreadID;  // id vlakna
-	static DWORD WINAPI robotUDPVlakno(void *param)
-	{
-		((CRMR_GUIDlg*)param)->robotprocess();
-		return 0;
-	}
-	HANDLE laserthreadHandle; // handle na vlakno
-	DWORD laserthreadID;  // id vlakna
-	static DWORD WINAPI laserUDPVlakno(void *param)
-	{
-		((CRMR_GUIDlg*)param)->laserprocess();
-
-		return 0;
-	}
-	//veci na broadcast laser
-	struct sockaddr_in las_si_me, las_si_other, las_si_posli;
-
-	int las_s, las_recv_len;
-	unsigned int las_slen;
-	//veci na broadcast robot
-	struct sockaddr_in rob_si_me, rob_si_other, rob_si_posli;
-
-	int rob_s, rob_recv_len;
-	unsigned int rob_slen;
-
-	int updateLaserPicture;
-	LaserMeasurement copyOfLaserData;
-	std::string ipaddress;
-	CKobuki robot;
-	TKobukiData robotdata;
-	int datacounter;
 
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton3();

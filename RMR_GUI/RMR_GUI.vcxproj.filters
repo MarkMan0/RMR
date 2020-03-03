@@ -27,12 +27,6 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CKobuki.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="rplidar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RMR_GUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -42,12 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CKobuki.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="rplidar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RMR_GUI.cpp">
