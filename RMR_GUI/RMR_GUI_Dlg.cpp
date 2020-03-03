@@ -51,7 +51,7 @@ END_MESSAGE_MAP()
 
 
 CRMR_GUIDlg::CRMR_GUIDlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(IDD_RMR_GUI_DIALOG, pParent), robot(std::make_shared<RobotManager>("192.168.1.15")), mc(robot)
+	: CDialogEx(IDD_GUI_DIALOG, pParent), robot(std::make_shared<RobotManager>("192.168.1.12")), mc(robot)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -66,11 +66,15 @@ BEGIN_MESSAGE_MAP(CRMR_GUIDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDOK, &CRMR_GUIDlg::OnBnClickedOk)
-	ON_BN_CLICKED(IDC_BUTTON1, &CRMR_GUIDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON3, &CRMR_GUIDlg::OnBnClickedButton3)
-	ON_BN_CLICKED(IDC_BUTTON5, &CRMR_GUIDlg::OnBnClickedButton5)
-	ON_BN_CLICKED(IDC_BUTTON2, &CRMR_GUIDlg::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON4, &CRMR_GUIDlg::OnBnClickedButton4)
+	ON_BN_CLICKED(IDC_BUTTON5, &CRMR_GUIDlg::OnBnClickedButton5)
+	ON_BN_CLICKED(IDC_BUTTON6, &CRMR_GUIDlg::OnBnClickedButton6)
+	ON_BN_CLICKED(IDC_BUTTON7, &CRMR_GUIDlg::OnBnClickedButton7)
+	ON_BN_CLICKED(IDC_BUTTON8, &CRMR_GUIDlg::OnBnClickedButton8)
+	ON_BN_CLICKED(IDC_BUTTON9, &CRMR_GUIDlg::OnBnClickedButton9)
+	ON_BN_CLICKED(IDC_BUTTON10, &CRMR_GUIDlg::OnBnClickedButton10)
+	ON_BN_CLICKED(IDC_BUTTON11, &CRMR_GUIDlg::OnBnClickedButton11)
 END_MESSAGE_MAP()
 
 
@@ -189,8 +193,6 @@ HCURSOR CRMR_GUIDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-
-
 void CRMR_GUIDlg::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
@@ -200,29 +202,36 @@ void CRMR_GUIDlg::OnBnClickedOk()
 
 }
 
-
-
-
-
-
-void CRMR_GUIDlg::OnBnClickedButton1()
+void CRMR_GUIDlg::OnBnClickedButton3()
 {
 	// TODO: Add your control notification handler code here
 	//pohyb dopredu
-
-	//robot->translation(200);
-	mc.moveForward(1000);
-	mc.rotateTo(-90);
-	mc.moveForward(1000);
-	mc.rotateTo(-180);
-	mc.moveForward(1000);
-	mc.rotateTo(-270);
-	mc.moveForward(1000);
-	mc.rotateTo(-360);
+	robot->translation(200);
 }
 
+void CRMR_GUIDlg::OnBnClickedButton4()
+{
+	// TODO: Add your control notification handler code here
+	//Left
+	robot->rotation(-1);
+}
 
-void CRMR_GUIDlg::OnBnClickedButton3()
+void CRMR_GUIDlg::OnBnClickedButton5()
+{
+	// TODO: Add your control notification handler code here
+	//Right
+	robot->rotation(1);
+
+}
+
+void CRMR_GUIDlg::OnBnClickedButton6()
+{
+	// TODO: Add your control notification handler code here
+	//Reverse
+	robot->translation(-200);
+}
+
+void CRMR_GUIDlg::OnBnClickedButton7()
 {
 	// TODO: Add your control notification handler code here
 	//Stop
@@ -234,28 +243,48 @@ void CRMR_GUIDlg::OnBnClickedButton3()
 	this->SetDlgItemTextW(IDC_EDIT3, CString(std::to_string(pos.theta).c_str()));
 }
 
-
-void CRMR_GUIDlg::OnBnClickedButton5()
+void CRMR_GUIDlg::OnBnClickedButton8()
 {
 	// TODO: Add your control notification handler code here
-	//Reverse
-	robot->translation(-200);
-
+	//Circle
 }
 
-
-void CRMR_GUIDlg::OnBnClickedButton2()
+void CRMR_GUIDlg::OnBnClickedButton9()
 {
 	// TODO: Add your control notification handler code here
-	//Left
-	robot->rotation(-1);
+	//Square
+	CString dest;
+	this->GetDlgItemTextW(IDC_EDIT7, dest);
+	int length = _ttoi(dest);
+	mc.moveForward(length);
+	mc.rotateTo(-90);
+	mc.moveForward(length);
+	mc.rotateTo(-180);
+	mc.moveForward(length);
+	mc.rotateTo(-270);
+	mc.moveForward(length);
+	mc.rotateTo(-360);
 }
 
-
-void CRMR_GUIDlg::OnBnClickedButton4()
+void CRMR_GUIDlg::OnBnClickedButton10()
 {
 	// TODO: Add your control notification handler code here
-	//Right
-	robot->rotation(1);	
+	//Triangle
+//	this->GetDlgItemTextW(IDC_EDIT7);
+	mc.moveForward(1000);
+	mc.rotateTo(-120);
+	mc.moveForward(1000);
+	mc.rotateTo(-240);
+	mc.moveForward(1000);
+	mc.rotateTo(-360);
+}
+
+void CRMR_GUIDlg::OnBnClickedButton11()
+{
+	// TODO: Add your control notification handler code here
+	//Zadany bod v priestore
+	robot->translation(200);
+	robot->rotation(1);
+
 
 }
