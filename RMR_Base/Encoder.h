@@ -1,7 +1,8 @@
 #pragma once
 #include <chrono>
 #include <limits>
-
+#undef min
+#undef max
 //Class to manage encoders
 template<class T, class D>
 class Encoder {

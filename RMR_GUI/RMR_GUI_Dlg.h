@@ -3,21 +3,20 @@
 //
 
 #pragma once
-
-#include<windows.h>
-#include<iostream>
-//#include<arpa/inet.h>
-//#include<unistd.h>
-//#include<sys/socket.h>
-#include<sys/types.h>
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
 #include<vector>
+#include <memory>
+
+#include "RobotManager.h"
+#include "MotionController.h"
 
 // CRMR_GUIDlg dialog
 class CRMR_GUIDlg : public CDialogEx
 {
+
+private:
+	std::shared_ptr<RobotManager> robot;
+	MotionController mc;
+
 // Construction
 public:
 	CRMR_GUIDlg(CWnd* pParent = NULL);	// standard constructor

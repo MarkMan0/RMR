@@ -1,8 +1,7 @@
 
 // RMR_GUIDlg.cpp : implementation file
 //
-
-#include "stdafx.h"
+#undef NOMINMAX
 #include "RMR_GUI.h"
 #include "RMR_GUI_Dlg.h"
 #include "afxdialogex.h"
@@ -52,7 +51,7 @@ END_MESSAGE_MAP()
 
 
 CRMR_GUIDlg::CRMR_GUIDlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(IDD_RMR_GUI_DIALOG, pParent)
+	: CDialogEx(IDD_RMR_GUI_DIALOG, pParent), robot(std::make_shared<RobotManager>("192.168.1.15")), mc(robot)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -148,6 +147,10 @@ void CRMR_GUIDlg::OnPaint()
 	}
 	else
 	{
+		auto pos = robot->getPosition();
+		this->SetDlgItemTextW(IDC_EDIT1, CString(std::to_string(pos.x).c_str()));
+		this->SetDlgItemTextW(IDC_EDIT2, CString(std::to_string(pos.y).c_str()));
+		this->SetDlgItemTextW(IDC_EDIT3, CString(std::to_string(pos.theta).c_str()));
 		CRect rct;
 		GetClientRect(&rct);
 		CPaintDC painter(this);
@@ -191,11 +194,13 @@ HCURSOR CRMR_GUIDlg::OnQueryDragIcon()
 void CRMR_GUIDlg::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
+
+	robot->init();
+	mc.init();
+
 }
 
-//this->SetDlgItemTextW(IDC_EDIT1, CString(std::to_string(robotdata.EncoderRight).c_str()));
-//this->SetDlgItemTextW(IDC_EDIT2, CString(std::to_string(robotdata.EncoderLeft).c_str()));
-//this->SetDlgItemTextW(IDC_EDIT3, CString(std::to_string(robotdata.GyroAngle).c_str()));
+
 
 
 
@@ -204,19 +209,37 @@ void CRMR_GUIDlg::OnBnClickedButton1()
 {
 	// TODO: Add your control notification handler code here
 	//pohyb dopredu
+
+	//robot->translation(200);
+	mc.moveForward(1000);
+	mc.rotateTo(-90);
+	mc.moveForward(1000);
+	mc.rotateTo(-180);
+	mc.moveForward(1000);
+	mc.rotateTo(-270);
+	mc.moveForward(1000);
+	mc.rotateTo(-360);
 }
 
 
 void CRMR_GUIDlg::OnBnClickedButton3()
 {
 	// TODO: Add your control notification handler code here
-
+	//Stop
+	//robot->rotation(0);
+	//robot->translation(0);
+	auto pos = robot->getPosition();
+	this->SetDlgItemTextW(IDC_EDIT1, CString(std::to_string(pos.x).c_str()));
+	this->SetDlgItemTextW(IDC_EDIT2, CString(std::to_string(pos.y).c_str()));
+	this->SetDlgItemTextW(IDC_EDIT3, CString(std::to_string(pos.theta).c_str()));
 }
 
 
 void CRMR_GUIDlg::OnBnClickedButton5()
 {
 	// TODO: Add your control notification handler code here
+	//Reverse
+	robot->translation(-200);
 
 }
 
@@ -224,12 +247,15 @@ void CRMR_GUIDlg::OnBnClickedButton5()
 void CRMR_GUIDlg::OnBnClickedButton2()
 {
 	// TODO: Add your control notification handler code here
-
+	//Left
+	robot->rotation(-1);
 }
 
 
 void CRMR_GUIDlg::OnBnClickedButton4()
 {
 	// TODO: Add your control notification handler code here
+	//Right
+	robot->rotation(1);	
 
 }

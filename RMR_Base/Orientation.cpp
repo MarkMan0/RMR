@@ -51,6 +51,6 @@ void Orientation::tick(uint16_t l, uint16_t r, signed short angle) {
 	pos.vx = (pos.x - oldX) / dt.count();
 	pos.vy = (pos.y - oldY) / dt.count();
 	pos.omega = theta.getSpeed();
-	
+	pos.theta = theta.getPosition();
 	pos.v = sqrt(pow(pos.vx, 2) + pow(pos.vy, 2));
 }
