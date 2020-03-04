@@ -59,6 +59,7 @@ public:
 	void translation(int spd);
 	void rotation(double spd);
 	void arc(int spd, int radius);
+	void arc2(int spd, double omega);
 	void stop();
 	bool ready() const {
 		return robotRdy;

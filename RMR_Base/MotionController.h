@@ -16,10 +16,12 @@ public:
 
 	void init();
 
-	bool rotateTo(double target);
+	bool rotateTo(double target, double tolerance = 0.5);
 
 	bool moveForward(double dist);
 	
-	bool moveToXY(double x, double y);
+	bool arcToXY(double x, double y);
+
+	bool moveArc(double x, double y);
 };
 

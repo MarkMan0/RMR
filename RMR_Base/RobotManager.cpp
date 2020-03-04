@@ -143,7 +143,10 @@ void RobotManager::arc(int spd, int radius) {
 	sendCmd(robot.getArcCmd(spd, radius));
 }
 
+void RobotManager::arc2(int spd, double omega) {
+	sendCmd(robot.getArc2Cmd(spd, omega));
+}
+
 void RobotManager::stop() {
 	sendCmd(robot.getTranslationCmd(0));
-	sendCmd(robot.getRotationCmd(0));
 }

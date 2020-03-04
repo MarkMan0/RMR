@@ -2,14 +2,11 @@
 
 #include <cmath>
 
-
+#include "Helpers.h"
 #include "RobotManager.h"
 #include "LoopRate.h"
 #include "ExitCondition.h"
 
-static inline double deg2rad(double deg) {
-	return deg / 180.0 * M_PI;
-}
 
 void MotionController::init() {
 	translationController
@@ -30,12 +27,12 @@ void MotionController::init() {
 
 }
 
-bool MotionController::rotateTo(double target)
+bool MotionController::rotateTo(double target, double tolerance)
 {
 	angleController.enable();
 	bool done = false;
 
-	ExitCondition cond(25, 0.5);
+	ExitCondition cond(25, tolerance);
 
 	LoopRate rate(50);
 	while (!done) {
@@ -89,3 +86,48 @@ bool MotionController::moveForward(double dist) {
 	return true;
 }
 
+bool MotionController::moveArc(double x, double y) {
+	const auto posStart = robot->getPosition();
+
+	double pointAngle = rad2deg(atan2(y - posStart.y, x - posStart.x));
+	double targetTheta = getClosestTargetAngle(posStart.theta, pointAngle);
+
+	auto posNow = robot->getPosition();
+
+	auto distToTarget = [&posStart, &posNow]() -> double {
+		return sqrt(pow(posNow.x - posStart.x, 2) + pow(posNow.y - posStart.y, 2));
+		};
+
+	LoopRate rate(50);
+	ExitCondition cond(25, 10);
+
+	while (!cond.check(distToTarget())) {
+		posNow = robot->getPosition();
+		double eDist = distToTarget();		//absolute distance to target
+		double eTheta = targetTheta - posNow.theta;
+
+		if(!cond.check(eDist))
+			robot->arc2((int)round(translationController.tick(eDist)), angleController.tick(eTheta));
+
+		rate.sleep();
+	}
+
+	robot->stop();
+	
+
+	return true;
+}
+
+bool MotionController::arcToXY(double x, double y) {
+	
+	auto pos = robot->getPosition();
+	
+	double pointAngle = rad2deg(atan2(y - pos.y, x - pos.x));
+	double target = getClosestTargetAngle(pos.theta, pointAngle);
+
+	rotateTo(target, 40);	//rotate towards target, +-40 degrees
+	moveArc(x, y);
+
+
+	return true;
+}
