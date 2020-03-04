@@ -1,7 +1,8 @@
 #include "CKobuki.h"
-
+#include "Helpers.h"
 #include <vector>
 
+#include <iostream>
 
 #pragma warning( push )
 #pragma warning( disable : 4838)
@@ -52,43 +53,27 @@ std::vector<unsigned char> CKobuki::getArcCmd(int mmpersec, int radius) {
     }
   
     int speedvalue = (int) round( mmpersec * ((radius + (radius > 0 ? 230.0 : -230.0)) / 2.0) / radius);
-    unsigned char message[14] = { 0xaa,0x55,0x0A,0x0c,0x02,0xf0,0x00,0x01,0x04,speedvalue % 256,speedvalue >> 8,radius % 256,radius >> 8,  0x00 };
+    unsigned char message[14] = { 0xaa,0x55,0x0A,0x0c,0x02,0xf0,0x00,0x01,0x04,mmpersec % 256,mmpersec >> 8,radius % 256,radius >> 8,  0x00 };
     message[13] = message[2] ^ message[3] ^ message[4] ^ message[5] ^ message[6] ^ message[7] ^ message[8] ^ message[9] ^ message[10] ^ message[11] ^ message[12];
 
     std::vector<unsigned char> vystup(message, message + sizeof(message) / sizeof(message[0]));
     return vystup;
 }
 
-template<class T>
-static inline int sign(T num) {
-    if (num < 0) return -1;
-    if (num > 0) return 1;
-    return 0;
-}
+
 
 std::vector<unsigned char> CKobuki::getArc2Cmd(int mmPerSec, double radPerSec) {
 
-    if (abs(radPerSec) < 1)
+    if (abs(radPerSec) < 1e-5)
         return getTranslationCmd(mmPerSec);
 
-    double r = mmPerSec / radPerSec - 230.0 / 2.0;
+
+    double r = mmPerSec / radPerSec;
+
     int rVal = (int)round(r);
-    if (sign(rVal) != sign(radPerSec)) {
-        return getRotationCmd(radPerSec);
-    }
-    if (abs(rVal) < 230.0 / 2.0) {
-        return getTranslationCmd(mmPerSec);
-    }
-
-    double setSpd = r / (r + 230.0 / 2.0) * mmPerSec;
-    int speedvalue = (int)round(setSpd);
+    if (abs(rVal) > 10000) rVal = 0;
+    return getArcCmd(mmPerSec, rVal);
     
-    unsigned char message[14] = { 0xaa,0x55,0x0A,0x0c,0x02,0xf0,0x00,0x01,0x04,speedvalue % 256,speedvalue >> 8,rVal % 256,rVal >> 8,  0x00 };
-    message[13] = message[2] ^ message[3] ^ message[4] ^ message[5] ^ message[6] ^ message[7] ^ message[8] ^ message[9] ^ message[10] ^ message[11] ^ message[12];
-
-    std::vector<unsigned char> vystup(message, message + sizeof(message) / sizeof(message[0]));
-    return vystup;
-
 }
 
 std::vector<unsigned char> CKobuki::getSoundCmd(int noteinHz, int duration) {

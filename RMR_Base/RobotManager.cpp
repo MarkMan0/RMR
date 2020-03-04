@@ -125,7 +125,7 @@ void RobotManager::init() {
 
 	while (!ready()) {} //wait for first message
 	//wait a bit
-	Sleep(200);
+	Sleep(500);
 	std::scoped_lock lck(robotMtx);
 	orientation.init(robot.robotData.EncoderLeft, robot.robotData.EncoderRight, robot.robotData.GyroAngle);
 }

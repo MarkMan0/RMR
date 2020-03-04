@@ -38,8 +38,26 @@ static inline double getClosestTargetAngle(double actual, double target) {
 	double scaled = scaleAngle(actual);	//robot absolute position in (-180, 180]
 	double point = scaleAngle(target); //target angle scaled
 
-	double diff = point - scaled;
+	double diff = scaleAngle(point - scaled);
 
 	return actual + diff;
 
+}
+
+
+template<class T>
+static inline int sign(T num) {
+	if (num < 0) return -1;
+	if (num > 0) return 1;
+	return 0;
+}
+
+
+static inline double angleDiff(double a, double b) {
+	a = scaleAngle(a);
+	b = scaleAngle(b);
+	if (a < 0) a += 360;
+	if (b < 0) b += 360;
+
+	return abs(a - b);
 }

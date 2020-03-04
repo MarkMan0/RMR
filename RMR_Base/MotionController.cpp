@@ -10,7 +10,7 @@
 
 void MotionController::init() {
 	translationController
-		.setKp(5)
+		.setKp(2)
 		.setKi(0.0)
 		.setKd(0.0)
 		.setLower(-100)
@@ -24,6 +24,14 @@ void MotionController::init() {
 		.setLower(-1)
 		.setUpper(1)
 		.setSampleT(1.0/50.0);
+
+	arcController
+		.setKp(0.08)
+		.setKi(0.0)
+		.setKd(0.0)
+		.setLower(-0.2)
+		.setUpper(0.2)
+		.setSampleT(1.0 / 50.0);
 
 }
 
@@ -87,27 +95,46 @@ bool MotionController::moveForward(double dist) {
 }
 
 bool MotionController::moveArc(double x, double y) {
+	translationController.enable();
+	angleController.enable();
+	arcController.enable();
 	const auto posStart = robot->getPosition();
-
 	double pointAngle = rad2deg(atan2(y - posStart.y, x - posStart.x));
-	double targetTheta = getClosestTargetAngle(posStart.theta, pointAngle);
 
 	auto posNow = robot->getPosition();
 
-	auto distToTarget = [&posStart, &posNow]() -> double {
-		return sqrt(pow(posNow.x - posStart.x, 2) + pow(posNow.y - posStart.y, 2));
+	auto distToTarget = [&posNow, x, y]() -> double {
+		return sqrt(pow(x - posNow.x, 2) + pow(y - posNow.y, 2));
 		};
 
 	LoopRate rate(50);
-	ExitCondition cond(25, 10);
+	ExitCondition cond(40, 30);
 
 	while (!cond.check(distToTarget())) {
 		posNow = robot->getPosition();
 		double eDist = distToTarget();		//absolute distance to target
-		double eTheta = targetTheta - posNow.theta;
+		
+		double pointAngleNow = rad2deg(atan2(y - posNow.y, x - posNow.x));
+		double targetTheta = getClosestTargetAngle(posNow.theta, pointAngleNow);
+		
+		//std::cout << std::to_string(posNow.theta - targetTheta) << "\t\t" << pointAngleNow << "\n";
+		
+		if (angleDiff(pointAngle, pointAngleNow) > 180) {
+			//eDist *= -1;
+		}
 
-		if(!cond.check(eDist))
-			robot->arc2((int)round(translationController.tick(eDist)), angleController.tick(eTheta));
+		double eTheta = targetTheta - posNow.theta;
+		const double k = 3000.0;
+		if (!cond.check(eDist)) {
+			double u = k / (eTheta);
+			if (abs(u) > 5000) {
+				u = 0;
+			}
+			else if (abs(u) < 1) {
+				u = sign(u) * 1;
+			}
+			robot->arc((int)round(translationController.tick(eDist)), u);
+		}
 
 		rate.sleep();
 	}
@@ -125,7 +152,7 @@ bool MotionController::arcToXY(double x, double y) {
 	double pointAngle = rad2deg(atan2(y - pos.y, x - pos.x));
 	double target = getClosestTargetAngle(pos.theta, pointAngle);
 
-	rotateTo(target, 40);	//rotate towards target, +-40 degrees
+	rotateTo(target, 90);	//rotate towards target, +-x degrees
 	moveArc(x, y);
 
 

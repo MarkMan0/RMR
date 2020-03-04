@@ -8,6 +8,7 @@ class MotionController {
 private:
 	PIDController translationController;
 	PIDController angleController;
+	PIDController arcController;
 
 	std::shared_ptr<RobotManager> robot;
 
