@@ -5,6 +5,7 @@
 #pragma once
 #include<vector>
 #include <memory>
+#include <thread>
 
 #include "RobotManager.h"
 #include "MotionController.h"
@@ -16,6 +17,8 @@ class CRMR_GUIDlg : public CDialogEx
 private:
 	std::shared_ptr<RobotManager> robot;
 	MotionController mc;
+	void refresh();
+	std::thread refreshThread;
 
 // Construction
 public:
