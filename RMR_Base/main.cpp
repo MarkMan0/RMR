@@ -20,9 +20,8 @@ int main() {
 	MotionController mc(rob);
 	mc.init();
 
-	mc.arcToXY(1000, 0);
-	mc.arcToXY(1000, 1000);
-	mc.arcToXY(0, 1000);
+	mc.arcToXY(2000, -1000);
+	mc.arcToXY(1000, -3000);
 	mc.arcToXY(0, 0);
 
 	rob->stop();

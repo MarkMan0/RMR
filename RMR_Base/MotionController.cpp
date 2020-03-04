@@ -99,8 +99,6 @@ bool MotionController::moveArc(double x, double y) {
 	angleController.enable();
 	arcController.enable();
 	const auto posStart = robot->getPosition();
-	double pointAngle = rad2deg(atan2(y - posStart.y, x - posStart.x));
-
 	auto posNow = robot->getPosition();
 
 	auto distToTarget = [&posNow, x, y]() -> double {
@@ -117,23 +115,12 @@ bool MotionController::moveArc(double x, double y) {
 		double pointAngleNow = rad2deg(atan2(y - posNow.y, x - posNow.x));
 		double targetTheta = getClosestTargetAngle(posNow.theta, pointAngleNow);
 		
-		//std::cout << std::to_string(posNow.theta - targetTheta) << "\t\t" << pointAngleNow << "\n";
-		
-		if (angleDiff(pointAngle, pointAngleNow) > 180) {
-			//eDist *= -1;
-		}
-
 		double eTheta = targetTheta - posNow.theta;
-		const double k = 3000.0;
+
 		if (!cond.check(eDist)) {
-			double u = k / (eTheta);
-			if (abs(u) > 5000) {
-				u = 0;
-			}
-			else if (abs(u) < 1) {
-				u = sign(u) * 1;
-			}
-			robot->arc((int)round(translationController.tick(eDist)), u);
+			double v = translationController.tick(eDist);
+			double u = v/angleController.tick((eTheta));
+			robot->arc((int)round(v), u);
 		}
 
 		rate.sleep();
