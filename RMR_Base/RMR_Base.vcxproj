@@ -156,6 +156,7 @@
     <ClInclude Include="PIDController.h" />
     <ClInclude Include="RobotManager.h" />
     <ClInclude Include="rplidar.h" />
+    <ClInclude Include="SCurve.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CKobuki.cpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="PIDController.cpp" />
     <ClCompile Include="RobotManager.cpp" />
     <ClCompile Include="rplidar.cpp" />
+    <ClCompile Include="SCurve.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

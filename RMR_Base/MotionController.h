@@ -2,6 +2,7 @@
 #include "PIDController.h"
 #include "RobotManager.h"
 
+#include <thread>
 #include <memory>
 
 class MotionController {
@@ -11,6 +12,8 @@ private:
 	PIDController arcController;
 
 	std::shared_ptr<RobotManager> robot;
+
+	std::thread plannerThread;
 
 public:
 	MotionController(const std::shared_ptr<RobotManager>& _manager) : robot(_manager) {}
