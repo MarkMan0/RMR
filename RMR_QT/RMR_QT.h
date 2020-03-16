@@ -19,5 +19,11 @@ private:
 	RobotManager robot;
 
 private slots:
-	void on_pushButton_clicked();
+	void on_pushButtonStart_clicked();
+	void on_pushButtonForward_clicked();
+	void on_pushButtonBackward_clicked();
+	void on_pushButtonLeft_clicked();
+	void on_pushButtonRight_clicked();
+	void on_pushButtonStop_clicked();
+	void on_pushButtonSquare_clicked();
 };
