@@ -98,6 +98,7 @@
     <ClCompile Include="..\RMR_Base\PIDController.cpp" />
     <ClCompile Include="..\RMR_Base\RobotManager.cpp" />
     <ClCompile Include="..\RMR_Base\rplidar.cpp" />
+    <ClCompile Include="..\RMR_Base\SCurve.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RMR_QT.cpp" />
   </ItemGroup>
@@ -122,6 +123,7 @@
     <ClInclude Include="..\RMR_Base\PIDController.h" />
     <ClInclude Include="..\RMR_Base\RobotManager.h" />
     <ClInclude Include="..\RMR_Base\rplidar.h" />
+    <ClInclude Include="..\RMR_Base\SCurve.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
