@@ -14,21 +14,16 @@ int main() {
 	using namespace std;
 	std::cout << "Hello world!" << std::endl;
 	
-	std::shared_ptr<RobotManager> rob = std::make_shared<RobotManager>("192.168.1.15");
+	std::shared_ptr<RobotManager> rob = std::make_shared<RobotManager>("192.168.1.11");
 	rob->init();
 	
-	MotionController mc(rob);
+	MC::MotionController mc(rob);
 	mc.init();
 
-	mc.moveForward(1000);
-	mc.rotateTo(-90);
-	mc.moveForward(1000);
-	mc.rotateTo(-180);
-	mc.moveForward(1000);
-	mc.rotateTo(-270);
-	mc.moveForward(1000);
-	mc.rotateTo(-360);
-	
+	mc.arcToXY(2000, -1000);
+	mc.arcToXY(1000, -3000);
+	mc.arcToXY(0, 0);
+
 	rob->stop();
 	while (1);
 	return 0;

@@ -208,6 +208,7 @@
     <ClInclude Include="..\RMR_Base\PIDController.h" />
     <ClInclude Include="..\RMR_Base\RobotManager.h" />
     <ClInclude Include="..\RMR_Base\rplidar.h" />
+    <ClInclude Include="..\RMR_Base\SCurve.h" />
     <ClInclude Include="RMR_GUI.h" />
     <ClInclude Include="RMR_GUI_Dlg.h" />
     <ClInclude Include="Resource.h" />
@@ -221,6 +222,7 @@
     <ClCompile Include="..\RMR_Base\PIDController.cpp" />
     <ClCompile Include="..\RMR_Base\RobotManager.cpp" />
     <ClCompile Include="..\RMR_Base\rplidar.cpp" />
+    <ClCompile Include="..\RMR_Base\SCurve.cpp" />
     <ClCompile Include="RMR_GUI.cpp" />
     <ClCompile Include="RMR_GUI_Dlg.cpp" />
     <ClCompile Include="stdafx.cpp">
