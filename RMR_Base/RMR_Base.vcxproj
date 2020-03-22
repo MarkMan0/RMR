@@ -168,6 +168,10 @@
     <ClCompile Include="rplidar.cpp" />
     <ClCompile Include="SCurve.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="lidardata.txt" />
+    <Text Include="robotdata.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -75,4 +75,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="lidardata.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="robotdata.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>
