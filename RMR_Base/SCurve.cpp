@@ -85,10 +85,11 @@ bool SCurve::SCurve::pointNow(Point& dest)
 	if (curr->expectedVel != -1) {
 		velocity = curr->expectedVel;
 	}
-	position += velocity * dt.count();
-	
-	dest.x = position * cos(direction);
-	dest.y = position * sin(direction);
+	double dPos = velocity * dt.count();
+	position += dPos;
+
+	dest.x += dPos * cos(direction);
+	dest.y += dPos * sin(direction);
 
 	return false;
 
