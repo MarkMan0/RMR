@@ -16,7 +16,7 @@ class CRMR_GUIDlg : public CDialogEx
 
 private:
 	std::shared_ptr<RobotManager> robot;
-	MotionController mc;
+	MC::MotionController mc;
 	void refresh();
 	std::thread refreshThread;
 

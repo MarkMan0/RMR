@@ -8,7 +8,41 @@
 #include "ExitCondition.h"
 
 
-void MotionController::init() {
+void MC::MotionController::movementThread() {
+
+	while (1) {
+		if (!movements.empty()) {
+			const auto target = movements.front();
+			auto pos = robot->getPosition();
+
+			if (target.type & MOVEMENT_XY) {
+				auto curve = sGenerator.createCurve({ pos.x, pos.y }, { target.x, target.y });
+				SCurve::Point p(0, 0);
+				LoopRate rate(50);
+
+				double theta = atan2(target.y - pos.y, target.x - pos.x);
+				rotationBlocking(theta, 20);	//rotate towards target
+
+				//move the rest of the way on an s-curve
+				while (!curve.pointNow(p)) {
+					arcControlTick(p.x, p.y);
+					rate.sleep();
+				}
+			}
+			if (target.type & MOVEMENT_ROTATION) {
+				rotationBlocking(target.theta);
+			}
+			movements.pop_front();
+		}
+
+		if (movements.empty()) {
+			std::unique_lock lck(cvMtx);
+			cv.wait(lck, [this]()->bool {return !(movements.empty()); });
+		}
+	}
+}
+
+void MC::MotionController::init() {
 	translationController
 		.setKp(2)
 		.setKi(0.0)
@@ -35,7 +69,7 @@ void MotionController::init() {
 
 }
 
-bool MotionController::rotateTo(double target, double tolerance)
+void MC::MotionController::rotationBlocking(double target, double tolerance)
 {
 	angleController.enable();
 	bool done = false;
@@ -59,10 +93,9 @@ bool MotionController::rotateTo(double target, double tolerance)
 
 	robot->rotation(0);
 
-	return true;
 }
 
-bool MotionController::moveForward(double dist) {
+void MC::MotionController::moveForward(double dist) {
 
 	const auto oldPos = robot->getPosition();
 	auto pos = robot->getPosition();
@@ -91,57 +124,41 @@ bool MotionController::moveForward(double dist) {
 
 	robot->translation(0);
 
-	return true;
 }
 
-bool MotionController::moveArc(double x, double y) {
-	translationController.enable();
-	angleController.enable();
-	arcController.enable();
-	const auto posStart = robot->getPosition();
-	auto posNow = robot->getPosition();
-
-	auto distToTarget = [&posNow, x, y]() -> double {
-		return sqrt(pow(x - posNow.x, 2) + pow(y - posNow.y, 2));
-		};
-
-	LoopRate rate(50);
-	ExitCondition cond(40, 30);
-
-	while (!cond.check(distToTarget())) {
-		posNow = robot->getPosition();
-		double eDist = distToTarget();		//absolute distance to target
-		
-		double pointAngleNow = rad2deg(atan2(y - posNow.y, x - posNow.x));
-		double targetTheta = getClosestTargetAngle(posNow.theta, pointAngleNow);
-		
-		double eTheta = targetTheta - posNow.theta;
-
-		if (!cond.check(eDist)) {
-			double v = translationController.tick(eDist);
-			double u = v/angleController.tick((eTheta));
-			robot->arc((int)round(v), u);
-		}
-
-		rate.sleep();
-	}
-
-	robot->stop();
+void MC::MotionController::rotateTo(double theta) {
 	
+	Movement mv;
+	mv.type = MOVEMENT_ROTATION;
+	mv.theta = theta;
 
-	return true;
+	movements.push_back(mv);
+	cv.notify_all();
+
 }
 
-bool MotionController::arcToXY(double x, double y) {
-	
-	auto pos = robot->getPosition();
-	
-	double pointAngle = rad2deg(atan2(y - pos.y, x - pos.x));
-	double target = getClosestTargetAngle(pos.theta, pointAngle);
-
-	rotateTo(target, 90);	//rotate towards target, +-x degrees
-	moveArc(x, y);
+void MC::MotionController::arcControlTick(double x, double y) {
 
 
-	return true;
+	const auto posNow = robot->getPosition();
+	double eDist = sqrt(pow(x - posNow.x, 2) + pow(y - posNow.y, 2));
+
+	double pointAngleNow = rad2deg(atan2(y - posNow.y, x - posNow.x));
+	double targetTheta = getClosestTargetAngle(posNow.theta, pointAngleNow);
+	double eTheta = targetTheta - posNow.theta;
+
+	double v = translationController.tick(eDist);
+	double u = v / angleController.tick((eTheta));
+	robot->arc((int)round(v), (int)round(v));
+}
+
+void MC::MotionController::arcToXY(double x, double y) {
+
+	Movement mv;
+	mv.type = MOVEMENT_XY;
+	mv.x = x;
+	mv.y = y;
+
+	movements.push_back(mv);
+	cv.notify_all();
 }

@@ -17,7 +17,7 @@ int main() {
 	std::shared_ptr<RobotManager> rob = std::make_shared<RobotManager>("192.168.1.11");
 	rob->init();
 	
-	MotionController mc(rob);
+	MC::MotionController mc(rob);
 	mc.init();
 
 	mc.arcToXY(2000, -1000);
