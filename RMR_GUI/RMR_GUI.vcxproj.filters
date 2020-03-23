@@ -63,6 +63,9 @@
     <ClInclude Include="..\RMR_Base\CKobuki.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\RMR_Base\SCurve.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -90,6 +93,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\RMR_Base\Orientation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RMR_Base\SCurve.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

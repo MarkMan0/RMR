@@ -49,6 +49,9 @@
     <ClCompile Include="..\RMR_Base\rplidar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\RMR_Base\SCurve.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="RMR_QT.h">
@@ -97,6 +100,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\RMR_Base\main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RMR_Base\SCurve.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

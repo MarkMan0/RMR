@@ -50,6 +50,18 @@ END_MESSAGE_MAP()
 
 
 
+void CRMR_GUIDlg::refresh() {
+	while (1) {
+		auto pos = robot->getPosition();
+		this->SetDlgItemTextW(IDC_EDIT1, CString(std::to_string(pos.x).c_str()));
+		this->SetDlgItemTextW(IDC_EDIT1, CString(std::to_string(pos.y).c_str()));
+		this->SetDlgItemTextW(IDC_EDIT1, CString(std::to_string(pos.theta).c_str()));
+
+		Invalidate();
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
+}
+
 CRMR_GUIDlg::CRMR_GUIDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_GUI_DIALOG, pParent), robot(std::make_shared<RobotManager>("192.168.1.12")), mc(robot)
 {
@@ -200,6 +212,7 @@ void CRMR_GUIDlg::OnBnClickedOk()
 	robot->init();
 	mc.init();
 
+	refreshThread = std::thread(&CRMR_GUIDlg::refresh, this);
 }
 
 void CRMR_GUIDlg::OnBnClickedButton3()
@@ -270,12 +283,14 @@ void CRMR_GUIDlg::OnBnClickedButton10()
 {
 	// TODO: Add your control notification handler code here
 	//Triangle
-//	this->GetDlgItemTextW(IDC_EDIT7);
-	mc.moveForward(1000);
+	CString destTr;
+	this->GetDlgItemTextW(IDC_EDIT8, destTr);
+	int lengthTr = _ttoi(destTr);
+	mc.moveForward(lengthTr);
 	mc.rotateTo(-120);
-	mc.moveForward(1000);
+	mc.moveForward(lengthTr);
 	mc.rotateTo(-240);
-	mc.moveForward(1000);
+	mc.moveForward(lengthTr);
 	mc.rotateTo(-360);
 }
 
@@ -283,8 +298,22 @@ void CRMR_GUIDlg::OnBnClickedButton11()
 {
 	// TODO: Add your control notification handler code here
 	//Zadany bod v priestore
-	robot->translation(200);
-	robot->rotation(1);
+
+	CString destX;
+	this->GetDlgItemTextW(IDC_EDIT4, destX);
+	int posX = _ttoi(destX);
+	CString destY;
+	this->GetDlgItemTextW(IDC_EDIT5, destY);
+	int posY = _ttoi(destY);
+	CString destT;
+	this->GetDlgItemTextW(IDC_EDIT9, destT);
+	int posT = _ttoi(destT);
+
+	mc.moveForward(posX);
+	mc.rotateTo(-90);
+	mc.moveForward(posY);
+	mc.rotateTo(posT);
+	
 
 
 }

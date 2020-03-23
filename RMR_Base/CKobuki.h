@@ -106,6 +106,7 @@ public:
 	std::vector<unsigned char> getTranslationCmd(int mmpersec);
 	std::vector<unsigned char> getRotationCmd(double radpersec);
 	std::vector<unsigned char> getArcCmd(int mmpersec, int radius);
+	std::vector<unsigned char> getArc2Cmd(int mmpersec, double omega);
 	std::vector<unsigned char> getSoundCmd(int noteinHz, int duration);
 	std::vector<unsigned char> getPIDCmd();
 

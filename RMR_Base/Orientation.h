@@ -1,5 +1,6 @@
 #pragma once
 #include <chrono>
+#include <iostream>
 
 #include "Encoder.h"
 
@@ -10,6 +11,9 @@ public:
 	struct Position {
 		double x, y, theta;
 		double vx, vy, omega, v;
+		void print() {
+			std::cout << "x:\t" << x << "\t\ty:\t" << y << "\t\tTheta:\t" << theta << "\n";
+		}
 	};
 
 private:
