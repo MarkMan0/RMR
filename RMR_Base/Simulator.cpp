@@ -135,4 +135,6 @@ Simulator::Simulator(const std::string& robFile, const std::string& lidarFile) :
 		throw std::runtime_error("Lidar data file not found");
 	}
 	processFiles();
+	robStrm.close();
+	lidarStrm.close();
 }
