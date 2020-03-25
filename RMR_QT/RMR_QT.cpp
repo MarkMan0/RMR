@@ -1,8 +1,9 @@
 #include "RMR_QT.h"
 #include <string> 
 
-RMR_QT::RMR_QT(QWidget *parent)
-	: QWidget(parent), robot("asd")
+RMR_QT::RMR_QT(QWidget* parent)
+	: QWidget(parent), robot("asd"),
+	sim(std::string("../RMR_BASE/robotdata.txt"), std::string("../RMR_BASE/lidardata.txt"))
 {
 	ui.setupUi(this);
 	this->setWindowTitle("aasfs");

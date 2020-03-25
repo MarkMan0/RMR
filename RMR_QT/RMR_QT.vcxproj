@@ -95,10 +95,12 @@
     <ClCompile Include="..\RMR_Base\CKobuki.cpp" />
     <ClCompile Include="..\RMR_Base\MotionController.cpp" />
     <ClCompile Include="..\RMR_Base\Orientation.cpp" />
+    <ClCompile Include="..\RMR_Base\OrientationSim.cpp" />
     <ClCompile Include="..\RMR_Base\PIDController.cpp" />
     <ClCompile Include="..\RMR_Base\RobotManager.cpp" />
     <ClCompile Include="..\RMR_Base\rplidar.cpp" />
     <ClCompile Include="..\RMR_Base\SCurve.cpp" />
+    <ClCompile Include="..\RMR_Base\Simulator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RMR_QT.cpp" />
   </ItemGroup>
@@ -116,14 +118,17 @@
     <ClInclude Include="..\RMR_Base\Encoder.h" />
     <ClInclude Include="..\RMR_Base\ExitCondition.h" />
     <ClInclude Include="..\RMR_Base\Helpers.h" />
+    <ClInclude Include="..\RMR_Base\LidarData.h" />
     <ClInclude Include="..\RMR_Base\LoopRate.h" />
     <ClInclude Include="..\RMR_Base\main.h" />
     <ClInclude Include="..\RMR_Base\MotionController.h" />
     <ClInclude Include="..\RMR_Base\Orientation.h" />
+    <ClInclude Include="..\RMR_Base\OrientationSim.h" />
     <ClInclude Include="..\RMR_Base\PIDController.h" />
     <ClInclude Include="..\RMR_Base\RobotManager.h" />
     <ClInclude Include="..\RMR_Base\rplidar.h" />
     <ClInclude Include="..\RMR_Base\SCurve.h" />
+    <ClInclude Include="..\RMR_Base\Simulator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

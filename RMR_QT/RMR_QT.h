@@ -5,6 +5,7 @@
 
 #include "RobotManager.h"
 #include "MotionController.h"
+#include "Simulator.h"
 
 class RMR_QT : public QWidget
 {
@@ -17,6 +18,7 @@ private:
 	Ui::RMR_QTClass ui;
 
 	RobotManager robot;
+	Simulator sim;
 
 private slots:
 	void on_pushButtonStart_clicked();
