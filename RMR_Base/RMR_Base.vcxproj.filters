@@ -48,6 +48,15 @@
     <ClInclude Include="SCurve.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LidarData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OrientationSim.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Simulator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CKobuki.cpp">
@@ -74,5 +83,19 @@
     <ClCompile Include="SCurve.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OrientationSim.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Simulator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="lidardata.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="robotdata.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
