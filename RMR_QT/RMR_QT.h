@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QWidget>
+#include <memory>
 #include "ui_RMR_QT.h"
 
 #include "RobotManager.h"
@@ -17,7 +18,8 @@ public:
 private:
 	Ui::RMR_QTClass ui;
 
-	RobotManager robot;
+	std::shared_ptr<RobotManager> robot;
+	MC::MotionController mc;
 	Simulator sim;
 
 private slots:

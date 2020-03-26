@@ -2,7 +2,8 @@
 #include <string> 
 
 RMR_QT::RMR_QT(QWidget* parent)
-	: QWidget(parent), robot("asd"),
+	: QWidget(parent), robot(std::make_shared<RobotManager>("127.0.0.1")),
+	mc(robot),
 	sim(std::string("../RMR_BASE/robotdata.txt"), std::string("../RMR_BASE/lidardata.txt"))
 {
 	ui.setupUi(this);
@@ -11,33 +12,34 @@ RMR_QT::RMR_QT(QWidget* parent)
 
 
 void RMR_QT::on_pushButtonStart_clicked() {
-	robot.init();
+	robot->init();
+	mc.init();
 }
 
 void RMR_QT::on_pushButtonForward_clicked() {
 	//pohyb dopredu
-	robot.translation(200);
+	mc.moveForward(100);
 }
 
 void RMR_QT::on_pushButtonBackward_clicked() {
 	//pohyb dopredu
-	robot.translation(-200);
+	mc.moveForward(-100);
 }
 
 void RMR_QT::on_pushButtonLeft_clicked() {
 	//Left
-	robot.rotation(-1);
+	mc.rotateTo(-90);
 }
 
 void RMR_QT::on_pushButtonRight_clicked() {
 	//Right
-	robot.rotation(1);
+	mc.rotateTo(90);
 }
 
 void RMR_QT::on_pushButtonStop_clicked() {
-	//Stop
-	robot.rotation(0);
-	robot.translation(0);
+	//Stop;
+	//TODO: stop via mc
+	robot->stop();
 }
 
 void RMR_QT::on_pushButtonSquare_clicked()
