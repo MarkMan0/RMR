@@ -16,7 +16,12 @@ int main() {
 	using namespace std;
 	std::cout << "Hello world!" << std::endl;
 	
-	Simulator sim(std::string("robotdata.txt"), std::string("lidardata.txt"));
+	auto robot = std::make_shared<RobotManager>("127.0.0.1");
+	MC::MotionController mc(robot);
+
+	robot->init();
+	mc.init();
+	mc.rotateTo(90);
 	
 	while (1);
 	return 0;
