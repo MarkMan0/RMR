@@ -67,6 +67,9 @@ void MC::MotionController::init() {
 		.setUpper(0.2)
 		.setSampleT(1.0 / 50.0);
 
+	if (!plannerThread.joinable()) {
+		plannerThread = std::thread(&MotionController::movementThread, this);
+	}
 }
 
 void MC::MotionController::rotationBlocking(double target, double tolerance)
