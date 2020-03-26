@@ -131,9 +131,12 @@ void MC::MotionController::arcControlTick(double x, double y) {
 	double targetTheta = getClosestTargetAngle(posNow.theta, pointAngleNow);
 	double eTheta = targetTheta - posNow.theta;
 
-	double v = translationController.tick(eDist);
-	double u = v / angleController.tick((eTheta));
-	robot->arc((int)round(v), (int)round(v));
+	double spd = translationController.tick(eDist);
+	double radius = spd / arcController.tick((eTheta));
+	if (isnan(radius) || isinf(radius)) {
+		radius = 0;
+	}
+	robot->arc((int)round(spd), (int)round(radius));
 }
 
 void MC::MotionController::arcToXY(double x, double y) {
