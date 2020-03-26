@@ -6,9 +6,7 @@
 
 SCurve::SCurve SCurve::SCurveGenerator::createCurve(Point from, Point to)
 {
-	using namespace SCurve;
-
-	SCurve curve(from, to);
+		SCurve curve(from, to);
 
 	double distance = sqrt(pow(to.x - from.x, 2) + pow(to.y - from.y, 2));
 
@@ -38,15 +36,15 @@ SCurve::SCurve SCurve::SCurveGenerator::createCurve(Point from, Point to)
 void SCurve::SCurve::addPoint(double t, double val, double expected /* =-1 */) {
 	double lastT = 0;
 	if (accPoints.empty()) {
-		if (t == 0) {
+		if (t != 0) {
 			throw std::logic_error("First point needs to have 0 time");
 		}
 	}
 	else {
 		lastT = accPoints.back().t;
 	}
-
-	accPoints.push_back({ lastT + t, val, expected });
+	AccPoint p{ lastT + t, val, expected };
+	accPoints.push_back(p);
 }
 
 SCurve::SCurve::SCurve(Point _from, Point _to) : from(_from), to(_to) {
@@ -55,9 +53,8 @@ SCurve::SCurve::SCurve(Point _from, Point _to) : from(_from), to(_to) {
 
 bool SCurve::SCurve::pointNow(Point& dest)
 {
-	using namespace SCurve;
 	if (!valid) {
-		throw std::logic_error("SCurve wasn't started(begin())");
+		begin();
 	}
 
 	if (accPoints.size() <= 1) {
@@ -69,11 +66,12 @@ bool SCurve::SCurve::pointNow(Point& dest)
 	time_point now = clock::now();
 	std::chrono::duration<double> sinceStart = now - startPoint;
 	std::chrono::duration<double> dt = now - lastCall;
+	lastCall = now;
 
 	auto curr = accPoints.begin();
 	auto next = std::next(curr);
 
-	if (sinceStart.count() > (sinceStart.count() + next->t)) {
+	if (sinceStart.count() > ( next->t)) {
 		//next point needed from list
 		curr = next;
 		accPoints.pop_front();
