@@ -6,21 +6,27 @@ class LoopRate {
 private:
 
 	using clock = std::chrono::high_resolution_clock;
-	double freq;
-	decltype(clock::now()) lastSleep;
+	const double freq;
+	const double dt;
+	unsigned long long hitCnt = 0;
+	using time_t = decltype(clock::now());
+	const time_t start;
+	time_t lastSleep;
 
 
 public:
-	LoopRate(double _freq): freq(_freq) {
-		lastSleep = clock::now();
-	}
+	LoopRate(double _freq) : freq(_freq), dt(1.0 / freq), start(clock::now()) {}
 	
 	void sleep() {
 		auto begin = clock::now();
+		
+		++hitCnt;
+		
 
-		std::chrono::duration<double> sinceLast = begin - lastSleep;
+		time_t slpUntill = start + std::chrono::milliseconds((long long)(1000 * (hitCnt * dt)));	//sleep until this time
 
-		double toSleep = 1.0 / freq - sinceLast.count();
+		std::chrono::duration<double> slpLen = slpUntill - begin;
+		double toSleep = slpLen.count();
 
 		double secondsSlept = 0.0;
 
@@ -31,7 +37,6 @@ public:
 
 			secondsSlept = slept.count();
 		}
-		lastSleep = clock::now();
 	}
 };
 
