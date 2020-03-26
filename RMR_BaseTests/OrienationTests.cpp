@@ -59,6 +59,12 @@ namespace OrientationTests {
 				ticksL -= dir;
 				ticksR += dir;
 				tickBuff += thetaPerTick;		//to eliminate orunding errors over time
+				if (tickBuff > 17999) {
+					tickBuff = -17999;
+				}
+				else if (tickBuff < -17999) {
+					tickBuff = 17999;
+				}
 				angleTicks = (signed short) round(tickBuff);
 				o.tick(ticksL, ticksR, angleTicks);
 			}
