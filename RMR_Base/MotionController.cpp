@@ -8,6 +8,13 @@
 #include "ExitCondition.h"
 
 
+
+bool MC::operator&(const MC::MovementType& a, const MC::MovementType& b) {
+	return static_cast<bool>(static_cast<uint8_t>(a)& static_cast<uint8_t>(b));
+}
+
+
+
 void MC::MotionController::movementThread() {
 
 	while (1) {
@@ -15,7 +22,7 @@ void MC::MotionController::movementThread() {
 			const auto target = movements.front();
 			auto pos = robot->getPosition();
 
-			if (target.type & MOVEMENT_XY) {
+			if (target.type & MovementType::MOVEMENT_XY) {
 				auto curve = sGenerator.createCurve({ pos.x, pos.y }, { target.x, target.y });
 				scurve::Point p(0, 0);
 				LoopRate rate(50);
@@ -29,7 +36,7 @@ void MC::MotionController::movementThread() {
 					rate.sleep();
 				}
 			}
-			if (target.type & MOVEMENT_ROTATION) {
+			if (target.type & MovementType::MOVEMENT_ROTATION) {
 				rotationBlocking(target.theta);
 			}
 			movements.pop_front();
@@ -103,7 +110,7 @@ void MC::MotionController::moveForward(double dist) {
 	const auto pos = robot->getPosition();
 
 	Movement mv;
-	mv.type = MOVEMENT_XY;
+	mv.type = MovementType::MOVEMENT_XY;
 	mv.x = pos.x + dist * cos(deg2rad(pos.theta));
 	mv.y = pos.y + dist * sin(deg2rad(pos.theta));
 
@@ -114,7 +121,7 @@ void MC::MotionController::moveForward(double dist) {
 void MC::MotionController::rotateTo(double theta) {
 	
 	Movement mv;
-	mv.type = MOVEMENT_ROTATION;
+	mv.type = MovementType::MOVEMENT_ROTATION;
 	mv.theta = theta;
 
 	movements.push_back(mv);
@@ -143,7 +150,7 @@ void MC::MotionController::arcControlTick(double x, double y) {
 void MC::MotionController::arcToXY(double x, double y) {
 
 	Movement mv;
-	mv.type = MOVEMENT_XY;
+	mv.type = MovementType::MOVEMENT_XY;
 	mv.x = x;
 	mv.y = y;
 

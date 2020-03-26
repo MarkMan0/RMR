@@ -9,15 +9,17 @@
 
 namespace MC {
 
-	enum MovementType {
-		MOVEMENT_NONE = 0,
-		MOVEMENT_XY = 0x01 << 0,
-		MOVEMENT_ROTATION = 0x01 << 1
+	enum class MovementType : uint8_t {
+		MOVEMENT_NONE = 0x01 << 0,
+		MOVEMENT_XY = 0x01 << 1,
+		MOVEMENT_ROTATION = 0x01 << 2
 	};
+
+	bool operator&(const MovementType& a, const MovementType& b);
 	   
 	struct Movement
 	{
-		MovementType type = MOVEMENT_NONE;
+		MovementType type = MovementType::MOVEMENT_NONE;
 		double x = 0, y = 0;
 		double theta = 0;
 		double distance = 0;
