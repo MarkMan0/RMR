@@ -99,33 +99,15 @@ void MC::MotionController::rotationBlocking(double target, double tolerance)
 
 void MC::MotionController::moveForward(double dist) {
 
-	const auto oldPos = robot->getPosition();
-	auto pos = robot->getPosition();
+	const auto pos = robot->getPosition();
 
-	auto getDistMoved = [&pos, &oldPos]()->double {return sqrt(pow(pos.x - oldPos.x, 2) + pow(pos.y - oldPos.y, 2)); };
+	Movement mv;
+	mv.type = MOVEMENT_XY;
+	mv.x = pos.x + dist * cos(deg2rad(pos.theta));
+	mv.y = pos.y + dist * sin(deg2rad(pos.theta));
 
-	auto getSpd = [&pos]()->double {return sqrt(pow(pos.vx, 2) + pow(pos.vy, 2)); };
-	translationController.enable();
-	
-	LoopRate rate(50);
-	ExitCondition cond(25, 10);
-	bool done = false;
-
-	while (!done) {
-		pos = robot->getPosition();
-		double e = dist - getDistMoved();
-	
-		if (cond.check(e)) {
-			done = true;
-		}
-		else {
-			robot->translation((int)round(translationController.tick(e)));
-			rate.sleep();
-		}
-	}
-
-	robot->translation(0);
-
+	movements.push_back(mv);
+	cv.notify_all();
 }
 
 void MC::MotionController::rotateTo(double theta) {
