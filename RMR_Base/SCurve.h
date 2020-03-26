@@ -2,8 +2,9 @@
 
 #include <list>
 #include <chrono>
+#include <optional>
 
-namespace SCurve {
+namespace scurve {
 
 	using clock = std::chrono::high_resolution_clock;
 	using time_point = decltype(clock::now());
@@ -17,7 +18,11 @@ namespace SCurve {
 	{
 		double t;
 		double val;
-		double expectedVel = -1;
+		std::optional<double> expectedVel;
+		std::optional<double> expectedPos;
+
+		AccPoint(double _t, double _val, std::optional<double> _expVel = std::nullopt, std::optional<double> _expPos = std::nullopt) 
+			: t(_t), val(_val), expectedVel(_expVel), expectedPos(_expPos) {}
 	};
 
 	class SCurve {
@@ -25,7 +30,7 @@ namespace SCurve {
 	private:
 		std::list<AccPoint> accPoints;
 		double direction = 0;
-		void addPoint(double t, double val, double expected = -1);
+		void addPoint(double _t, double _val, std::optional<double> _expVel = std::nullopt, std::optional<double> _expPos = std::nullopt);
 		time_point startPoint, lastCall;
 		bool valid = false;
 

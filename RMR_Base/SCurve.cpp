@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 
-SCurve::SCurve SCurve::SCurveGenerator::createCurve(Point from, Point to)
+scurve::SCurve scurve::SCurveGenerator::createCurve(Point from, Point to)
 {
 		SCurve curve(from, to);
 
@@ -18,7 +18,7 @@ SCurve::SCurve SCurve::SCurveGenerator::createCurve(Point from, Point to)
 
 		curve.addPoint(0, maxAcc);
 		curve.addPoint(tAcc, -maxAcc);
-		curve.addPoint(tAcc, 0, 0);
+		curve.addPoint(tAcc, 0, 0, distance);
 
 	}
 	else {
@@ -27,13 +27,13 @@ SCurve::SCurve SCurve::SCurveGenerator::createCurve(Point from, Point to)
 		curve.addPoint(0, maxAcc);
 		curve.addPoint(tAcc, 0, maxVel);
 		curve.addPoint(tVel, -maxAcc);
-		curve.addPoint(tAcc, 0, 0);
+		curve.addPoint(tAcc, 0, 0, distance);
 	}
 
 	return curve;
 }
 
-void SCurve::SCurve::addPoint(double t, double val, double expected /* =-1 */) {
+void scurve::SCurve::addPoint(double t, double val, std::optional<double> expVel, std::optional<double> expPos) {
 	double lastT = 0;
 	if (accPoints.empty()) {
 		if (t != 0) {
@@ -43,15 +43,15 @@ void SCurve::SCurve::addPoint(double t, double val, double expected /* =-1 */) {
 	else {
 		lastT = accPoints.back().t;
 	}
-	AccPoint p{ lastT + t, val, expected };
+	AccPoint p(lastT + t, val, expVel, expPos);
 	accPoints.push_back(p);
 }
 
-SCurve::SCurve::SCurve(Point _from, Point _to) : from(_from), to(_to) {
+scurve::SCurve::SCurve(Point _from, Point _to) : from(_from), to(_to) {
 	direction = atan2(to.y - from.y, to.x - from.x);
 }
 
-bool SCurve::SCurve::pointNow(Point& dest)
+bool scurve::SCurve::pointNow(Point& dest)
 {
 	if (!valid) {
 		begin();
@@ -80,12 +80,14 @@ bool SCurve::SCurve::pointNow(Point& dest)
 	double accNow = curr->val;
 
 	velocity += accNow * dt.count();
-	if (curr->expectedVel != -1) {
-		velocity = curr->expectedVel;
+	if (curr->expectedVel) {
+		velocity = *(curr->expectedVel);
 	}
 	double dPos = velocity * dt.count();
+	if (curr->expectedPos) {
+		dPos = *(curr->expectedPos) - position;
+	}
 	position += dPos;
-
 	dest.x += dPos * cos(direction);
 	dest.y += dPos * sin(direction);
 
@@ -93,7 +95,7 @@ bool SCurve::SCurve::pointNow(Point& dest)
 
 }
 
-void SCurve::SCurve::begin() {
+void scurve::SCurve::begin() {
 	if (accPoints.empty()) {
 		throw std::logic_error("No points in curve");
 	}

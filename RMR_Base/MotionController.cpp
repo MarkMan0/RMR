@@ -17,7 +17,7 @@ void MC::MotionController::movementThread() {
 
 			if (target.type & MOVEMENT_XY) {
 				auto curve = sGenerator.createCurve({ pos.x, pos.y }, { target.x, target.y });
-				SCurve::Point p(0, 0);
+				scurve::Point p(0, 0);
 				LoopRate rate(50);
 
 				double theta = atan2(target.y - pos.y, target.x - pos.x);

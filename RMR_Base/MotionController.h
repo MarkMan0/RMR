@@ -41,7 +41,7 @@ namespace MC {
 
 		void movementThread();
 
-		SCurve::SCurveGenerator sGenerator;
+		scurve::SCurveGenerator sGenerator;
 
 		void arcControlTick(double x, double y);
 		void rotationBlocking(double target, double tolerance = 0.5);
