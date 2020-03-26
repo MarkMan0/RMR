@@ -11,8 +11,6 @@ private:
 
 	double sampleT= 1;
 
-	bool enabled = false;
-
 public:
 	PIDController() = default;
 
@@ -22,7 +20,6 @@ public:
 	PIDController& setUpper(double d);
 	PIDController& setLower(double d);
 	PIDController& setSampleT(double t);
-	void enable(bool b = true);
 
 	double tick(double e);
 };

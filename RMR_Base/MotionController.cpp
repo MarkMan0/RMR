@@ -74,7 +74,6 @@ void MC::MotionController::init() {
 
 void MC::MotionController::rotationBlocking(double target, double tolerance)
 {
-	angleController.enable();
 	bool done = false;
 
 	ExitCondition cond(25, tolerance);

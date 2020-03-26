@@ -39,17 +39,11 @@ PIDController& PIDController::setSampleT(double t)
 	return *this;
 }
 
-void PIDController::enable(bool b /*=true*/) {
-	enabled = b;
-}
+
 
 double PIDController::tick(double e)
 {
-	if (!enabled) {
-		integral = 0;
-		last = e;
-		return 0.0;
-	}
+
 
 	integral += Ki * e;
 	integral = clamp(integral, lower, upper);
