@@ -33,6 +33,7 @@ void MC::MotionController::movementThread() {
 				rotationBlocking(target.theta);
 			}
 			movements.pop_front();
+			robot->stop();
 		}
 
 		if (movements.empty()) {
@@ -44,11 +45,11 @@ void MC::MotionController::movementThread() {
 
 void MC::MotionController::init() {
 	translationController
-		.setKp(2)
+		.setKp(8)
 		.setKi(0.0)
 		.setKd(0.0)
-		.setLower(-100)
-		.setUpper(100)
+		.setLower(-500)
+		.setUpper(500)
 		.setSampleT(1.0/50.0);
 
 	angleController
