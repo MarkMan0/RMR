@@ -21,7 +21,7 @@ int main() {
 
 	robot->init();
 	mc.init();
-	mc.rotateTo(90);
+	mc.moveForward(500);
 	
 	while (1);
 	return 0;

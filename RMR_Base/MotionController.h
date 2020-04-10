@@ -46,7 +46,8 @@ namespace MC {
 		scurve::SCurveGenerator sGenerator;
 
 		void arcControlTick(double x, double y);
-		void rotationBlocking(double target, double tolerance = 0.5);
+		void rotationBlocking(double target, double tolerance = 1);
+		void arcToXYBlocking(double x, double y);
 
 	public:
 		MotionController(const std::shared_ptr<RobotManager>& _manager) : robot(_manager), sGenerator(500, 100) {}

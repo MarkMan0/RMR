@@ -23,24 +23,20 @@ void MC::MotionController::movementThread() {
 			auto pos = robot->getPosition();
 
 			if (target.type & MovementType::MOVEMENT_XY) {
-				auto curve = sGenerator.createCurve({ pos.x, pos.y }, { target.x, target.y });
-				scurve::Point p(0, 0);
-				LoopRate rate(50);
 
-				double theta = atan2(target.y - pos.y, target.x - pos.x);
+				double theta = rad2deg(atan2(target.y - pos.y, target.x - pos.x));
 				rotationBlocking(theta, 20);	//rotate towards target
 
-				//move the rest of the way on an s-curve
-				while (!curve.pointNow(p)) {
-					arcControlTick(p.x, p.y);
-					rate.sleep();
-				}
+				arcToXYBlocking(target.x, target.y);
+
+
 			}
 			if (target.type & MovementType::MOVEMENT_ROTATION) {
 				rotationBlocking(target.theta);
 			}
 			movements.pop_front();
 			robot->stop();
+			std::cout << std::endl;
 		}
 
 		if (movements.empty()) {
@@ -52,7 +48,7 @@ void MC::MotionController::movementThread() {
 
 void MC::MotionController::init() {
 	translationController
-		.setKp(8)
+		.setKp(2)
 		.setKi(0.0)
 		.setKd(0.0)
 		.setLower(-500)
@@ -68,7 +64,7 @@ void MC::MotionController::init() {
 		.setSampleT(1.0/50.0);
 
 	arcController
-		.setKp(0.08)
+		.setKp(0.2)
 		.setKi(0.0)
 		.setKd(0.0)
 		.setLower(-0.2)
@@ -141,10 +137,36 @@ void MC::MotionController::arcControlTick(double x, double y) {
 
 	double spd = translationController.tick(eDist);
 	double radius = spd / arcController.tick((eTheta));
+
+	std::cout << "dist: " << eDist << "\t\tTheta: " << eTheta << "\n";
 	if (isnan(radius) || isinf(radius)) {
 		radius = 0;
 	}
+	if (abs(eTheta) > 90) {
+		spd *= -1;
+		radius = 0;
+	}
 	robot->arc((int)round(spd), (int)round(radius));
+}
+
+void MC::MotionController::arcToXYBlocking(double x, double y) {
+
+	LoopRate rate(50);
+	ExitCondition cond(5, 50);
+	auto pos = robot->getPosition();
+	auto getDist = [&pos, &x, &y]()->double {
+		return sqrt(pow(pos.x - x, 2) + pow(pos.y - y, 2));
+		};
+
+	while (!cond.check(getDist())) 	{
+		arcControlTick(x, y);
+		rate.sleep();
+		pos = robot->getPosition();
+	}
+
+	robot->stop();
+
+
 }
 
 void MC::MotionController::arcToXY(double x, double y) {

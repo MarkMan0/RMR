@@ -28,12 +28,12 @@ void RMR_QT::on_pushButtonBackward_clicked() {
 
 void RMR_QT::on_pushButtonLeft_clicked() {
 	//Left
-	mc.rotateTo(-90);
+	mc.rotateTo(90);
 }
 
 void RMR_QT::on_pushButtonRight_clicked() {
 	//Right
-	mc.rotateTo(90);
+	mc.rotateTo(-90);
 }
 
 void RMR_QT::on_pushButtonStop_clicked() {
@@ -57,4 +57,14 @@ void RMR_QT::on_pushButtonSquare_clicked()
 //	mc.rotateTo(-270);
 //	mc.moveForward(length);
 //	mc.rotateTo(-360);
+}
+
+void RMR_QT::on_pushButtonPoint_clicked() {
+	bool ok;
+	double x = ui.textEditX->toPlainText().toDouble(&ok);
+	if (!ok) return;
+	double y = ui.textEditY->toPlainText().toDouble(&ok);
+	if (!ok) return;
+
+	mc.arcToXY(x, y);
 }
