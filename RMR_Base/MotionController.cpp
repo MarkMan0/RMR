@@ -48,7 +48,7 @@ void MC::MotionController::movementThread() {
 
 void MC::MotionController::init() {
 	translationController
-		.setKp(2)
+		.setKp(1)
 		.setKi(0.0)
 		.setKd(0.0)
 		.setLower(-500)
@@ -64,7 +64,7 @@ void MC::MotionController::init() {
 		.setSampleT(1.0/50.0);
 
 	arcController
-		.setKp(0.2)
+		.setKp(0.05)
 		.setKi(0.0)
 		.setKd(0.0)
 		.setLower(-0.2)
