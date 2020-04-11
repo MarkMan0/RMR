@@ -33,7 +33,7 @@ void Orientation::tick(uint16_t l, uint16_t r, signed short angle) {
 	
 	double oldX = pos.x, oldY = pos.y;
 
-	if ( abs(dr-dl) > 1e-1 && abs(thetaNow - thetaLast) > deg2rad(0.5)) {
+	if (0 && abs(dr-dl) > 1e-1 && abs(thetaNow - thetaLast) > deg2rad(0.5)) {
 		pos.x += d * (dr + dl) / (2.0 * (dr - dl)) * ( sin(thetaNow) - sin(thetaLast) );
 		pos.y -= d * (dr + dl) / (2.0 * (dr - dl)) * ( cos(thetaNow) - cos(thetaLast) );
 		//std::cout << "XXX: ";
