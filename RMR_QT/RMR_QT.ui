@@ -16,7 +16,7 @@
   <widget class="QPushButton" name="pushButtonStart">
    <property name="geometry">
     <rect>
-     <x>450</x>
+     <x>480</x>
      <y>20</y>
      <width>75</width>
      <height>23</height>
@@ -268,6 +268,17 @@ p, li { white-space: pre-wrap; }
    <property name="text">
     <string>Lidar</string>
    </property>
+  </widget>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>20</y>
+     <width>411</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="renderAreaCont"/>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

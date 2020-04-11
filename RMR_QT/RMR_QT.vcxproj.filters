@@ -58,9 +58,15 @@
     <ClCompile Include="..\RMR_Base\Simulator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RenderArea.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="RMR_QT.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="RenderArea.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

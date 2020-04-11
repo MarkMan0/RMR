@@ -7,6 +7,10 @@ RMR_QT::RMR_QT(QWidget* parent)
 	sim(std::string("../RMR_BASE/robotdata.txt"), std::string("../RMR_BASE/lidardata.txt"))
 {
 	ui.setupUi(this);
+	area = new RenderArea(this);
+
+	ui.renderAreaCont->addWidget(area);
+	
 	this->setWindowTitle("aasfs");
 }
 

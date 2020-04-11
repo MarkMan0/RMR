@@ -103,6 +103,7 @@
     <ClCompile Include="..\RMR_Base\SCurve.cpp" />
     <ClCompile Include="..\RMR_Base\Simulator.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RenderArea.cpp" />
     <ClCompile Include="RMR_QT.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +131,7 @@
     <ClInclude Include="..\RMR_Base\rplidar.h" />
     <ClInclude Include="..\RMR_Base\SCurve.h" />
     <ClInclude Include="..\RMR_Base\Simulator.h" />
+    <QtMoc Include="RenderArea.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

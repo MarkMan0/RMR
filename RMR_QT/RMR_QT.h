@@ -8,6 +8,8 @@
 #include "MotionController.h"
 #include "Simulator.h"
 
+#include "RenderArea.h"
+
 class RMR_QT : public QWidget
 {
 	Q_OBJECT
@@ -17,7 +19,7 @@ public:
 
 private:
 	Ui::RMR_QTClass ui;
-
+	RenderArea* area;
 	std::shared_ptr<RobotManager> robot;
 	MC::MotionController mc;
 	Simulator sim;
