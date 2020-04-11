@@ -7,6 +7,7 @@
 #include <mutex>
 #include <atomic>
 #include <cstdint>
+#include <optional>
 
 
 #include "rplidar.h"
@@ -21,7 +22,9 @@ public:
 
 private:
 	
-	LaserMeasurement measure;
+	LaserMeasurement lidarRaw;
+
+	std::vector<LidarPoint> lidarPoints;
 
 	CKobuki robot;
 	unsigned int dataCounter = 0;
@@ -50,6 +53,7 @@ private:
 
 	void processRobot();
 	void processLidar();
+	std::optional<LidarPoint> applyTransform(const LaserData& data, const Orientation::Position& pos);
 
 
 public:

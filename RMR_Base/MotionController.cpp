@@ -24,8 +24,9 @@ void MC::MotionController::movementThread() {
 
 			if (target.type & MovementType::MOVEMENT_XY) {
 
-				double theta = rad2deg(atan2(target.y - pos.y, target.x - pos.x));
-				rotationBlocking(theta, 20);	//rotate towards target
+				double pointAngleNow = rad2deg(atan2(target.y - pos.y, target.x - pos.x));
+				double targetTheta = getClosestTargetAngle(pos.theta, pointAngleNow);
+				rotationBlocking(targetTheta, 10);	//rotate towards target
 
 				arcToXYBlocking(target.x, target.y);
 
@@ -48,27 +49,27 @@ void MC::MotionController::movementThread() {
 
 void MC::MotionController::init() {
 	translationController
-		.setKp(1)
+		.setKp(2)
 		.setKi(0.0)
-		.setKd(0.0)
+		.setKd(1)
 		.setLower(-500)
 		.setUpper(500)
 		.setSampleT(1.0/50.0);
 
 	angleController
-		.setKp(0.2)
+		.setKp(0.1)
 		.setKi(0.0)
-		.setKd(0.0)
+		.setKd(0.05)
 		.setLower(-1)
 		.setUpper(1)
 		.setSampleT(1.0/50.0);
 
 	arcController
-		.setKp(0.05)
+		.setKp(0.1)
 		.setKi(0.0)
-		.setKd(0.0)
-		.setLower(-0.2)
-		.setUpper(0.2)
+		.setKd(0.03)
+		.setLower(-0.3)
+		.setUpper(0.3)
 		.setSampleT(1.0 / 50.0);
 
 	if (!plannerThread.joinable()) {
@@ -97,7 +98,7 @@ void MC::MotionController::rotationBlocking(double target, double tolerance)
 		}
 	}
 
-	robot->rotation(0);
+	robot->stop();
 
 }
 
@@ -152,16 +153,23 @@ void MC::MotionController::arcControlTick(double x, double y) {
 void MC::MotionController::arcToXYBlocking(double x, double y) {
 
 	LoopRate rate(50);
-	ExitCondition cond(5, 50);
+	ExitCondition cond(5, 100);
 	auto pos = robot->getPosition();
 	auto getDist = [&pos, &x, &y]()->double {
 		return sqrt(pow(pos.x - x, 2) + pow(pos.y - y, 2));
 		};
 
+	double prevDist = getDist();
+	
 	while (!cond.check(getDist())) 	{
 		arcControlTick(x, y);
 		rate.sleep();
 		pos = robot->getPosition();
+
+		if (prevDist - getDist() < -50) {
+			break;
+		}
+		prevDist = getDist();
 	}
 
 	robot->stop();

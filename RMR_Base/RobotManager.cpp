@@ -1,4 +1,5 @@
 #include "RobotManager.h"
+#include "Helpers.h"
 #include <thread>
 
 void RobotManager::receiveRobotData() {
@@ -89,12 +90,12 @@ void RobotManager::receiveLidarData() {
 	}
 	while (1)
 	{
-		if ((las_recv_len = recvfrom(las_s, (char*)(measure.data.get()), sizeof(LaserData) * measure.buffSz, 0, (struct sockaddr*) & las_si_other, (int*)&las_slen)) == -1)
+		if ((las_recv_len = recvfrom(las_s, (char*)(lidarRaw.data.get()), sizeof(LaserData) * lidarRaw.buffSz, 0, (struct sockaddr*) & las_si_other, (int*)&las_slen)) == -1)
 		{
 
 			continue;
 		}
-		measure.numberOfScans = (int)(las_recv_len) / sizeof(LaserData);
+		lidarRaw.numberOfScans = (int)(las_recv_len) / sizeof(LaserData);
 		processLidar();
 	}
 }
@@ -105,8 +106,35 @@ void RobotManager::processRobot() {
 
 }
 
+std::optional<LidarPoint> RobotManager::applyTransform(const LaserData& data, const Orientation::Position &pos) {
+	LidarPoint p;
+	
+	constexpr int maxDist = 2000;	// 2 meters
+	if (data.scanDistance > maxDist) {
+		return std::nullopt;
+	}
+	const double x = pos.x + data.scanDistance * cos(deg2rad(pos.theta + data.scanAngle));
+	const double y = pos.y + data.scanDistance * sin(deg2rad(pos.theta + data.scanAngle));
+	
+	p.x = x;
+	p.y = y;
+
+	return p;
+}
+
 void RobotManager::processLidar() {
-	return;
+	
+	const auto pos = orientation.getPosition();
+
+	if (pos.v != 0) return;		//robot not still
+
+	for (int i = 0; i < lidarRaw.numberOfScans; ++i) {
+		const auto p = applyTransform(lidarRaw.data[i], pos);
+		if (p) {
+			lidarPoints.push_back(*p);
+		}
+	}
+
 }
 
 bool RobotManager::sendCmd(const std::vector<unsigned char>& msg)

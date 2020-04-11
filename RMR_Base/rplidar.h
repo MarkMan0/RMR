@@ -35,3 +35,8 @@ public:
     LaserMeasurement() : data(std::make_unique<LaserData[]>(buffSz)) {}
 
 };
+
+struct LidarPoint {
+    double x;
+    double y;
+};
