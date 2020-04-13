@@ -106,33 +106,25 @@ void RobotManager::processRobot() {
 
 }
 
-std::optional<LidarPoint> RobotManager::applyTransform(const LaserData& data, const Orientation::Position &pos) {
-	LidarPoint p;
-	
-	constexpr int maxDist = 2000;	// 2 meters
-	if (data.scanDistance > maxDist) {
-		return std::nullopt;
-	}
-	const double x = pos.x + data.scanDistance * cos(deg2rad(pos.theta + data.scanAngle));
-	const double y = pos.y + data.scanDistance * sin(deg2rad(pos.theta + data.scanAngle));
-	
-	p.x = x;
-	p.y = y;
-
-	return p;
-}
-
 void RobotManager::processLidar() {
 	
 	const auto pos = orientation.getPosition();
 
 	if (pos.v != 0) return;		//robot not still
 
-	for (int i = 0; i < lidarRaw.numberOfScans; ++i) {
-		const auto p = applyTransform(lidarRaw.data[i], pos);
-		if (p) {
-			lidarPoints.push_back(*p);
+
+	if (lidarMtx.try_lock()) {
+		map.rawData.clear();
+		map.rawData.reserve(lidarRaw.numberOfScans);
+		for (int i = 0; i < lidarRaw.numberOfScans; ++i) {
+			lidar::LidarData data;
+			data.angle = lidarRaw.data[i].scanAngle;
+			data.dist = lidarRaw.data[i].scanDistance;
+			data.robPos = pos;
+			map.rawData.push_back(data);
+			map.addPoint(data);
 		}
+		lidarMtx.unlock();
 	}
 
 }
@@ -178,3 +170,4 @@ void RobotManager::arc2(int spd, double omega) {
 void RobotManager::stop() {
 	sendCmd(robot.getTranslationCmd(0));
 }
+

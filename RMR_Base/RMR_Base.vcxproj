@@ -159,10 +159,10 @@
     <ClInclude Include="RobotManager.h" />
     <ClInclude Include="rplidar.h" />
     <ClInclude Include="SCurve.h" />
-    <ClInclude Include="Simulator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CKobuki.cpp" />
+    <ClCompile Include="LidarData.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MotionController.cpp" />
     <ClCompile Include="Orientation.cpp" />
@@ -171,7 +171,6 @@
     <ClCompile Include="RobotManager.cpp" />
     <ClCompile Include="rplidar.cpp" />
     <ClCompile Include="SCurve.cpp" />
-    <ClCompile Include="Simulator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="lidardata.txt" />

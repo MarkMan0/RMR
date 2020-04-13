@@ -13,6 +13,7 @@
 #include "rplidar.h"
 #include "CKobuki.h"
 #include "Encoder.h"
+#include "LidarData.h"
 #include "Orientation.h"
 
 
@@ -24,7 +25,7 @@ private:
 	
 	LaserMeasurement lidarRaw;
 
-	std::vector<LidarPoint> lidarPoints;
+	lidar::Map map;
 
 	CKobuki robot;
 	unsigned int dataCounter = 0;
@@ -51,13 +52,14 @@ private:
 	std::thread lidarThread;
 	void receiveLidarData();
 
+	
+
 	void processRobot();
 	void processLidar();
-	std::optional<LidarPoint> applyTransform(const LaserData& data, const Orientation::Position& pos);
 
 
 public:
-	RobotManager(const std::string& _ipAddress) : orientation(230, 35, robot.tickToMeter*1000), ipAddress(_ipAddress) { }
+	RobotManager(const std::string& _ipAddress) : orientation(230, 35, robot.tickToMeter*1000), ipAddress(_ipAddress), map(100, 1000) { }
 
 	void init();
 	void translation(int spd);
@@ -91,5 +93,10 @@ public:
 		std::scoped_lock lcd(robotMtx);
 		return orientation.getPosition();
 	}
-	
+
+	const lidar::Map& getMap() const {
+		return map;
+	}
+
+	std::mutex lidarMtx;
 };

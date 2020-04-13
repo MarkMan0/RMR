@@ -55,10 +55,10 @@
     <ClCompile Include="..\RMR_Base\OrientationSim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\RMR_Base\Simulator.cpp">
+    <ClCompile Include="RenderArea.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RenderArea.cpp">
+    <ClCompile Include="..\RMR_Base\LidarData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -121,9 +121,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\RMR_Base\OrientationSim.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\RMR_Base\Simulator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

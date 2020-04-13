@@ -37,7 +37,6 @@ void MC::MotionController::movementThread() {
 			}
 			movements.pop_front();
 			robot->stop();
-			std::cout << std::endl;
 		}
 
 		if (movements.empty()) {
@@ -139,7 +138,6 @@ void MC::MotionController::arcControlTick(double x, double y) {
 	double spd = translationController.tick(eDist);
 	double radius = spd / arcController.tick((eTheta));
 
-	std::cout << "dist: " << eDist << "\t\tTheta: " << eTheta << "\n";
 	if (isnan(radius) || isinf(radius)) {
 		radius = 0;
 	}

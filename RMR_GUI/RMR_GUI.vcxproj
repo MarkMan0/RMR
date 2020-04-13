@@ -206,6 +206,7 @@
     <ClInclude Include="..\RMR_Base\Encoder.h" />
     <ClInclude Include="..\RMR_Base\ExitCondition.h" />
     <ClInclude Include="..\RMR_Base\Helpers.h" />
+    <ClInclude Include="..\RMR_Base\LidarData.h" />
     <ClInclude Include="..\RMR_Base\LoopRate.h" />
     <ClInclude Include="..\RMR_Base\MotionController.h" />
     <ClInclude Include="..\RMR_Base\Orientation.h" />
@@ -221,6 +222,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\RMR_Base\CKobuki.cpp" />
+    <ClCompile Include="..\RMR_Base\LidarData.cpp" />
     <ClCompile Include="..\RMR_Base\MotionController.cpp" />
     <ClCompile Include="..\RMR_Base\Orientation.cpp" />
     <ClCompile Include="..\RMR_Base\PIDController.cpp" />

@@ -3,11 +3,10 @@
 
 RMR_QT::RMR_QT(QWidget* parent)
 	: QWidget(parent), robot(std::make_shared<RobotManager>("127.0.0.1")),
-	mc(robot),
-	sim(std::string("../RMR_BASE/robotdata.txt"), std::string("../RMR_BASE/lidardata.txt"))
+	mc(robot)
 {
 	ui.setupUi(this);
-	area = new RenderArea(this);
+	area = new RenderArea(this, robot);
 
 	ui.renderAreaCont->addWidget(area);
 	

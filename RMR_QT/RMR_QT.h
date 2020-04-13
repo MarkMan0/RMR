@@ -6,7 +6,6 @@
 
 #include "RobotManager.h"
 #include "MotionController.h"
-#include "Simulator.h"
 
 #include "RenderArea.h"
 
@@ -22,7 +21,6 @@ private:
 	RenderArea* area;
 	std::shared_ptr<RobotManager> robot;
 	MC::MotionController mc;
-	Simulator sim;
 
 private slots:
 	void on_pushButtonStart_clicked();

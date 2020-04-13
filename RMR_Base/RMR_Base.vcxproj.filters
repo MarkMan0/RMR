@@ -54,9 +54,6 @@
     <ClInclude Include="OrientationSim.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Simulator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CKobuki.cpp">
@@ -86,7 +83,7 @@
     <ClCompile Include="OrientationSim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Simulator.cpp">
+    <ClCompile Include="LidarData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

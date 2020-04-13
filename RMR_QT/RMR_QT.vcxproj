@@ -94,6 +94,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\RMR_Base\CKobuki.cpp" />
+    <ClCompile Include="..\RMR_Base\LidarData.cpp" />
     <ClCompile Include="..\RMR_Base\MotionController.cpp" />
     <ClCompile Include="..\RMR_Base\Orientation.cpp" />
     <ClCompile Include="..\RMR_Base\OrientationSim.cpp" />
@@ -101,7 +102,6 @@
     <ClCompile Include="..\RMR_Base\RobotManager.cpp" />
     <ClCompile Include="..\RMR_Base\rplidar.cpp" />
     <ClCompile Include="..\RMR_Base\SCurve.cpp" />
-    <ClCompile Include="..\RMR_Base\Simulator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RenderArea.cpp" />
     <ClCompile Include="RMR_QT.cpp" />
@@ -130,7 +130,6 @@
     <ClInclude Include="..\RMR_Base\RobotManager.h" />
     <ClInclude Include="..\RMR_Base\rplidar.h" />
     <ClInclude Include="..\RMR_Base\SCurve.h" />
-    <ClInclude Include="..\RMR_Base\Simulator.h" />
     <QtMoc Include="RenderArea.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

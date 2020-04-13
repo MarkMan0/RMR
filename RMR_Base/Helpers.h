@@ -61,3 +61,9 @@ static inline double angleDiff(double a, double b) {
 
 	return abs(a - b);
 }
+
+
+struct Point {
+	double x;
+	double y;
+};

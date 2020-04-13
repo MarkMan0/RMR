@@ -10,7 +10,6 @@
 #include "MotionController.h"
 #include "LoopRate.h"
 
-#include "Simulator.h"
 
 int main() {
 	using namespace std;
@@ -21,7 +20,7 @@ int main() {
 
 	robot->init();
 	mc.init();
-	mc.moveForward(500);
+	//mc.moveForward(500);
 	
 	while (1);
 	return 0;
