@@ -14,6 +14,7 @@ private:
 	void resetFcn();
 	void paintMap();
 	void paintRaw();
+	void drawRobot();
 	std::thread resetThread;
 
 public:

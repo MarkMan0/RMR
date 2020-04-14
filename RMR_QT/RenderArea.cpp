@@ -81,15 +81,28 @@ void RenderArea::paintRaw() {
 		double lidX = scale * data.dist * cos(deg2rad(90-data.angle));
 		double lidY = scale * data.dist * sin(deg2rad(90-data.angle));
 
-		int x = w - w / 2 - lidX;
-		int y = h - h / 2 - lidY;
+		int x = w / 2 + lidX;
+		int y = h / 2 + lidY;
 
 		painter.drawRect(x, y, 5, 5);
 	}
 
 }
 
+void RenderArea::drawRobot() {
+	QPainter painter(this);
+
+	int centX = width() / 2, centY = height() / 2;
+	QPoint center(centX, centY);
+	const int r = 15;
+	painter.drawEllipse(center, r, r);
+	const int w = r/2;
+	painter.drawRect(centX - w / 2, centY + r - w / 2, w, w);
+
+}
+
 void RenderArea::paintEvent(QPaintEvent* event) {
+	drawRobot();
 	paintRaw();
 
 	
