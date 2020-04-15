@@ -39,6 +39,7 @@ void RenderArea::resetFcn() {
 	constexpr int ms = 2000;
 	while (1) {
 		update();
+		paintMapNow = true;
 		std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 	}
 }
@@ -52,16 +53,35 @@ void RenderArea::paintMap() {
 	const auto& lidarData = robot->getMap();
 	const auto& map = lidarData.getMap();
 
-	const double scale = 1.0 / 30.0;
+	const double scale = 1.0 / 15.0;
+	const int offset = 50;
+
+	const int w = width(), h = height();
 
 	for (const auto& kv : map) {
 		const Point& p = kv.first;
-		if (kv.second > 1) {
-			int x = scale * (p.x + lidarData.maxVal);
-			int y = scale * (p.y + lidarData.maxVal);
+		if (kv.second > 10) {
+			int x = (scale * (p.x)) + offset;
+			int y = h - (scale * (p.y)) - offset;
 			painter.drawRect(x, y, 2, 2);
 		}
 	}
+	auto pos = robot->getPosition();
+	int x = scale * pos.x + offset;
+	int y = h - (scale * pos.y) - offset;
+	painter.drawEllipse(QPoint(x, y), 10, 10);
+
+
+	QPen pen;
+	QVector<qreal> pattern;
+	pattern.push_back(3);
+	pattern.push_back(3);
+	pen.setDashPattern(pattern);
+	pen.setColor(QColorConstants::Gray);
+	pen.setWidth(2);
+
+	painter.setPen(pen);
+	painter.drawRect(offset, 0, w - offset, h - offset);
 	
 }
 
@@ -100,7 +120,7 @@ void RenderArea::drawRobot() {
 
 void RenderArea::paintEvent(QPaintEvent* event) {
 	if (paintMapNow) {
-		drawRobot();
+		//drawRobot();
 		paintMap();
 	}
 	

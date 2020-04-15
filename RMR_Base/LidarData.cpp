@@ -2,8 +2,8 @@
 
 Point lidar::Map::transform(const LidarData& data) const {
 	Point p;
-	p.x = data.robPos.x + data.dist * cos(deg2rad(data.robPos.theta + (90 - data.angle)));
-	p.y = data.robPos.y + data.dist * sin(deg2rad(data.robPos.theta + (90 - data.angle)));
+	p.x = data.robPos.x + data.dist * cos(deg2rad(data.robPos.theta + data.angle - 5));
+	p.y = data.robPos.y + data.dist * sin(deg2rad(data.robPos.theta + data.angle - 5));
 
 	return p;
 }
@@ -31,6 +31,8 @@ Point lidar::Map::getClosestPoint(const Point& p) const {
 }
 
 void lidar::Map::addPoint(const LidarData& data) {
+	if (data.dist < 100 || data.dist > 5000) return;
+	
 	Point p = transform(data);
 	
 	if (p.x < minVal || p.x > maxVal) return;

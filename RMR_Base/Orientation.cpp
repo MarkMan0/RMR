@@ -10,9 +10,9 @@ void Orientation::init(unsigned short l, unsigned short r, signed short theta) {
 	left.begin(l);
 	right.begin(r);
 	this->theta.begin(theta);
-
-	pos.x = 0;
-	pos.y = 0;
+	//TODO: make parameter
+	pos.x = 1000;
+	pos.y = 1000;
 	pos.theta = this->theta.getPosition();
 
 	pos.vx = 0;

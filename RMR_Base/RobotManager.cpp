@@ -118,7 +118,7 @@ void RobotManager::processLidar() {
 		map.rawData.reserve(lidarRaw.numberOfScans);
 		for (int i = 0; i < lidarRaw.numberOfScans; ++i) {
 			lidar::LidarData data;
-			data.angle = lidarRaw.data[i].scanAngle;
+			data.angle = scaleAngle(lidarRaw.data[i].scanAngle);
 			data.dist = lidarRaw.data[i].scanDistance;
 			data.robPos = pos;
 			map.rawData.push_back(data);

@@ -37,6 +37,7 @@ void MC::MotionController::movementThread() {
 			}
 			movements.pop_front();
 			robot->stop();
+			std::this_thread::sleep_for(std::chrono::seconds(1));
 		}
 
 		if (movements.empty()) {

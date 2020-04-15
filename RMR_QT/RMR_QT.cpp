@@ -21,22 +21,22 @@ void RMR_QT::on_pushButtonStart_clicked() {
 
 void RMR_QT::on_pushButtonForward_clicked() {
 	//pohyb dopredu
-	mc.moveForward(100);
+	mc.moveForward(500);
 }
 
 void RMR_QT::on_pushButtonBackward_clicked() {
 	//pohyb dopredu
-	mc.moveForward(-100);
+	mc.moveForward(-500);
 }
 
 void RMR_QT::on_pushButtonLeft_clicked() {
 	//Left
-	mc.rotateTo(90);
+	mc.rotateTo(robot->getPosition().theta + 90);
 }
 
 void RMR_QT::on_pushButtonRight_clicked() {
 	//Right
-	mc.rotateTo(-90);
+	mc.rotateTo(robot->getPosition().theta-90);
 }
 
 void RMR_QT::on_pushButtonStop_clicked() {
@@ -64,7 +64,9 @@ void RMR_QT::on_pushButtonPoint_clicked() {
 }
 
 void RMR_QT::on_pushButtonTriangle_clicked() {
-	area->paintMapNow = true;
+	mc.arcToXY(500, 1000);
+	mc.arcToXY(500, 4000);
+	mc.arcToXY(5000, 4000);
 }
 
 void RMR_QT::on_pushButtonEraseMap_clicked() {
