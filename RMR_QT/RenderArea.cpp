@@ -36,7 +36,7 @@ QSize RenderArea::minimumSizeHint() const
 }*/
 
 void RenderArea::resetFcn() {
-	constexpr int ms = 500;
+	constexpr int ms = 2000;
 	while (1) {
 		update();
 		std::this_thread::sleep_for(std::chrono::milliseconds(ms));
@@ -44,28 +44,25 @@ void RenderArea::resetFcn() {
 }
 
 void RenderArea::paintMap() {
+	if (!paintMapNow)	return;
+	paintMapNow = false;
+
 	QPainter painter(this);
 
-	const auto& map = robot->getMap();
+	const auto& lidarData = robot->getMap();
+	const auto& map = lidarData.getMap();
 
-	int minVal = map.minVal;
-	int maxVal = map.maxVal;
-	int spacing = map.spacing;
-	int w = width(), h = height();
+	const double scale = 1.0 / 30.0;
 
-	for (int x = minVal; x < maxVal; ++x) {
-		for (int y = minVal; y < maxVal; ++y) {
-			bool wall = map.checkPoint(x, y);
-			double xscale = w / (1.0 * maxVal - minVal),
-				yscale = h / (1.0 * maxVal - minVal);
-			if (wall) {
-				int xCoord = (x + minVal) * xscale;
-				int yCoord = (y + minVal) * yscale;
-				painter.drawRect(xCoord, yCoord, 5, 5);
-			}
+	for (const auto& kv : map) {
+		const Point& p = kv.first;
+		if (kv.second > 1) {
+			int x = scale * (p.x + lidarData.maxVal);
+			int y = scale * (p.y + lidarData.maxVal);
+			painter.drawRect(x, y, 2, 2);
 		}
-
 	}
+	
 }
 
 void RenderArea::paintRaw() {
@@ -102,8 +99,9 @@ void RenderArea::drawRobot() {
 }
 
 void RenderArea::paintEvent(QPaintEvent* event) {
-	drawRobot();
-	paintRaw();
-
+	if (paintMapNow) {
+		drawRobot();
+		paintMap();
+	}
 	
 }

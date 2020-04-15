@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <mutex>
+#include <map>
 #include "Helpers.h"
 #include "Orientation.h"
 
@@ -14,7 +15,7 @@ namespace lidar {
 
 	class Map {
 	public:
-		using map_type = std::vector< std::vector<unsigned int>>;
+		using map_type = std::map<Point, unsigned int>;
 		
 	private:
 		map_type points;
@@ -22,15 +23,18 @@ namespace lidar {
 		const unsigned int minmax;
 		int centerInd;
 		Point transform(const LidarData&) const;
-		int getScaledInd(double d) const;
+		int getClosestCoord(double d) const;
+		Point getClosestPoint(const Point& p) const;
 	public:
 
 		mutable std::mutex mtx;
 		std::vector<LidarData> rawData;
 		Map(int _spacing, int _minmax);
 		void addPoint(const LidarData& point);
-		bool checkPoint(double x, double y, int th = 1) const;
+		bool checkPoint(const Point& p, int th = 1) const;
+		const map_type& getMap() const;
 		const int minVal, maxVal;
 		const int spacing;
+		void erase();
 	};
 }

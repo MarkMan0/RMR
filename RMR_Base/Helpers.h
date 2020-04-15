@@ -66,4 +66,9 @@ static inline double angleDiff(double a, double b) {
 struct Point {
 	double x;
 	double y;
+	bool operator <(const Point& rhs) const {
+		if (this->x != rhs.x) return this->x < rhs.x;
+		else return this->y < rhs.y;
+		
+	}
 };

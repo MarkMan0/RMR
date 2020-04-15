@@ -62,3 +62,11 @@ void RMR_QT::on_pushButtonPoint_clicked() {
 
 	mc.arcToXY(x, y);
 }
+
+void RMR_QT::on_pushButtonTriangle_clicked() {
+	area->paintMapNow = true;
+}
+
+void RMR_QT::on_pushButtonEraseMap_clicked() {
+	robot->getMap().erase();
+}

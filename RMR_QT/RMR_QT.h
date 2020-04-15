@@ -31,4 +31,6 @@ private slots:
 	void on_pushButtonStop_clicked();
 	void on_pushButtonSquare_clicked();
 	void on_pushButtonPoint_clicked();
+	void on_pushButtonTriangle_clicked();
+	void on_pushButtonEraseMap_clicked();
 };

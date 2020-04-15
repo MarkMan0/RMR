@@ -59,7 +59,7 @@ private:
 
 
 public:
-	RobotManager(const std::string& _ipAddress) : orientation(230, 35, robot.tickToMeter*1000), ipAddress(_ipAddress), map(100, 1000) { }
+	RobotManager(const std::string& _ipAddress) : orientation(230, 35, robot.tickToMeter*1000), ipAddress(_ipAddress), map(100, 5000) { }
 
 	void init();
 	void translation(int spd);
@@ -95,6 +95,10 @@ public:
 	}
 
 	const lidar::Map& getMap() const {
+		return map;
+	}
+
+	lidar::Map& getMap() {
 		return map;
 	}
 

@@ -110,7 +110,7 @@ void RobotManager::processLidar() {
 	
 	const auto pos = orientation.getPosition();
 
-	if (pos.v != 0) return;		//robot not still
+	if (pos.v != 0 || pos.omega != 0) return;		//robot not still
 
 
 	if (lidarMtx.try_lock()) {
@@ -138,6 +138,8 @@ void RobotManager::init() {
 	if (!robotThread.joinable()) {
 		robotThread = std::thread(&RobotManager::receiveRobotData, this);
 	}
+	while (!ready()) {} //wait for first message
+	std::this_thread::sleep_for(std::chrono::microseconds(500));
 	if (!lidarThread.joinable()) {
 		lidarThread = std::thread(&RobotManager::receiveLidarData, this);
 	}

@@ -280,6 +280,19 @@ p, li { white-space: pre-wrap; }
    </property>
    <layout class="QGridLayout" name="renderAreaCont"/>
   </widget>
+  <widget class="QPushButton" name="pushButtonEraseMap">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>500</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Erase Map</string>
+   </property>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

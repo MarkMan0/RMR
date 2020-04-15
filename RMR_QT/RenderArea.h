@@ -17,12 +17,14 @@ private:
 	void drawRobot();
 	std::thread resetThread;
 
+
 public:
 	RenderArea(QWidget* parent, const std::shared_ptr<RobotManager>& _robot);
 	~RenderArea();
 	QSize minimumSizeHint() const override;
 	QSize sizeHint() const override;
 
+	bool paintMapNow = false;
 	
 
 public slots:
