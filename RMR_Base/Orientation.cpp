@@ -5,14 +5,15 @@
 #include <cmath>
 
 #include "Helpers.h"
+#include "Config.h"
 
 void Orientation::init(unsigned short l, unsigned short r, signed short theta) {
 	left.begin(l);
 	right.begin(r);
 	this->theta.begin(theta);
 	//TODO: make parameter
-	pos.x = 1000;
-	pos.y = 1000;
+	pos.x = config::startX;
+	pos.y = config::startY;
 	pos.theta = this->theta.getPosition();
 
 	pos.vx = 0;

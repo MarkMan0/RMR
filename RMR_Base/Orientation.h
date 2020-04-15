@@ -1,7 +1,7 @@
 #pragma once
 #include <chrono>
 #include <iostream>
-
+#include "Config.h"
 #include "Encoder.h"
 
 class Orientation {
@@ -28,7 +28,9 @@ private:
 	decltype(clock::now()) lastTick;
 
 public:
-	Orientation(double _d, double _radius, double mmPerTick) : left(mmPerTick), right(mmPerTick), theta(1.0/100.0, -17999, 17999), d(_d), radius(_radius) { }
+	Orientation() : left(config::rob::tick2mm), right(config::rob::tick2mm), 
+		theta(config::rob::tick2deg, config::rob::thetaMin, config::rob::thetaMax),
+		d(config::rob::d), radius(config::rob::r) { }
 
 	void init(unsigned short l = 0, unsigned short r = 0, signed short theta = 0);	
 	void tick(uint16_t l, uint16_t r, signed short angle);

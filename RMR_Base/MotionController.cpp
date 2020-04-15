@@ -54,29 +54,11 @@ MC::MotionController::~MotionController() {
 }
 
 void MC::MotionController::init() {
-	translationController
-		.setKp(2)
-		.setKi(0.0)
-		.setKd(1)
-		.setLower(-500)
-		.setUpper(500)
-		.setSampleT(1.0/50.0);
+	translationController.setParams(config::transCont);
 
-	angleController
-		.setKp(0.1)
-		.setKi(0.0)
-		.setKd(0.05)
-		.setLower(-1)
-		.setUpper(1)
-		.setSampleT(1.0/50.0);
+	angleController.setParams(config::angleCont);
 
-	arcController
-		.setKp(0.1)
-		.setKi(0.0)
-		.setKd(0.03)
-		.setLower(-0.3)
-		.setUpper(0.3)
-		.setSampleT(1.0 / 50.0);
+	arcController.setParams(config::arcCont);
 
 	if (!plannerThread.joinable()) {
 		plannerThread = std::thread(&MotionController::movementThread, this);

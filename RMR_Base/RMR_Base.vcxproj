@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CKobuki.h" />
+    <ClInclude Include="Config.h" />
     <ClInclude Include="Encoder.h" />
     <ClInclude Include="ExitCondition.h" />
     <ClInclude Include="Helpers.h" />

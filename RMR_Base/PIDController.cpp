@@ -39,6 +39,15 @@ PIDController& PIDController::setSampleT(double t)
 	return *this;
 }
 
+void PIDController::setParams(const config::pid_param_t& params) {
+	Kp = params.p;
+	Ki = params.i;
+	Kd = params.d;
+	lower = params.lower;
+	upper = params.upper;
+	sampleT = params.sampleT;
+}
+
 
 
 double PIDController::tick(double e)

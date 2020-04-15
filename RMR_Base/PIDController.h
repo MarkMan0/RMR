@@ -1,5 +1,6 @@
 #pragma once
 #include <limits>
+#include "Config.h"
 
 class PIDController {
 
@@ -20,6 +21,8 @@ public:
 	PIDController& setUpper(double d);
 	PIDController& setLower(double d);
 	PIDController& setSampleT(double t);
+
+	void setParams(const config::pid_param_t& params);
 
 	double tick(double e);
 };
