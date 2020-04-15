@@ -16,7 +16,7 @@ private:
 	void paintRaw();
 	void drawRobot();
 	std::thread resetThread;
-
+	std::atomic<bool> stopSignal = false;
 
 public:
 	RenderArea(QWidget* parent, const std::shared_ptr<RobotManager>& _robot);

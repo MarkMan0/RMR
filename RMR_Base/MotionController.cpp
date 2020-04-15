@@ -17,7 +17,7 @@ bool MC::operator&(const MC::MovementType& a, const MC::MovementType& b) {
 
 void MC::MotionController::movementThread() {
 
-	while (1) {
+	while (!stopSignal) {
 		if (!movements.empty()) {
 			const auto target = movements.front();
 			auto pos = robot->getPosition();
@@ -37,14 +37,20 @@ void MC::MotionController::movementThread() {
 			}
 			movements.pop_front();
 			robot->stop();
-			std::this_thread::sleep_for(std::chrono::seconds(1));
+			std::this_thread::sleep_for(std::chrono::milliseconds(500));
 		}
 
 		if (movements.empty()) {
 			std::unique_lock lck(cvMtx);
-			cv.wait(lck, [this]()->bool {return !(movements.empty()); });
+			cv.wait(lck, [this]()->bool {return (!(movements.empty()) || stopSignal); });
 		}
 	}
+}
+
+MC::MotionController::~MotionController() {
+	stopSignal = true;
+	cv.notify_all();
+	plannerThread.join();
 }
 
 void MC::MotionController::init() {
@@ -84,7 +90,7 @@ void MC::MotionController::rotationBlocking(double target, double tolerance)
 	ExitCondition cond(25, tolerance);
 
 	LoopRate rate(50);
-	while (!done) {
+	while (!done && !stopSignal) {
 		auto pos = robot->getPosition();
 		double e = target - pos.theta;
 
@@ -160,7 +166,7 @@ void MC::MotionController::arcToXYBlocking(double x, double y) {
 
 	double prevDist = getDist();
 	
-	while (!cond.check(getDist())) 	{
+	while (!cond.check(getDist()) && !stopSignal) 	{
 		arcControlTick(x, y);
 		rate.sleep();
 		pos = robot->getPosition();

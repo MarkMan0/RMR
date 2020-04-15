@@ -15,10 +15,11 @@ class RMR_QT : public QWidget
 
 public:
 	RMR_QT(QWidget *parent = Q_NULLPTR);
+	~RMR_QT();
 
 private:
 	Ui::RMR_QTClass ui;
-	RenderArea* area;
+	std::unique_ptr<RenderArea> area;
 	std::shared_ptr<RobotManager> robot;
 	MC::MotionController mc;
 

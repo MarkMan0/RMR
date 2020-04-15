@@ -6,17 +6,24 @@ RMR_QT::RMR_QT(QWidget* parent)
 	mc(robot)
 {
 	ui.setupUi(this);
-	area = new RenderArea(this, robot);
+	area = std::make_unique<RenderArea>(this, robot);
 
-	ui.renderAreaCont->addWidget(area);
+	ui.renderAreaCont->addWidget(area.get());
 	
 	this->setWindowTitle("aasfs");
 }
 
 
 void RMR_QT::on_pushButtonStart_clicked() {
-	robot->init();
-	mc.init();
+	try {
+		robot->init();
+		mc.init();
+	}
+	catch (...) {}
+}
+
+RMR_QT::~RMR_QT() {
+	std::cout << "asd" << std::endl;
 }
 
 void RMR_QT::on_pushButtonForward_clicked() {

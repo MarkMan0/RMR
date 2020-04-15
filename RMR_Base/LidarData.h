@@ -31,7 +31,7 @@ namespace lidar {
 		std::vector<LidarData> rawData;
 		Map(int _spacing, int _minmax);
 		void addPoint(const LidarData& point);
-		bool checkPoint(const Point& p, int th = 1) const;
+		bool checkPoint(const Point& p, unsigned int th = 1) const;
 		const map_type& getMap() const;
 		const int minVal, maxVal;
 		const int spacing;

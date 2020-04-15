@@ -35,8 +35,10 @@ void RobotManager::receiveRobotData() {
 	sendCmd(robot.getPIDCmd());
 	Sleep(100);
 	sendCmd(robot.getSoundCmd(440, 1000));
-
-	while (1)
+	int timeout = 200; //ms
+	int intLen = sizeof(timeout);
+	setsockopt(rob_s, SOL_SOCKET, SO_RCVTIMEO, (char*)(&timeout), intLen);
+	while (!stopSignal)
 	{
 
 		if ((rob_recv_len = recvfrom(rob_s, (char*)(robot.robotBuff.get()), sizeof(char) * robot.buffSz, 0, (struct sockaddr*) & rob_si_other, (int*)&rob_slen)) == -1)
@@ -54,6 +56,7 @@ void RobotManager::receiveRobotData() {
 
 
 	}
+	closesocket(rob_s);
 }
 
 void RobotManager::receiveLidarData() {
@@ -84,11 +87,14 @@ void RobotManager::receiveLidarData() {
 	las_si_posli.sin_addr.s_addr = inet_addr(ipAddress.data());//htonl(INADDR_BROADCAST);
 	bind(las_s, (struct sockaddr*) & las_si_me, sizeof(las_si_me));
 	char command = 0x00;
+	int timeout = 200; //ms
+	int intLen = sizeof(timeout);
+	setsockopt(las_s, SOL_SOCKET, SO_RCVTIMEO, (char*)(&timeout), intLen);
 	if (sendto(las_s, &command, sizeof(command), 0, (struct sockaddr*) & las_si_posli, las_slen) == -1)
 	{
 
 	}
-	while (1)
+	while (!stopSignal)
 	{
 		if ((las_recv_len = recvfrom(las_s, (char*)(lidarRaw.data.get()), sizeof(LaserData) * lidarRaw.buffSz, 0, (struct sockaddr*) & las_si_other, (int*)&las_slen)) == -1)
 		{
@@ -98,6 +104,7 @@ void RobotManager::receiveLidarData() {
 		lidarRaw.numberOfScans = (int)(las_recv_len) / sizeof(LaserData);
 		processLidar();
 	}
+	closesocket(las_s);
 }
 
 void RobotManager::processRobot() {
@@ -134,11 +141,29 @@ bool RobotManager::sendCmd(const std::vector<unsigned char>& msg)
 	return sendto(rob_s, (char*)msg.data(), (int)(sizeof(char) * msg.size()), 0, (struct sockaddr*) & rob_si_posli, sizeof(rob_si_posli)) != SOCKET_ERROR;
 }
 
+RobotManager::~RobotManager() {
+	stopSignal = true;
+	lidarThread.join();
+	robotThread.join();
+}
+
 void RobotManager::init() {
 	if (!robotThread.joinable()) {
 		robotThread = std::thread(&RobotManager::receiveRobotData, this);
 	}
-	while (!ready()) {} //wait for first message
+	const int misses = 15;
+	int cnt = 0;
+	while (!ready() && cnt < misses) {
+		++cnt;
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
+	if (!ready()) {
+		stopSignal = true;
+		robotThread.join();
+		stopSignal = false;
+		robotRdy = false;
+		throw std::runtime_error("Couldn't connect to robot");
+	}
 	std::this_thread::sleep_for(std::chrono::microseconds(500));
 	if (!lidarThread.joinable()) {
 		lidarThread = std::thread(&RobotManager::receiveLidarData, this);

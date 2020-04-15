@@ -11,8 +11,9 @@ RenderArea::RenderArea(QWidget* parent, const std::shared_ptr<RobotManager>& _ro
 	resetThread = std::thread(&RenderArea::resetFcn, this);
 }
 
-RenderArea::~RenderArea()
-{
+RenderArea::~RenderArea() {
+	stopSignal = true;
+	resetThread.join();
 }
 
 QSize RenderArea::sizeHint() const
@@ -37,7 +38,7 @@ QSize RenderArea::minimumSizeHint() const
 
 void RenderArea::resetFcn() {
 	constexpr int ms = 2000;
-	while (1) {
+	while (!stopSignal) {
 		update();
 		paintMapNow = true;
 		std::this_thread::sleep_for(std::chrono::milliseconds(ms));

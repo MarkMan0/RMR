@@ -42,6 +42,7 @@ namespace MC {
 		std::mutex cvMtx;
 
 		void movementThread();
+		std::atomic<bool> stopSignal = false;
 
 		scurve::SCurveGenerator sGenerator;
 
@@ -51,7 +52,7 @@ namespace MC {
 
 	public:
 		MotionController(const std::shared_ptr<RobotManager>& _manager) : robot(_manager), sGenerator(500, 100) {}
-
+		~MotionController();
 		void init();
 
 

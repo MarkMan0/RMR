@@ -49,7 +49,7 @@ void lidar::Map::addPoint(const LidarData& data) {
 };
 
 
-bool lidar::Map::checkPoint(const Point& p, int th) const {
+bool lidar::Map::checkPoint(const Point& p, unsigned int th) const {
 #ifndef TESTING
 	std::scoped_lock lck(mtx);
 #endif // !TESTING
@@ -58,7 +58,7 @@ bool lidar::Map::checkPoint(const Point& p, int th) const {
 	try {
 		res = points.at(p2) > th;
 	}
-	catch (std::out_of_range & ex) {
+	catch (const std::out_of_range&) {
 		res = false;
 	}
 	return res;
