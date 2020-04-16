@@ -13,8 +13,8 @@ namespace config {
 	constexpr double startY = 1000;
 
 	constexpr pid_param_t transCont{ 2, 0, 0.5, -500, 500, 1.0/50.0 };
-	constexpr pid_param_t angleCont{ 0.1, 0, 0.05, -1, 1, 1.0 / 50.0 };
-	constexpr pid_param_t arcCont{ 0.1, 0, 0.03, -0.3, 0.3, 1.0 / 50.0 };
+	constexpr pid_param_t angleCont{ 0.08, 0, 0.05, -1, 1, 1.0 / 50.0 };
+	constexpr pid_param_t arcCont{ 0.08, 0, 0.02, -0.1, 0.1, 1.0 / 50.0 };
 
 	namespace rob {
 		constexpr double d = 230,
