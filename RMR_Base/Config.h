@@ -20,8 +20,8 @@ namespace config {
 		constexpr double d = 230,
 			r = 35,
 			tick2mm = 0.000085292090497737556558 * 1000.0,
-			tick2deg = 1.0 / 100.0,
-			thetaMax = 18000,
+			tick2deg = 1.0 / 100.0;
+		constexpr signed short	thetaMax = 18000,
 			thetaMin = -17999;
 	}
 }
