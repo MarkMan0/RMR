@@ -143,8 +143,10 @@ bool RobotManager::sendCmd(const std::vector<unsigned char>& msg)
 
 RobotManager::~RobotManager() {
 	stopSignal = true;
-	lidarThread.join();
-	robotThread.join();
+	if(lidarThread.joinable())
+		lidarThread.join();
+	if(robotThread.joinable())
+		robotThread.join();
 }
 
 void RobotManager::init() {

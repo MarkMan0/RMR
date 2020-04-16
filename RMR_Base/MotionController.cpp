@@ -50,7 +50,8 @@ void MC::MotionController::movementThread() {
 MC::MotionController::~MotionController() {
 	stopSignal = true;
 	cv.notify_all();
-	plannerThread.join();
+	if(plannerThread.joinable())
+		plannerThread.join();
 }
 
 void MC::MotionController::init() {
