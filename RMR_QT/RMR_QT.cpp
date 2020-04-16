@@ -19,31 +19,68 @@ void RMR_QT::on_pushButtonStart_clicked() {
 		robot->init();
 		mc.init();
 	}
-	catch (...) {}
+	catch (const std::runtime_error& e) {
+		ui.label_errors->setText(e.what());
+	}
 }
 
 RMR_QT::~RMR_QT() {
-	std::cout << "asd" << std::endl;
+}
+
+double RMR_QT::getNumFromLineEdit(const QLineEdit* le)
+{
+	bool ok;
+	double x = le->displayText().toDouble(&ok);
+	if (ok) {
+		return x;
+	}
+	else {
+		throw std::runtime_error("Not a number");
+	}
+}
+
+void RMR_QT::setErrTxt(const QString& err) {
+	ui.label_errors->setText(err);
 }
 
 void RMR_QT::on_pushButtonForward_clicked() {
-	//pohyb dopredu
-	mc.moveForward(500);
+	try {
+		double d = getNumFromLineEdit(ui.lineEdit_Distance);
+		mc.moveForward(d);
+	}
+	catch (const std::runtime_error&) {
+		setErrTxt("Distance not a number");
+	}
 }
 
 void RMR_QT::on_pushButtonBackward_clicked() {
-	//pohyb dopredu
-	mc.moveForward(-500);
+	try {
+		double d = getNumFromLineEdit(ui.lineEdit_Distance);
+		mc.moveForward(-d);
+	}
+	catch (const std::runtime_error&) {
+		setErrTxt("Distance not a number");
+	}
 }
 
 void RMR_QT::on_pushButtonLeft_clicked() {
-	//Left
-	mc.rotateTo(robot->getPosition().theta + 90);
+	try {
+		double d = getNumFromLineEdit(ui.lineEdit_AngleRel);
+		mc.rotateTo(robot->getPosition().theta + d);
+	}
+	catch (const std::runtime_error&) {
+		setErrTxt("Angle not a number");
+	}
 }
 
 void RMR_QT::on_pushButtonRight_clicked() {
-	//Right
-	mc.rotateTo(robot->getPosition().theta-90);
+	try {
+		double d = getNumFromLineEdit(ui.lineEdit_AngleRel);
+		mc.rotateTo(robot->getPosition().theta - d);
+	}
+	catch (const std::runtime_error&) {
+		setErrTxt("Angle not a number");
+	}
 }
 
 void RMR_QT::on_pushButtonStop_clicked() {
@@ -52,29 +89,29 @@ void RMR_QT::on_pushButtonStop_clicked() {
 	robot->stop();
 }
 
-void RMR_QT::on_pushButtonSquare_clicked()
-{
-	mc.arcToXY(1000, 0);
-	mc.arcToXY(1000, 1000);
-	mc.arcToXY(0, 1000);
-	mc.arcToXY(0, 0);
-}
-
 void RMR_QT::on_pushButtonPoint_clicked() {
-	bool ok;
-	double x = ui.textEditX->toPlainText().toDouble(&ok);
-	if (!ok) return;
-	double y = ui.textEditY->toPlainText().toDouble(&ok);
-	if (!ok) return;
 
-	mc.arcToXY(x, y);
+	try {
+		double x = getNumFromLineEdit(ui.lineEdit_X);
+		double y = getNumFromLineEdit(ui.lineEdit_Y);
+		mc.arcToXY(x, y);
+	}
+	catch (const std::runtime_error&) {
+		setErrTxt("X/Y not a number");
+	}
+
 }
 
-void RMR_QT::on_pushButtonTriangle_clicked() {
-	mc.arcToXY(500, 1000);
-	mc.arcToXY(500, 4000);
-	mc.arcToXY(5000, 4000);
+void RMR_QT::on_pushButtonTurn_clicked() {
+	try {
+		double angle = getNumFromLineEdit(ui.lineEdit_Angle);
+		mc.rotateTo(angle);
+	}
+	catch (const std::runtime_error&) {
+		setErrTxt("Angle not a number");
+	}
 }
+
 
 void RMR_QT::on_pushButtonEraseMap_clicked() {
 	robot->getMap().erase();

@@ -23,15 +23,19 @@ private:
 	std::shared_ptr<RobotManager> robot;
 	MC::MotionController mc;
 
+	double getNumFromLineEdit(const QLineEdit*);
+	void setErrTxt(const QString&);
+
 private slots:
 	void on_pushButtonStart_clicked();
+
 	void on_pushButtonForward_clicked();
 	void on_pushButtonBackward_clicked();
 	void on_pushButtonLeft_clicked();
 	void on_pushButtonRight_clicked();
+
 	void on_pushButtonStop_clicked();
-	void on_pushButtonSquare_clicked();
 	void on_pushButtonPoint_clicked();
-	void on_pushButtonTriangle_clicked();
+	void on_pushButtonTurn_clicked();
 	void on_pushButtonEraseMap_clicked();
 };
