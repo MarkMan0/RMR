@@ -76,7 +76,7 @@ namespace OrientationTests {
 
 		TEST_METHOD(TestTranslation) {
 			double r = rKobuki, d = dKobuki, mmPerTick = mmPerTickKobuki;
-			Orientation o(d, r, mmPerTick);
+			Orientation o;
 
 			o.init();
 
@@ -108,7 +108,7 @@ namespace OrientationTests {
 		TEST_METHOD(TestRotation) {
 			//Counter clockwise
 			double r = rKobuki, d = dKobuki, mmPerTick = mmPerTickKobuki;
-			Orientation o(d, r, mmPerTick);
+			Orientation o;
 			o.init();
 			unsigned short xTicks = 0, yTicks = 0;
 			signed short angleTicks = 0;
@@ -134,7 +134,7 @@ namespace OrientationTests {
 		TEST_METHOD(TestTurnAndForward) {
 			//Counter clockwise
 			double r = rKobuki, d = dKobuki, mmPerTick = mmPerTickKobuki;
-			Orientation o(d, r, mmPerTick);
+			Orientation o;
 			unsigned short xTicks = 0, yTicks = 0;
 			signed short angleTicks = 0;
 
@@ -193,7 +193,7 @@ namespace OrientationTests {
 		TEST_METHOD(TestNonZeroStart) {
 			double r = rKobuki, d = dKobuki, mmPerTick = mmPerTickKobuki;
 
-			Orientation o(d, r, mmPerTick);
+			Orientation o;
 
 			unsigned short lTicks = 5000, rTicks = 6000;
 			signed short angleTicks = 7000;

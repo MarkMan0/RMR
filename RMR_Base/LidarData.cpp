@@ -16,7 +16,7 @@ lidar::Map::Map(int _spacing, int _minmax) : spacing(_spacing), minVal(-_minmax)
 
 	for (int x = minVal; x < maxVal; x += spacing) {
 		for (int y = minVal; y < maxVal; y += spacing) {
-			Point p{ x, y };
+			Point p(x, y);
 			points[p] = 0;
 		}
 	}
