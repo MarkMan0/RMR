@@ -38,4 +38,6 @@ private slots:
 	void on_pushButtonPoint_clicked();
 	void on_pushButtonTurn_clicked();
 	void on_pushButtonEraseMap_clicked();
+
+	void on_pushButtonSolve_clicked();
 };

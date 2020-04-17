@@ -3,6 +3,7 @@
 #include <QWidget>
 #include "RobotManager.h"
 #include <thread>
+#include "MazeSolver.h"
 
 class RenderArea : public QWidget
 {
@@ -14,11 +15,16 @@ private:
 	void resetFcn();
 	void paintMap();
 	void paintRaw();
+	void drawPoint(QPainter& painter, const Point& p);
 	void drawRobot();
+	void paintSolution();
 	std::thread resetThread;
 	std::atomic<bool> stopSignal = false;
 
+	maze::MazeSolver solver;
+
 public:
+	void solve();
 	RenderArea(QWidget* parent, const std::shared_ptr<RobotManager>& _robot);
 	~RenderArea();
 	QSize minimumSizeHint() const override;

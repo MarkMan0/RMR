@@ -153,6 +153,7 @@
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="LidarData.h" />
     <ClInclude Include="LoopRate.h" />
+    <ClInclude Include="MazeSolver.h" />
     <ClInclude Include="MotionController.h" />
     <ClInclude Include="Orientation.h" />
     <ClInclude Include="OrientationSim.h" />
@@ -165,6 +166,7 @@
     <ClCompile Include="CKobuki.cpp" />
     <ClCompile Include="LidarData.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MazeSolver.cpp" />
     <ClCompile Include="MotionController.cpp" />
     <ClCompile Include="Orientation.cpp" />
     <ClCompile Include="OrientationSim.cpp" />

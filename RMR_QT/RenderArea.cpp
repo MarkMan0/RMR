@@ -46,8 +46,6 @@ void RenderArea::resetFcn() {
 }
 
 void RenderArea::paintMap() {
-	if (!paintMapNow)	return;
-	paintMapNow = false;
 
 	QPainter painter(this);
 
@@ -62,9 +60,7 @@ void RenderArea::paintMap() {
 	for (const auto& kv : map) {
 		const Point& p = kv.first;
 		if (kv.second > 10) {
-			int x = (scale * (p.x)) + offset;
-			int y = h - (scale * (p.y)) - offset;
-			painter.drawRect(x, y, 2, 2);
+			drawPoint(painter, p);
 		}
 	}
 	auto pos = robot->getPosition();
@@ -107,6 +103,17 @@ void RenderArea::paintRaw() {
 
 }
 
+void RenderArea::drawPoint(QPainter& painter, const Point& p) {
+	const double scale = 1.0 / 15.0;
+	const int offset = 50;
+	const int w = width(), h = height();
+
+	int x = (scale * (p.x)) + offset;
+	int y = h - (scale * (p.y)) - offset;
+
+	painter.drawRect(x, y, 2, 2);
+}
+
 void RenderArea::drawRobot() {
 	QPainter painter(this);
 
@@ -119,10 +126,39 @@ void RenderArea::drawRobot() {
 
 }
 
-void RenderArea::paintEvent(QPaintEvent* event) {
-	if (paintMapNow) {
-		//drawRobot();
-		paintMap();
-	}
+void RenderArea::paintSolution() {
+	QPainter painter(this);
+	QPen pen;
+	pen.setColor(QColorConstants::Red);
+
+	painter.setPen(pen);
 	
+	const auto& sol = solver.getSolution();
+
+	for (const Point& p : sol) {
+		drawPoint(painter, p);
+	}
+
+}
+
+void RenderArea::paintEvent(QPaintEvent* event) {
+	paintMap();
+	paintSolution();
+	
+}
+
+void RenderArea::solve() {
+
+	solver.loadMaze(robot->getMap());
+
+	Point p;
+	const auto pos = robot->getPosition();
+	p.x = pos.x;
+	p.y = pos.y;
+	solver.setSource(p);
+
+	p.x = 500;
+	p.y = 3500;
+	solver.setTarger(p);
+	solver.dijkstra();
 }

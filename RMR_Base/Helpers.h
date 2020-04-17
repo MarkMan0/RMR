@@ -67,8 +67,14 @@ struct BasePoint {
 	T x;
 	T y;
 	bool operator <(const BasePoint<T>& rhs) const {
-		if (this->x != rhs.x) return this->x < rhs.x;
-		else return this->y < rhs.y;
+		if (this->x != rhs.x) 
+			return this->x < rhs.x;
+		else 
+			return this->y < rhs.y;
+	}
+
+	bool operator==(const BasePoint<T>& rhs) const {
+		return (this->x == rhs.x && this->y == rhs.y);
 	}
 
 	template <class U>

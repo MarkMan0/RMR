@@ -1,6 +1,7 @@
 #include "RMR_QT.h"
 #include <string> 
 
+
 RMR_QT::RMR_QT(QWidget* parent)
 	: QWidget(parent), robot(std::make_shared<RobotManager>("127.0.0.1")),
 	mc(robot)
@@ -115,4 +116,8 @@ void RMR_QT::on_pushButtonTurn_clicked() {
 
 void RMR_QT::on_pushButtonEraseMap_clicked() {
 	robot->getMap().erase();
+}
+
+void RMR_QT::on_pushButtonSolve_clicked() {
+	area->solve();
 }

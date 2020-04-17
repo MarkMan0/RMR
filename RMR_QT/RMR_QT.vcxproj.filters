@@ -61,6 +61,9 @@
     <ClCompile Include="..\RMR_Base\LidarData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\RMR_Base\MazeSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="RMR_QT.h">
@@ -121,6 +124,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\RMR_Base\OrientationSim.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RMR_Base\MazeSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

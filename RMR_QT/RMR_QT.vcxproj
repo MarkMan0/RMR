@@ -95,6 +95,7 @@
   <ItemGroup>
     <ClCompile Include="..\RMR_Base\CKobuki.cpp" />
     <ClCompile Include="..\RMR_Base\LidarData.cpp" />
+    <ClCompile Include="..\RMR_Base\MazeSolver.cpp" />
     <ClCompile Include="..\RMR_Base\MotionController.cpp" />
     <ClCompile Include="..\RMR_Base\Orientation.cpp" />
     <ClCompile Include="..\RMR_Base\OrientationSim.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="..\RMR_Base\LidarData.h" />
     <ClInclude Include="..\RMR_Base\LoopRate.h" />
     <ClInclude Include="..\RMR_Base\main.h" />
+    <ClInclude Include="..\RMR_Base\MazeSolver.h" />
     <ClInclude Include="..\RMR_Base\MotionController.h" />
     <ClInclude Include="..\RMR_Base\Orientation.h" />
     <ClInclude Include="..\RMR_Base\OrientationSim.h" />
