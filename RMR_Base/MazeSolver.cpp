@@ -181,11 +181,46 @@ maze::MazeSolver::sol_t& maze::MazeSolver::dijkstra() {
 
 	std::reverse(ret.begin(), ret.end());
 	sol = ret;
+	simplifySol();
 	return sol;
 }
 
 const maze::MazeSolver::node_cont& maze::MazeSolver::getNodes() const {
 	return nodes;
+}
+
+maze::MazeSolver::sol_t& maze::MazeSolver::simplifySol() {
+	if (sol.size() < 2) {
+		return sol;
+	}
+
+	//remove every 2nd element
+	for (int i = 1; i < sol.size(); ++i) {
+		sol.erase(sol.begin() + i);
+	}
+
+	decltype(sol) sol2;
+
+	sol2.push_back(sol[0]);
+	sol2.push_back(sol[1]);
+
+	double dirNow = sol[0].dirTo(sol[1]);
+	
+	for (int i = 2; i < sol.size(); ++i) {
+		double dir = sol[i - 1].dirTo(sol[i]);
+		if (abs(dir - dirNow) > deg2rad(5)) {
+			dirNow = dir;
+			sol2.push_back(sol[i]);
+		}
+	}
+
+	sol = sol2;
+	sol2.clear();
+	for (int i = 1; i < sol.size(); i += 2) {
+		sol2.push_back(sol[i]);
+	}
+	sol = sol2;
+	return sol;
 }
 
 

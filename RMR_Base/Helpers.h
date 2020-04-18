@@ -89,5 +89,9 @@ struct BasePoint {
 	BasePoint<T>() = default;
 	BasePoint<T>(T _x, T _y) : x(_x), y(_y) {}
 
+	double dirTo(const BasePoint<T>& other) {
+		return atan2(other.y - y, other.x - x);
+	}
+
 };
 using Point = BasePoint<double>;

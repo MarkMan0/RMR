@@ -52,6 +52,7 @@ namespace maze {
 		bool astar();
 		sol_t& dijkstra();
 		const node_cont& getNodes() const;
+		sol_t& simplifySol();
 
 		std::weak_ptr<maze::Node> getClosest(const Point& p) const;
 
