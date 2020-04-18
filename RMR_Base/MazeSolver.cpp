@@ -219,6 +219,7 @@ maze::MazeSolver::sol_t& maze::MazeSolver::simplifySol() {
 	for (int i = 1; i < sol.size(); i += 2) {
 		sol2.push_back(sol[i]);
 	}
+	sol2.push_back(target.lock()->p);
 	sol = sol2;
 	return sol;
 }

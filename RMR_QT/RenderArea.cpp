@@ -2,9 +2,10 @@
 
 #include <QPainter>
 
-RenderArea::RenderArea(QWidget* parent, const std::shared_ptr<RobotManager>& _robot)
+RenderArea::RenderArea(QWidget* parent, const std::shared_ptr<RobotManager>& _robot, MC::MotionController& _mc)
 	: QWidget(parent),
-	  robot(_robot)
+	  robot(_robot),
+	  mc(_mc)
 {
 	setBackgroundRole(QPalette::Base);
 	setAutoFillBackground(true);
@@ -180,8 +181,14 @@ void RenderArea::solve() {
 	p.y = pos.y;
 	solver.setSource(p);
 
-	p.x = 1500;
-	p.y = 700;
+	p.x = 1000;
+	p.y = 1000;
 	solver.setTarger(p);
 	solver.dijkstra();
+}
+
+void RenderArea::follow() {
+	for (const auto& p : solver.getSolution()) {
+		mc.arcToXY(p.x, p.y);
+	}
 }

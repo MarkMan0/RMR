@@ -40,4 +40,5 @@ private slots:
 	void on_pushButtonDiscover_clicked();
 
 	void on_pushButtonSolve_clicked();
+	void on_pushButtonFollow_clicked();
 };

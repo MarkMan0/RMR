@@ -7,7 +7,7 @@ RMR_QT::RMR_QT(QWidget* parent)
 	mc(robot)
 {
 	ui.setupUi(this);
-	area = std::make_unique<RenderArea>(this, robot);
+	area = std::make_unique<RenderArea>(this, robot, mc);
 
 	ui.renderAreaCont->addWidget(area.get());
 	
@@ -131,4 +131,8 @@ void RMR_QT::on_pushButtonDiscover_clicked() {
 
 void RMR_QT::on_pushButtonSolve_clicked() {
 	area->solve();
+}
+
+void RMR_QT::on_pushButtonFollow_clicked() {
+	area->follow();
 }

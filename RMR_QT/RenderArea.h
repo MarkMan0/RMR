@@ -4,6 +4,7 @@
 #include "RobotManager.h"
 #include <thread>
 #include "MazeSolver.h"
+#include "MotionController.h"
 
 class RenderArea : public QWidget
 {
@@ -23,10 +24,11 @@ private:
 	std::atomic<bool> stopSignal = false;
 	bool once = false;
 	maze::MazeSolver solver;
-
+	MC::MotionController &mc;
 public:
 	void solve();
-	RenderArea(QWidget* parent, const std::shared_ptr<RobotManager>& _robot);
+	void follow();
+	RenderArea(QWidget* parent, const std::shared_ptr<RobotManager>& _robot, MC::MotionController& _mc);
 	~RenderArea();
 	QSize minimumSizeHint() const override;
 	QSize sizeHint() const override;
