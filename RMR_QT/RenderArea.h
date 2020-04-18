@@ -18,9 +18,10 @@ private:
 	void drawPoint(QPainter& painter, const Point& p);
 	void drawRobot();
 	void paintSolution();
+	void paintMaze();
 	std::thread resetThread;
 	std::atomic<bool> stopSignal = false;
-
+	bool once = false;
 	maze::MazeSolver solver;
 
 public:

@@ -17,7 +17,7 @@ void maze::MazeSolver::loadMaze(const lidar::Map& data) {
 		for (int x = data.minVal; x < data.maxVal; x += spacing) {
 			auto n = std::make_shared<Node>();
 			n->p = Point(x, y);
-			if (data.checkPoint(n->p)) {
+			if (data.checkPoint(n->p, 10)) {
 				n->blocked = true;
 			}
 			row.push_back(std::move(n));
@@ -42,15 +42,23 @@ bool maze::MazeSolver::checkNeighbors(node_cont::size_type row, node_cont::size_
 
 void maze::MazeSolver::dilate() {
 	const auto sz = nodes.size();
-	
-	for (int i = 1; i < sz - 1; i += 2) {
-		for (int j = 1; j < sz - 1; j += 2) {
-			nodes[i][j]->blocked = checkNeighbors(i, j);
+	using pair = std::pair<int, int>;
+
+	std::vector<pair> blockeds;
+
+	for (int i = 1; i < sz - 1; ++i) {
+		for (int j = 1; j < sz - 1; ++j) {
+			if (nodes[i][j]->blocked) {
+				blockeds.emplace_back(i, j);
+			}
 		}
 	}
-	for (int i = 2; i < sz - 1; i += 2) {
-		for (int j = 2; j < sz - 1; j += 2) {
-			nodes[i][j]->blocked = checkNeighbors(i, j);
+
+	for (const auto& p : blockeds) {
+		for (int i = -1; i <= 1; ++i) {
+			for (int j = -1; j <= 1; ++j) {
+				nodes[p.first + i][p.second + j]->blocked = true;
+			}
 		}
 	}
 }
@@ -63,6 +71,7 @@ void maze::MazeSolver::dilate(int runs) {
 }
 
 void maze::MazeSolver::addNeighbors(int r, int c) {
+	if (nodes[r][c]->blocked) return;
 	for (int i = r - 1; i <= r + 1; ++i) {
 		for (int j = c - 1; j <= c + 1; ++j) {
 			if (i == r && j == c) continue;	//itself
@@ -90,7 +99,7 @@ maze::MazeSolver::sol_t& maze::MazeSolver::getSolution()
 
 bool maze::MazeSolver::astar() {
 
-	dilate(5);
+	dilate(10);
 
 	auto cmp = [](std::weak_ptr<Node> l, std::weak_ptr<Node> r) {
 		return l.lock()->hDist < r.lock()->hDist;
@@ -102,7 +111,7 @@ bool maze::MazeSolver::astar() {
 
 
 maze::MazeSolver::sol_t& maze::MazeSolver::dijkstra() {
-	dilate(7);
+	dilate(10);
 	connectNodes();
 
 	auto cmp = [](std::weak_ptr<Node> l, std::weak_ptr<Node> r) {
@@ -117,7 +126,6 @@ maze::MazeSolver::sol_t& maze::MazeSolver::dijkstra() {
 		return *ll < *rr;
 	};
 
-	std::set<std::weak_ptr<Node>, decltype(cmp)> q(cmp);
 	std::set<std::weak_ptr<Node>, decltype(dist_cmp)> dist(dist_cmp);
 
 	for (auto& row : nodes) {
@@ -125,18 +133,18 @@ maze::MazeSolver::sol_t& maze::MazeSolver::dijkstra() {
 			auto val = n.lock();
 			val->distFromStart = std::numeric_limits<double>::max();
 			val->parent.reset();
-			q.insert(n);
-			dist.insert(n);
+			if(!val->blocked)
+				dist.insert(val);
 		}
 	}
 
 	dist.erase(source);
 	source.lock()->distFromStart = 0;
+	source.lock()->parent = source;
 	dist.insert(source);
 
-	while (!q.empty()) {
+	while (!dist.empty()) {
 		auto u = *(dist.begin());
-		q.erase(u);
 		dist.erase(u);
 		if (*(u.lock()) == *(target.lock()))
 			break;
@@ -147,7 +155,7 @@ maze::MazeSolver::sol_t& maze::MazeSolver::dijkstra() {
 			auto n_ptr = neighbor.lock();
 			double altDist = u_ptr->distFromStart + n_ptr->distFromNeighbor(*u_ptr);
 
-			if (altDist < n_ptr->distFromStart) {
+			if (altDist < n_ptr->distFromStart && !n_ptr->blocked) {
 				dist.erase(neighbor);
 				n_ptr->distFromStart = altDist;
 				n_ptr->parent = u;
@@ -174,6 +182,10 @@ maze::MazeSolver::sol_t& maze::MazeSolver::dijkstra() {
 	std::reverse(ret.begin(), ret.end());
 	sol = ret;
 	return sol;
+}
+
+const maze::MazeSolver::node_cont& maze::MazeSolver::getNodes() const {
+	return nodes;
 }
 
 

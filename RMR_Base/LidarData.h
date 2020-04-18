@@ -20,7 +20,6 @@ namespace lidar {
 	private:
 		map_type points;
 		
-		const unsigned int minmax;
 		int centerInd;
 		Point transform(const LidarData&) const;
 		int getClosestCoord(double d) const;
@@ -29,6 +28,7 @@ namespace lidar {
 
 		mutable std::mutex mtx;
 		std::vector<LidarData> rawData;
+		Map(int _spacing, int _min, int _max);
 		Map(int _spacing, int _minmax);
 		void addPoint(const LidarData& point);
 		bool checkPoint(const Point& p, unsigned int th = 1) const;

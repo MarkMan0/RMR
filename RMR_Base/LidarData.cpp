@@ -8,10 +8,9 @@ Point lidar::Map::transform(const LidarData& data) const {
 	return p;
 }
 
-lidar::Map::Map(int _spacing, int _minmax) : spacing(_spacing), minVal(-_minmax), maxVal(_minmax), minmax(_minmax)
-{
-	const int numData = (2*minmax) / spacing;
-	
+lidar::Map::Map(int _spacing, int _min, int _max) : spacing(_spacing), minVal(_min), maxVal(_max) {
+	const int numData = (maxVal - minVal) / spacing;
+
 	centerInd = numData / 2;
 
 	for (int x = minVal; x < maxVal; x += spacing) {
@@ -21,6 +20,8 @@ lidar::Map::Map(int _spacing, int _minmax) : spacing(_spacing), minVal(-_minmax)
 		}
 	}
 }
+
+lidar::Map::Map(int _spacing, int _minmax) : Map(spacing, -_minmax, _minmax) { }
 
 int lidar::Map::getClosestCoord(double d) const {
 	return spacing * (static_cast<int>(d) / spacing);

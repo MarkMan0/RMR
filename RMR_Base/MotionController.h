@@ -12,7 +12,8 @@ namespace MC {
 	enum class MovementType : uint8_t {
 		MOVEMENT_NONE = 0x01 << 0,
 		MOVEMENT_XY = 0x01 << 1,
-		MOVEMENT_ROTATION = 0x01 << 2
+		MOVEMENT_ROTATION = 0x01 << 2,
+		MOVEMENT_PAUSE = 0x01 << 3,
 	};
 
 	bool operator&(const MovementType& a, const MovementType& b);
@@ -23,7 +24,7 @@ namespace MC {
 		double x = 0, y = 0;
 		double theta = 0;
 		double distance = 0;
-
+		unsigned int waitT;
 	};
 
 
@@ -57,10 +58,9 @@ namespace MC {
 
 
 		void moveForward(double dist);
-
 		void rotateTo(double theta);
-
 		void arcToXY(double x, double y);
+		void addPause(unsigned int ms);
 	};
 
 }

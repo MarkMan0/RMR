@@ -60,7 +60,7 @@ private:
 	std::atomic<bool> stopSignal = false;
 
 public:
-	RobotManager(const std::string& _ipAddress) : orientation(), ipAddress(_ipAddress), map(50, 7000) { }
+	RobotManager(const std::string& _ipAddress) : orientation(), ipAddress(_ipAddress), map(50, -500, 7000) { }
 	~RobotManager();
 
 	void init();

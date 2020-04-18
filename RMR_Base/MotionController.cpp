@@ -35,6 +35,11 @@ void MC::MotionController::movementThread() {
 			if (target.type & MovementType::MOVEMENT_ROTATION) {
 				rotationBlocking(target.theta);
 			}
+			if (target.type & MovementType::MOVEMENT_PAUSE) {
+				auto ms = target.waitT;
+				robot->stop();
+				std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+			}
 			movements.pop_front();
 			robot->stop();
 			std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -172,6 +177,14 @@ void MC::MotionController::arcToXY(double x, double y) {
 	mv.x = x;
 	mv.y = y;
 
+	movements.push_back(mv);
+	cv.notify_all();
+}
+
+void MC::MotionController::addPause(unsigned int ms) {
+	Movement mv;
+	mv.type = MovementType::MOVEMENT_PAUSE;
+	mv.waitT = ms;
 	movements.push_back(mv);
 	cv.notify_all();
 }

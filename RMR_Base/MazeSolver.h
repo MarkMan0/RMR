@@ -20,7 +20,7 @@ namespace maze {
 		}
 
 		double distFromNeighbor(const Node& neighbor) {
-			return abs(p.x - neighbor.p.x) + abs(p.y - neighbor.p.y);
+			return sqrt(pow(p.x - neighbor.p.x,2) + pow(p.y - neighbor.p.y,2));
 		}
 
 		bool operator==(const Node& rhs) const {
@@ -51,6 +51,7 @@ namespace maze {
 		sol_t& getSolution();
 		bool astar();
 		sol_t& dijkstra();
+		const node_cont& getNodes() const;
 
 		std::weak_ptr<maze::Node> getClosest(const Point& p) const;
 

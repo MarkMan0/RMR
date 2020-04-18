@@ -114,8 +114,19 @@ void RMR_QT::on_pushButtonTurn_clicked() {
 }
 
 
-void RMR_QT::on_pushButtonEraseMap_clicked() {
-	robot->getMap().erase();
+void RMR_QT::on_pushButtonDiscover_clicked() {
+	auto mvPause = [this](double x, double y) {
+		mc.arcToXY(x, y);
+		mc.addPause(4000);
+	};
+
+	mvPause(500, 1000);
+	mvPause(500, 3700);
+	mvPause(2500, 4000);
+	mvPause(4500, 4500);
+	mvPause(3100, 4000);
+	mvPause(3100, 2000);
+	mvPause(4500, 500);
 }
 
 void RMR_QT::on_pushButtonSolve_clicked() {

@@ -111,6 +111,8 @@ void RenderArea::drawPoint(QPainter& painter, const Point& p) {
 	int x = (scale * (p.x)) + offset;
 	int y = h - (scale * (p.y)) - offset;
 
+	if (x < 0 || x > w || y < 0 || y > h) return;
+
 	painter.drawRect(x, y, 2, 2);
 }
 
@@ -141,15 +143,36 @@ void RenderArea::paintSolution() {
 
 }
 
+void RenderArea::paintMaze() {
+	if (paintMapNow) {
+		QPainter painter(this);
+		QPen pen;
+		pen.setColor(QColor(106, 190, 69, 50));
+		painter.setPen(pen);
+
+		const auto& nodes = solver.getNodes();
+
+		for (const auto& row : nodes) {
+			for (const auto& node : row) {
+				if (node->blocked) {
+					drawPoint(painter, node->p);
+				}
+			}
+		}
+	}
+}
+
 void RenderArea::paintEvent(QPaintEvent* event) {
 	paintMap();
 	paintSolution();
-	
+	paintMaze();
 }
 
 void RenderArea::solve() {
-
-	solver.loadMaze(robot->getMap());
+	if (!once) {
+		once = true;
+		solver.loadMaze(robot->getMap());
+	}
 
 	Point p;
 	const auto pos = robot->getPosition();
@@ -157,8 +180,8 @@ void RenderArea::solve() {
 	p.y = pos.y;
 	solver.setSource(p);
 
-	p.x = 500;
-	p.y = 3500;
+	p.x = 1500;
+	p.y = 700;
 	solver.setTarger(p);
 	solver.dijkstra();
 }
