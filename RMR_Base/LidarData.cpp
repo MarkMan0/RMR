@@ -49,6 +49,44 @@ void lidar::Map::addPoint(const LidarData& data) {
 	points[p] += 1;
 };
 
+std::vector<Point> lidar::Map::getNeighbors(const Point& p) const {
+	std::vector<Point> ret;
+	Point p2 = p;
+	for (int dx = -1; dx <= 1; ++dx) {
+		for (int dy = -1; dy <= 1; ++dy) {
+			double x = p.x + dx * spacing;
+			double y = p.y + dy * spacing;
+			if (x > maxVal || x < minVal || y > maxVal || y < minVal) continue;
+			ret.push_back(Point(p.x + dx * spacing, p.y + dy * spacing));
+		}
+	}
+
+	return ret;
+}
+
+
+void lidar::Map::filter() {
+	if (++filtCnt < filtFreq) return;
+
+	filtCnt = 0;
+
+	for (auto& pair : points) {
+		if (pair.second > threshold || pair.second <= 1) {
+			continue;
+		}
+		const auto neighbors = getNeighbors(pair.first);
+		bool blocked = false;
+		for (const auto& n : neighbors) {
+			if (points[n] > threshold) {
+				blocked = true;
+			}
+		}
+
+		if (!blocked) {
+			pair.second = 0;
+		}
+	}
+}
 
 bool lidar::Map::checkPoint(const Point& p, unsigned int th) const {
 #ifndef TESTING

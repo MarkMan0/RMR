@@ -131,6 +131,7 @@ void RobotManager::processLidar() {
 			map.rawData.push_back(data);
 			map.addPoint(data);
 		}
+		map.filter();
 		lidarMtx.unlock();
 	}
 
