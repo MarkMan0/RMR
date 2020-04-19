@@ -5,6 +5,7 @@
 #include <limits>
 #include <memory>
 
+#define private public
 namespace maze {
 	
 	struct Node {
@@ -35,7 +36,7 @@ namespace maze {
 		node_cont nodes;
 		std::weak_ptr<Node> source;
 		std::weak_ptr<Node> target;
-		sol_t sol;
+		sol_t sol, solFull;
 	private:
 
 

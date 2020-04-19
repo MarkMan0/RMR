@@ -123,10 +123,12 @@ void RMR_QT::on_pushButtonDiscover_clicked() {
 	mvPause(500, 1000);
 	mvPause(500, 3700);
 	mvPause(2500, 4000);
-	mvPause(4500, 4500);
+	mvPause(4500, 4300);
 	mvPause(3100, 4000);
 	mvPause(3100, 2000);
 	mvPause(4500, 500);
+	mvPause(5200, 1500);
+	mvPause(4700, 2600);
 }
 
 void RMR_QT::on_pushButtonSolve_clicked() {

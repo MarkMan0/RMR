@@ -132,15 +132,24 @@ void RenderArea::drawRobot() {
 void RenderArea::paintSolution() {
 	QPainter painter(this);
 	QPen pen;
-	pen.setColor(QColorConstants::Red);
 
+
+	pen.setColor(QColorConstants::DarkBlue);
 	painter.setPen(pen);
-	
-	const auto& sol = solver.getSolution();
-
-	for (const Point& p : sol) {
+	const auto solFull = solver.solFull;
+	for (const Point& p : solFull) {
 		drawPoint(painter, p);
 	}
+
+
+	pen.setColor(QColorConstants::Red);
+	painter.setPen(pen);
+	const auto& solSimp = solver.getSolution();
+	for (const Point& p : solSimp) {
+		drawPoint(painter, p);
+	}
+
+	
 
 }
 
@@ -170,10 +179,7 @@ void RenderArea::paintEvent(QPaintEvent* event) {
 }
 
 void RenderArea::solve() {
-	if (!once) {
-		once = true;
-		solver.loadMaze(robot->getMap());
-	}
+	solver.loadMaze(robot->getMap());
 
 	Point p;
 	const auto pos = robot->getPosition();

@@ -181,6 +181,7 @@ maze::MazeSolver::sol_t& maze::MazeSolver::dijkstra() {
 
 	std::reverse(ret.begin(), ret.end());
 	sol = ret;
+	solFull = ret;
 	simplifySol();
 	return sol;
 }
@@ -199,7 +200,7 @@ maze::MazeSolver::sol_t& maze::MazeSolver::simplifySol() {
 		sol.erase(sol.begin() + i);
 	}
 
-	decltype(sol) sol2;
+	sol_t sol2;
 
 	sol2.push_back(sol[0]);
 	sol2.push_back(sol[1]);
@@ -208,7 +209,7 @@ maze::MazeSolver::sol_t& maze::MazeSolver::simplifySol() {
 	
 	for (int i = 2; i < sol.size(); ++i) {
 		double dir = sol[i - 1].dirTo(sol[i]);
-		if (abs(dir - dirNow) > deg2rad(5)) {
+		if (abs(dir - dirNow) > deg2rad(2)) {
 			dirNow = dir;
 			sol2.push_back(sol[i]);
 		}
@@ -216,8 +217,12 @@ maze::MazeSolver::sol_t& maze::MazeSolver::simplifySol() {
 
 	sol = sol2;
 	sol2.clear();
-	for (int i = 1; i < sol.size(); i += 2) {
-		sol2.push_back(sol[i]);
+	sol2.push_back(sol[0]);
+
+	for (int i = 1; i < sol.size(); ++i) {
+		if (sol[i].dist(*sol2.rbegin()) > 150) {
+			sol2.push_back(sol[i]);
+		}
 	}
 	sol2.push_back(target.lock()->p);
 	sol = sol2;
