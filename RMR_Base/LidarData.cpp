@@ -71,7 +71,7 @@ void lidar::Map::filter() {
 	filtCnt = 0;
 
 	for (auto& pair : points) {
-		if (pair.second > threshold || pair.second <= 1) {
+		if (pair.second > 5*threshold || pair.second <= 1) {
 			continue;
 		}
 		const auto neighbors = getNeighbors(pair.first);
@@ -79,6 +79,7 @@ void lidar::Map::filter() {
 		for (const auto& n : neighbors) {
 			if (points[n] > threshold) {
 				blocked = true;
+				break;
 			}
 		}
 
