@@ -2,10 +2,19 @@
 
 #include <QPainter>
 
-RenderArea::RenderArea(QWidget* parent, const std::shared_ptr<RobotManager>& _robot, MC::MotionController& _mc)
+RenderArea::PointInt RenderArea::applyOffsets(const Point& p) const {
+	const int w = width(), h = height();
+	PointInt ret;
+	ret.x = (scale * (p.x)) + offset;
+	ret.y = h - (scale * (p.y)) - offset;
+
+	return ret;
+}
+
+RenderArea::RenderArea(QWidget* parent, const std::shared_ptr<RobotManager>& _robot, const maze::MazeSolver& _solver)
 	: QWidget(parent),
 	  robot(_robot),
-	  mc(_mc)
+	  solver(_solver)
 {
 	setBackgroundRole(QPalette::Base);
 	setAutoFillBackground(true);
@@ -28,14 +37,6 @@ QSize RenderArea::minimumSizeHint() const
 	return QSize(100, 100);
 }
 
-/*QRect RenderArea::getRect(const LidarPoint& point) {
-	const int h = height(), w = width();
-	constexpr double scale = 1.0/20.0;
-	constexpr int sz = 2;
-	QRect rect(static_cast<int>(scale*point.x + w/2), static_cast<int>(scale*point.y + h/2), sz, sz);
-
-	return rect;
-}*/
 
 void RenderArea::resetFcn() {
 	constexpr int ms = 2000;
@@ -47,28 +48,16 @@ void RenderArea::resetFcn() {
 }
 
 void RenderArea::paintMap() {
-
+	
 	QPainter painter(this);
-
-	const auto& lidarData = robot->getMap();
-	const auto& map = lidarData.getMap();
-
-	const double scale = 1.0 / 15.0;
-	const int offset = 50;
-
-	const int w = width(), h = height();
-
+	std::scoped_lock lck(robot->mapMtx);
+	const auto& map = robot->getMap().getPoints();
 	for (const auto& kv : map) {
 		const point_t& p = kv.first;
 		if (kv.second > 10) {
 			drawPoint(painter, p);
 		}
 	}
-	auto pos = robot->getPosition();
-	int x = scale * pos.x + offset;
-	int y = h - (scale * pos.y) - offset;
-	painter.drawEllipse(QPoint(x, y), 10, 10);
-
 
 	QPen pen;
 	QVector<qreal> pattern;
@@ -79,54 +68,22 @@ void RenderArea::paintMap() {
 	pen.setWidth(2);
 
 	painter.setPen(pen);
-	painter.drawRect(offset, 0, w - offset, h - offset);
+	painter.drawRect(offset, 0, width() - offset, height() - offset);
 	
 }
 
-void RenderArea::paintRaw() {
-	QPainter painter(this);
-	const auto& map = robot->getMap();
-	std::scoped_lock lck(map.mtx);
-
-	const auto& raw = map.rawData;
-	const auto pos = robot->getPosition();
-	const int w = width(), h = height();
-	const double scale = 1.0 / 20.0;
-	for (const auto& data : raw) {
-		double lidX = scale * data.dist * cos(deg2rad(90-data.angle));
-		double lidY = scale * data.dist * sin(deg2rad(90-data.angle));
-
-		int x = w / 2 + lidX;
-		int y = h / 2 + lidY;
-
-		painter.drawRect(x, y, 5, 5);
-	}
-
-}
-
 void RenderArea::drawPoint(QPainter& painter, const point_t& p) {
-	const double scale = 1.0 / 15.0;
-	const int offset = 50;
-	const int w = width(), h = height();
 
-	int x = (scale * (p.x)) + offset;
-	int y = h - (scale * (p.y)) - offset;
-
-	if (x < 0 || x > w || y < 0 || y > h) return;
-
-	painter.drawRect(x, y, 2, 2);
+	auto p2 = applyOffsets(p);
+	if (p2.x < 0 || p2.x > width() || p2.y < 0 || p2.y > height()) return;
+	painter.drawRect(p2.x, p2.y, 2, 2);
 }
 
-void RenderArea::drawRobot() {
+void RenderArea::paintRobot() {
 	QPainter painter(this);
-
-	int centX = width() / 2, centY = height() / 2;
-	QPoint center(centX, centY);
-	const int r = 15;
-	painter.drawEllipse(center, r, r);
-	const int w = r/2;
-	painter.drawRect(centX - w / 2, centY + r - w / 2, w, w);
-
+	auto pos = robot->getPosition();
+	Point p = applyOffsets(pos.p);
+	painter.drawEllipse(QPoint(p.x, p.y), 10, 10);
 }
 
 void RenderArea::paintSolution() {
@@ -176,25 +133,5 @@ void RenderArea::paintEvent(QPaintEvent* event) {
 	paintMap();
 	paintSolution();
 	paintMaze();
-}
-
-void RenderArea::solve() {
-	solver.loadMaze(robot->getMap());
-
-	point_t p;
-	const auto pos = robot->getPosition();
-	p.x = pos.x;
-	p.y = pos.y;
-	solver.setSource(p);
-
-	p.x = 1000;
-	p.y = 1000;
-	solver.setTarger(p);
-	solver.dijkstra();
-}
-
-void RenderArea::follow() {
-	for (const auto& p : solver.getSolution()) {
-		mc.arcToXY(p.x, p.y);
-	}
+	paintRobot();
 }

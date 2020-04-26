@@ -11,25 +11,26 @@ class RenderArea : public QWidget
 	Q_OBJECT
 public:
 	using point_t = lidar::point_t;
+	using PointInt = BasePoint<int>;
 private:
+	const double scale = 1.0 / 15.0;
+	const int offset = 50;
 	std::shared_ptr<RobotManager> robot;
-	//QRect getRect(const LidarPoint& point);
 	void resetFcn();
 	void paintMap();
-	void paintRaw();
 	void drawPoint(QPainter& painter, const point_t& p);
-	void drawRobot();
+	void paintRobot();
 	void paintSolution();
 	void paintMaze();
 	std::thread resetThread;
 	std::atomic<bool> stopSignal = false;
 	bool once = false;
-	maze::MazeSolver solver;
-	MC::MotionController &mc;
+	const maze::MazeSolver& solver;
+
+	PointInt applyOffsets(const Point& p) const;
+
 public:
-	void solve();
-	void follow();
-	RenderArea(QWidget* parent, const std::shared_ptr<RobotManager>& _robot, MC::MotionController& _mc);
+	RenderArea(QWidget* parent, const std::shared_ptr<RobotManager>& _robot, const maze::MazeSolver& _solver);
 	~RenderArea();
 	QSize minimumSizeHint() const override;
 	QSize sizeHint() const override;

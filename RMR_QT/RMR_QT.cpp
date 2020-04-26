@@ -7,7 +7,7 @@ RMR_QT::RMR_QT(QWidget* parent)
 	mc(robot)
 {
 	ui.setupUi(this);
-	area = std::make_unique<RenderArea>(this, robot, mc);
+	area = std::make_unique<RenderArea>(this, robot, mc.getSolver());
 
 	ui.renderAreaCont->addWidget(area.get());
 	
@@ -121,6 +121,7 @@ void RMR_QT::on_pushButtonDiscover_clicked() {
 	};
 
 	mvPause(500, 1000);
+	mvPause(500, 2500);
 	mvPause(500, 3700);
 	mvPause(2500, 4000);
 	mvPause(4500, 4300);
@@ -132,9 +133,12 @@ void RMR_QT::on_pushButtonDiscover_clicked() {
 }
 
 void RMR_QT::on_pushButtonSolve_clicked() {
-	area->solve();
-}
-
-void RMR_QT::on_pushButtonFollow_clicked() {
-	area->follow();
+	try {
+		double x = getNumFromLineEdit(ui.lineEdit_X);
+		double y = getNumFromLineEdit(ui.lineEdit_Y);
+		mc.moveToPoint(Point(x, y));
+	}
+	catch (const std::runtime_error&) {
+		setErrTxt("X/Y not a number");
+	}
 }

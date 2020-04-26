@@ -24,7 +24,6 @@ public:
 private:
 	
 	LaserMeasurement lidarRaw;
-
 	lidar::Map map;
 
 	CKobuki robot;
@@ -60,6 +59,8 @@ private:
 	std::atomic<bool> stopSignal = false;
 
 public:
+	std::mutex mapMtx;
+
 	RobotManager(const std::string& _ipAddress) : orientation(), ipAddress(_ipAddress), map(50, -500, 7000) { }
 	~RobotManager();
 
@@ -71,24 +72,6 @@ public:
 	void stop();
 	bool ready() const {
 		return robotRdy;
-	}
-	TKobukiData getData() {
-		std::scoped_lock lck(robotMtx);
-		return robot.robotData;
-	}
-
-	Orientation::EncType encoderL() {
-		std::scoped_lock lck(robotMtx);
-		return orientation.getLeft();
-	}
-	Orientation::EncType encoderR() {
-		std::scoped_lock lck(robotMtx);
-		return orientation.getRight();
-	}
-
-	double getAngle() {
-		std::scoped_lock lck(robotMtx);
-		return orientation.getTheta();
 	}
 
 	Position getPosition() {
@@ -104,5 +87,8 @@ public:
 		return map;
 	}
 
-	std::mutex lidarMtx;
+	bool mapRdy() const {
+		return true;
+	}
+
 };

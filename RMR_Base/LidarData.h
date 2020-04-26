@@ -30,7 +30,6 @@ namespace lidar {
 	public:
 
 		const int threshold = 10;
-		mutable std::mutex mtx;
 		std::vector<LidarData> rawData;
 		Map(int _spacing, int _min, int _max);
 		Map(int _spacing, int _minmax);
@@ -38,7 +37,7 @@ namespace lidar {
 		std::vector<point_t> getNeighbors(const point_t& p) const;
 		void filter();
 		bool checkPoint(const Point& p, unsigned int th = 1) const;
-		const map_type& getMap() const;
+		const map_type& getPoints() const;
 		const int minVal, maxVal;
 		const int spacing;
 		void erase();

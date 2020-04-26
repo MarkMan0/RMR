@@ -71,6 +71,11 @@ void MC::MotionController::init() {
 	}
 }
 
+const maze::MazeSolver& MC::MotionController::getSolver() const
+{
+	return solver;
+}
+
 void MC::MotionController::rotationBlocking(double target, double tolerance)
 {
 	bool done = false;
@@ -170,6 +175,27 @@ void MC::MotionController::arcToXYBlocking(double x, double y) {
 
 }
 
+void MC::MotionController::planOnMap(const Point& to) {
+	{
+		std::scoped_lock lck(robot->mapMtx);
+		solver.loadMaze(robot->getMap());
+	}
+	Point p;
+	const auto pos = robot->getPosition();
+	p.x = pos.x;
+	p.y = pos.y;
+
+
+	solver.setSource(p);
+
+	solver.setTarger(to);
+	solver.dijkstra();
+
+	for (const auto& p : solver.getSolution()) {
+		arcToXY(p.x, p.y);
+	}
+}
+
 void MC::MotionController::arcToXY(double x, double y) {
 
 	Movement mv;
@@ -187,4 +213,15 @@ void MC::MotionController::addPause(unsigned int ms) {
 	mv.waitT = ms;
 	movements.push_back(mv);
 	cv.notify_all();
+}
+
+void MC::MotionController::moveToPoint(const Point& p) {
+
+	if (robot->mapRdy()) {
+		planOnMap(p);
+	}
+	else {
+		// bug algorithm
+	}
+
 }

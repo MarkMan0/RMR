@@ -41,11 +41,6 @@ void lidar::Map::addPoint(const LidarData& data) {
 
 	p = getClosestPoint(p);
 
-
-#ifndef TESTING
-	std::scoped_lock lck(mtx);
-#endif // !TESTING
-
 	points[p] += 1;
 };
 
@@ -90,9 +85,6 @@ void lidar::Map::filter() {
 }
 
 bool lidar::Map::checkPoint(const Point& p, unsigned int th) const {
-#ifndef TESTING
-	std::scoped_lock lck(mtx);
-#endif // !TESTING
 	point_t p2 = getClosestPoint(p);
 	bool res = false;
 	try {
@@ -104,7 +96,7 @@ bool lidar::Map::checkPoint(const Point& p, unsigned int th) const {
 	return res;
 }
 
-const lidar::Map::map_type& lidar::Map::getMap() const
+const lidar::Map::map_type& lidar::Map::getPoints() const
 {
 	return points;
 }

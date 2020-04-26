@@ -5,8 +5,8 @@
 
 void maze::MazeSolver::loadMaze(const lidar::Map& data) {
 
-	const Point first = (*(data.getMap().begin())).first,
-		last = (*(data.getMap().rbegin())).first;
+	const Point first = (*(data.getPoints().begin())).first,
+		last = (*(data.getPoints().rbegin())).first;
 
 	const int spacing = data.spacing / 2;
 	nodes.clear();
@@ -92,7 +92,7 @@ void maze::MazeSolver::connectNodes() {
 	}
 }
 
-maze::MazeSolver::sol_t& maze::MazeSolver::getSolution()
+const maze::MazeSolver::sol_t& maze::MazeSolver::getSolution() const
 {
 	return sol;
 }

@@ -6,6 +6,7 @@
 #include <memory>
 #include <list>
 #include "SCurve.h"
+#include "MazeSolver.h"
 
 namespace MC {
 
@@ -47,20 +48,25 @@ namespace MC {
 
 		scurve::SCurveGenerator sGenerator;
 
+		maze::MazeSolver solver;
+
 		void arcControlTick(double x, double y);
 		void rotationBlocking(double target, double tolerance = 1);
 		void arcToXYBlocking(double x, double y);
-
+		void planOnMap(const Point& p);
 	public:
 		MotionController(const std::shared_ptr<RobotManager>& _manager) : robot(_manager), sGenerator(500, 100) {}
 		~MotionController();
 		void init();
 
+		const maze::MazeSolver& getSolver() const;
 
 		void moveForward(double dist);
 		void rotateTo(double theta);
 		void arcToXY(double x, double y);
 		void addPause(unsigned int ms);
+
+		void moveToPoint(const Point& p);
 	};
 
 }

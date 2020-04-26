@@ -3,23 +3,38 @@
 #include <iostream>
 #include "Config.h"
 #include "Encoder.h"
+#include "Helpers.h"
 
 class Orientation {
 public:
 	typedef typename Encoder<uint16_t, double> EncType;
 
 	struct Position {
-		double x, y, theta;
-		double vx, vy, omega, v;
+		Point p;
+		double& x, & y;
+		double theta = 0;
+		double vx = 0, vy = 0, omega = 0, v = 0;
 		void print() {
 			std::cout << "x:\t" << x << "\t\ty:\t" << y << "\t\tTheta:\t" << theta << "\n";
 		}
+		Position() : p(0, 0), x(p.x), y(p.y) {}
+
+		Position& operator=(const Position& rhs) {
+			p = rhs.p;
+			theta = rhs.theta;
+			vx = rhs.vx;
+			vy = rhs.vy;
+			omega = rhs.omega;
+			v = rhs.v;
+			return *this;
+		}
+		Position(const Position& rhs) : p(rhs.p), x(p.x), y(p.y), theta(rhs.theta), vx(rhs.vx), vy(rhs.vy), omega(rhs.omega), v(rhs.v) {}
 	};
 
 private:
 	EncType left, right;
 	Encoder<signed short, double> theta;
-	Position pos = { 0 };
+	Position pos;
 
 	const double d, radius;
 

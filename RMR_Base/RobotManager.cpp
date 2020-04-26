@@ -120,7 +120,7 @@ void RobotManager::processLidar() {
 	if (pos.v != 0 || pos.omega != 0) return;		//robot not still
 
 
-	if (lidarMtx.try_lock()) {
+	if (mapMtx.try_lock()) {
 		map.rawData.clear();
 		map.rawData.reserve(lidarRaw.numberOfScans);
 		for (int i = 0; i < lidarRaw.numberOfScans; ++i) {
@@ -132,7 +132,7 @@ void RobotManager::processLidar() {
 			map.addPoint(data);
 		}
 		map.filter();
-		lidarMtx.unlock();
+		mapMtx.unlock();
 	}
 
 }

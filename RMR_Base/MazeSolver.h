@@ -5,7 +5,6 @@
 #include <limits>
 #include <memory>
 
-#define private public
 namespace maze {
 	
 	struct Node {
@@ -47,9 +46,7 @@ namespace maze {
 		void dilate(int runs);
 		void addNeighbors(int r, int c);
 		void connectNodes();
-		void setStart(const Point&);
-		void setFinish(const Point&);
-		sol_t& getSolution();
+		const sol_t& getSolution() const;
 		bool astar();
 		sol_t& dijkstra();
 		const node_cont& getNodes() const;
