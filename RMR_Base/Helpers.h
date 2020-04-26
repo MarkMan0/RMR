@@ -89,6 +89,16 @@ struct BasePoint {
 	BasePoint<T>() = default;
 	BasePoint<T>(T _x, T _y) : x(_x), y(_y) {}
 
+	template<class U>
+	BasePoint<T>(const BasePoint<U>& rhs) : x(static_cast<T>(rhs.x)), y(static_cast<T>(rhs.y)) {}
+
+	template<class U>
+	BasePoint<T>& operator= (const BasePoint<U>& rhs) {
+		x = static_cast<U>(rhs.x);
+		y = static_cast<U>(rhs.y);
+		return *this;
+	}
+
 	double dirTo(const BasePoint<T>& other) const {
 		return atan2(other.y - y, other.x - x);
 	}

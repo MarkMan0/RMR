@@ -59,7 +59,7 @@ void RenderArea::paintMap() {
 	const int w = width(), h = height();
 
 	for (const auto& kv : map) {
-		const Point& p = kv.first;
+		const point_t& p = kv.first;
 		if (kv.second > 10) {
 			drawPoint(painter, p);
 		}
@@ -104,7 +104,7 @@ void RenderArea::paintRaw() {
 
 }
 
-void RenderArea::drawPoint(QPainter& painter, const Point& p) {
+void RenderArea::drawPoint(QPainter& painter, const point_t& p) {
 	const double scale = 1.0 / 15.0;
 	const int offset = 50;
 	const int w = width(), h = height();
@@ -137,7 +137,7 @@ void RenderArea::paintSolution() {
 	pen.setColor(QColorConstants::DarkBlue);
 	painter.setPen(pen);
 	const auto solFull = solver.solFull;
-	for (const Point& p : solFull) {
+	for (const point_t& p : solFull) {
 		drawPoint(painter, p);
 	}
 
@@ -145,7 +145,7 @@ void RenderArea::paintSolution() {
 	pen.setColor(QColorConstants::Red);
 	painter.setPen(pen);
 	const auto& solSimp = solver.getSolution();
-	for (const Point& p : solSimp) {
+	for (const point_t& p : solSimp) {
 		drawPoint(painter, p);
 	}
 
@@ -181,7 +181,7 @@ void RenderArea::paintEvent(QPaintEvent* event) {
 void RenderArea::solve() {
 	solver.loadMaze(robot->getMap());
 
-	Point p;
+	point_t p;
 	const auto pos = robot->getPosition();
 	p.x = pos.x;
 	p.y = pos.y;

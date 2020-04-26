@@ -9,14 +9,15 @@
 class RenderArea : public QWidget
 {
 	Q_OBJECT
-
+public:
+	using point_t = lidar::point_t;
 private:
 	std::shared_ptr<RobotManager> robot;
 	//QRect getRect(const LidarPoint& point);
 	void resetFcn();
 	void paintMap();
 	void paintRaw();
-	void drawPoint(QPainter& painter, const Point& p);
+	void drawPoint(QPainter& painter, const point_t& p);
 	void drawRobot();
 	void paintSolution();
 	void paintMaze();

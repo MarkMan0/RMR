@@ -1,7 +1,7 @@
 #include "LidarData.h"
 
-Point lidar::Map::transform(const LidarData& data) const {
-	Point p;
+lidar::point_t lidar::Map::transform(const LidarData& data) const {
+	point_t p;
 	p.x = data.robPos.x + data.dist * cos(deg2rad(data.robPos.theta + data.angle - 5));
 	p.y = data.robPos.y + data.dist * sin(deg2rad(data.robPos.theta + data.angle - 5));
 
@@ -15,7 +15,7 @@ lidar::Map::Map(int _spacing, int _min, int _max) : spacing(_spacing), minVal(_m
 
 	for (int x = minVal; x < maxVal; x += spacing) {
 		for (int y = minVal; y < maxVal; y += spacing) {
-			Point p(x, y);
+			point_t p(x, y);
 			points[p] = 0;
 		}
 	}
@@ -27,14 +27,14 @@ int lidar::Map::getClosestCoord(double d) const {
 	return spacing * (static_cast<int>(d) / spacing);
 }
 
-Point lidar::Map::getClosestPoint(const Point& p) const {
-	return Point{ 1.0*getClosestCoord(p.x), 1.0*getClosestCoord(p.y) };
+lidar::point_t lidar::Map::getClosestPoint(const point_t& p) const {
+	return point_t{ getClosestCoord(p.x), getClosestCoord(p.y) };
 }
 
 void lidar::Map::addPoint(const LidarData& data) {
 	if (data.dist < 100 || data.dist > 5000) return;
 	
-	Point p = transform(data);
+	point_t p = transform(data);
 	
 	if (p.x < minVal || p.x > maxVal) return;
 	if (p.y < minVal || p.y > maxVal) return;
@@ -49,15 +49,15 @@ void lidar::Map::addPoint(const LidarData& data) {
 	points[p] += 1;
 };
 
-std::vector<Point> lidar::Map::getNeighbors(const Point& p) const {
-	std::vector<Point> ret;
-	Point p2 = p;
+std::vector<lidar::point_t> lidar::Map::getNeighbors(const point_t& p) const {
+	std::vector<point_t> ret;
+	point_t p2 = p;
 	for (int dx = -1; dx <= 1; ++dx) {
 		for (int dy = -1; dy <= 1; ++dy) {
 			double x = p.x + dx * spacing;
 			double y = p.y + dy * spacing;
 			if (x > maxVal || x < minVal || y > maxVal || y < minVal) continue;
-			ret.push_back(Point(p.x + dx * spacing, p.y + dy * spacing));
+			ret.push_back(point_t(p.x + dx * spacing, p.y + dy * spacing));
 		}
 	}
 
@@ -93,7 +93,7 @@ bool lidar::Map::checkPoint(const Point& p, unsigned int th) const {
 #ifndef TESTING
 	std::scoped_lock lck(mtx);
 #endif // !TESTING
-	Point p2 = getClosestPoint(p);
+	point_t p2 = getClosestPoint(p);
 	bool res = false;
 	try {
 		res = points.at(p2) > th;
