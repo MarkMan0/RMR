@@ -95,7 +95,7 @@ void RMR_QT::on_pushButtonPoint_clicked() {
 	try {
 		double x = getNumFromLineEdit(ui.lineEdit_X);
 		double y = getNumFromLineEdit(ui.lineEdit_Y);
-		mc.arcToXY(x, y);
+		mc.moveToPoint(Point(x, y));
 	}
 	catch (const std::runtime_error&) {
 		setErrTxt("X/Y not a number");
@@ -116,7 +116,7 @@ void RMR_QT::on_pushButtonTurn_clicked() {
 
 void RMR_QT::on_pushButtonDiscover_clicked() {
 	auto mvPause = [this](double x, double y) {
-		mc.arcToXY(x, y);
+		mc.moveToPoint(Point(x, y));
 		mc.addPause(4000);
 	};
 
@@ -132,13 +132,14 @@ void RMR_QT::on_pushButtonDiscover_clicked() {
 	mvPause(4700, 2600);
 }
 
-void RMR_QT::on_pushButtonSolve_clicked() {
-	try {
-		double x = getNumFromLineEdit(ui.lineEdit_X);
-		double y = getNumFromLineEdit(ui.lineEdit_Y);
-		mc.moveToPoint(Point(x, y));
-	}
-	catch (const std::runtime_error&) {
-		setErrTxt("X/Y not a number");
-	}
+void RMR_QT::on_radioButtonLinear_clicked() {
+	mc.plannerMode = MC::PlannerMode::LINEAR;
+}
+
+void RMR_QT::on_radioButtonBug_clicked() {
+	mc.plannerMode = MC::PlannerMode::BUG_ALGORITHM;
+}
+
+void RMR_QT::on_radioButtonMap_clicked() {
+	mc.plannerMode = MC::PlannerMode::USE_MAP;
 }

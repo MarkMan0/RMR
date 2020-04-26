@@ -215,13 +215,20 @@ void MC::MotionController::addPause(unsigned int ms) {
 	cv.notify_all();
 }
 
-void MC::MotionController::moveToPoint(const Point& p) {
-
-	if (robot->mapRdy()) {
-		planOnMap(p);
+void MC::MotionController::moveToPoint(const Point& p, PlannerMode mode) {
+	
+	if (mode == PlannerMode::CURRENT) {
+		mode = plannerMode;
 	}
-	else {
-		// bug algorithm
+
+	if (mode == PlannerMode::LINEAR) {
+		arcToXY(p.x, p.y);
+	}
+	else if (mode == PlannerMode::BUG_ALGORITHM){
+		//TODO
+	}
+	else if (mode == PlannerMode::USE_MAP) {
+		planOnMap(p);
 	}
 
 }

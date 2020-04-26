@@ -39,5 +39,7 @@ private slots:
 	void on_pushButtonTurn_clicked();
 	void on_pushButtonDiscover_clicked();
 
-	void on_pushButtonSolve_clicked();
+	void on_radioButtonLinear_clicked();
+	void on_radioButtonBug_clicked();
+	void on_radioButtonMap_clicked();
 };

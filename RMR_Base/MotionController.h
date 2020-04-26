@@ -17,6 +17,13 @@ namespace MC {
 		MOVEMENT_PAUSE = 0x01 << 3,
 	};
 
+	enum class PlannerMode : uint8_t {
+		LINEAR, 
+		BUG_ALGORITHM,
+		USE_MAP,
+		CURRENT
+	};
+
 	bool operator&(const MovementType& a, const MovementType& b);
 	   
 	struct Movement
@@ -54,7 +61,10 @@ namespace MC {
 		void rotationBlocking(double target, double tolerance = 1);
 		void arcToXYBlocking(double x, double y);
 		void planOnMap(const Point& p);
+		void arcToXY(double x, double y);
 	public:
+		PlannerMode plannerMode = PlannerMode::LINEAR;
+
 		MotionController(const std::shared_ptr<RobotManager>& _manager) : robot(_manager), sGenerator(500, 100) {}
 		~MotionController();
 		void init();
@@ -63,10 +73,9 @@ namespace MC {
 
 		void moveForward(double dist);
 		void rotateTo(double theta);
-		void arcToXY(double x, double y);
 		void addPause(unsigned int ms);
 
-		void moveToPoint(const Point& p);
+		void moveToPoint(const Point& p, PlannerMode mode = PlannerMode::CURRENT);
 	};
 
 }
