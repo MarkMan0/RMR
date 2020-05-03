@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BugStateMachine.h" />
     <ClInclude Include="CKobuki.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Encoder.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="SCurve.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BugStateMachine.cpp" />
     <ClCompile Include="CKobuki.cpp" />
     <ClCompile Include="LidarData.cpp" />
     <ClCompile Include="main.cpp" />
