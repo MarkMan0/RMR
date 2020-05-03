@@ -1,1 +1,52 @@
-<mxfile host="app.diagrams.net" modified="2020-05-03T15:10:28.107Z" agent="5.0 (Windows)" etag="pq36xMjhTrLL86ReafI8" version="13.0.6" type="github"><diagram id="NEbJ2NGwbRafk85F4stU" name="Page-1">ddHBEoIgEADQr+GuMJWdzfLSyUNnRjZhBl0GabS+Ph0wY6wTy2NhWSAsb8eL5UZeUYAmNBEjYSdCaZomdBpmeXrZZUcPjVUiJK1QqRcETII+lIA+SnSI2ikTY41dB7WLjFuLQ5x2Rx1XNbyBDVQ111u9KeGk14weVi9BNXKpnO5Dfy1fkkMnveQChy9iBWG5RXQ+ascc9Px4y7v4fec/q5+LWejcjw1TsJ49TaIfYsUb</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2020-05-03T15:19:54.991Z" agent="5.0 (Windows)" etag="LqyJ5EAV-6GmguWkcloN" version="13.0.6" type="github">
+  <diagram id="NEbJ2NGwbRafk85F4stU" name="Page-1">
+    <mxGraphModel dx="1102" dy="589" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="AojNVQgWJRW5mqSgwb5U-4" value="Wall in front of robot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="AojNVQgWJRW5mqSgwb5U-1" target="AojNVQgWJRW5mqSgwb5U-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="AojNVQgWJRW5mqSgwb5U-1" value="&lt;div&gt;&lt;b&gt;TO_TARGET&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Action: Move towards target linearly&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="110" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="AojNVQgWJRW5mqSgwb5U-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="AojNVQgWJRW5mqSgwb5U-2" target="AojNVQgWJRW5mqSgwb5U-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="510" y="140" />
+              <mxPoint x="510" y="395" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AojNVQgWJRW5mqSgwb5U-7" value="after" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="AojNVQgWJRW5mqSgwb5U-5">
+          <mxGeometry x="-0.4286" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AojNVQgWJRW5mqSgwb5U-2" value="&lt;div&gt;&lt;b&gt;WALL_ENCOUNTER&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Action: Turn left/right by 90 degrees&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="110" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="AojNVQgWJRW5mqSgwb5U-6" value="Wall in front of robot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="AojNVQgWJRW5mqSgwb5U-3">
+          <mxGeometry x="-0.0476" relative="1" as="geometry">
+            <mxPoint x="370" y="170" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="370" y="170" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AojNVQgWJRW5mqSgwb5U-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.358;entryY=1.017;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="AojNVQgWJRW5mqSgwb5U-3" target="AojNVQgWJRW5mqSgwb5U-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="AojNVQgWJRW5mqSgwb5U-9" value="&lt;div&gt;Target in front of robot&lt;/div&gt;&lt;div&gt;No obstacle in between&lt;br&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="AojNVQgWJRW5mqSgwb5U-8">
+          <mxGeometry x="0.6659" y="2" relative="1" as="geometry">
+            <mxPoint y="57" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AojNVQgWJRW5mqSgwb5U-3" value="&lt;div&gt;&lt;b&gt;FOLLOWING_WALL&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Action: Try to keep a constant distance from the wall&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="360" width="180" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
