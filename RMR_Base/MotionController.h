@@ -7,6 +7,7 @@
 #include <list>
 #include "SCurve.h"
 #include "MazeSolver.h"
+#include "BugStateMachine.h"
 
 namespace MC {
 
@@ -15,6 +16,7 @@ namespace MC {
 		MOVEMENT_XY = 0x01 << 1,
 		MOVEMENT_ROTATION = 0x01 << 2,
 		MOVEMENT_PAUSE = 0x01 << 3,
+		MOVEMENT_BUG = 0x01 << 4,
 	};
 
 	enum class PlannerMode : uint8_t {
@@ -41,7 +43,11 @@ namespace MC {
 		PIDController translationController;
 		PIDController angleController;
 		PIDController arcController;
+		PIDController wallController;
 
+		using BSM = BugStateMachine;
+		BSM bsm;
+		
 		std::shared_ptr<RobotManager> robot;
 
 		std::thread plannerThread;
@@ -58,8 +64,11 @@ namespace MC {
 		maze::MazeSolver solver;
 
 		void arcControlTick(double x, double y);
+		void wallFollowContTick(double dist);
 		void rotationBlocking(double target, double tolerance = 1);
 		void arcToXYBlocking(double x, double y);
+		double distToWall(const std::vector<lidar::LidarData>& data) const;
+		void bugBlocking(const Point&);
 		void planOnMap(const Point& p);
 		void arcToXY(double x, double y);
 	public:
@@ -74,6 +83,8 @@ namespace MC {
 		void moveForward(double dist);
 		void rotateTo(double theta);
 		void addPause(unsigned int ms);
+
+		void bugToXY(const Point& p);
 
 		void moveToPoint(const Point& p, PlannerMode mode = PlannerMode::CURRENT);
 	};

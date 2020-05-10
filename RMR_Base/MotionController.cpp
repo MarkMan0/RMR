@@ -32,6 +32,9 @@ void MC::MotionController::movementThread() {
 
 
 			}
+			if (target.type & MovementType::MOVEMENT_BUG) {
+				bugBlocking(Point(target.x, target.y));
+			}
 			if (target.type & MovementType::MOVEMENT_ROTATION) {
 				rotationBlocking(target.theta);
 			}
@@ -40,8 +43,8 @@ void MC::MotionController::movementThread() {
 				robot->stop();
 				std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 			}
-			movements.pop_front();
 			robot->stop();
+			movements.pop_front();
 			std::this_thread::sleep_for(std::chrono::milliseconds(500));
 		}
 
@@ -65,6 +68,8 @@ void MC::MotionController::init() {
 	angleController.setParams(config::angleCont);
 
 	arcController.setParams(config::arcCont);
+
+	wallController.setParams(config::wallCont);
 
 	if (!plannerThread.joinable()) {
 		plannerThread = std::thread(&MotionController::movementThread, this);
@@ -148,6 +153,17 @@ void MC::MotionController::arcControlTick(double x, double y) {
 	robot->arc((int)round(spd), (int)round(radius));
 }
 
+void MC::MotionController::wallFollowContTick(double dist) {
+	int spd = 300;
+	double o = wallController.tick(dist);
+	double radius = spd / o;
+
+	if (isnan(radius) || isinf(radius)) {
+		radius = 0;
+	}
+	robot->arc((int)round(spd), (int)round(radius));
+}
+
 void MC::MotionController::arcToXYBlocking(double x, double y) {
 
 	LoopRate rate(50);
@@ -173,6 +189,60 @@ void MC::MotionController::arcToXYBlocking(double x, double y) {
 	robot->stop();
 
 
+}
+
+double MC::MotionController::distToWall(const std::vector<lidar::LidarData>& data) const {
+	const double target = 90;
+	auto ld = data[0];
+	for (const auto& d : data) {
+		if (std::abs(target - d.angle) < std::abs(target - ld.angle) ) {
+			ld = d;
+		}
+	}
+
+	return ld.dist;
+}
+
+
+void MC::MotionController::bugBlocking(const Point& p) {
+	auto pos = robot->getPosition();
+	auto getDist = [&pos, &p]() {
+		double d = pos.p.dist(p);
+		return d; 
+	};
+
+	LoopRate rate(50);
+	ExitCondition cond(0, 100);
+	bool change = true;
+	while (!cond.check(getDist()) && !stopSignal) {
+
+		auto state = bsm.getState();
+		auto data = robot->getLastLidar();
+		pos = robot->getPosition();
+		switch (state)
+		{
+		case BugStateMachine::State::TO_TARGET:
+			if (change) {
+				rotationBlocking(rad2deg(pos.p.dirTo(p)), 10);
+				change = false;
+			}
+			arcControlTick(p.x, p.y);
+			break;
+		case BugStateMachine::State::WALL_ENCOUNTER:
+			change = true;
+			rotationBlocking(pos.theta + 90, 5);
+			break;
+		case BugStateMachine::State::FOLLOWING_WALL: 
+			change = true;
+			wallFollowContTick(distToWall(data));
+			break;
+		default:
+			break;
+		}
+		bsm.tick(data);
+		rate.sleep();
+	}
+	robot->stop();
 }
 
 void MC::MotionController::planOnMap(const Point& to) {
@@ -215,6 +285,15 @@ void MC::MotionController::addPause(unsigned int ms) {
 	cv.notify_all();
 }
 
+void MC::MotionController::bugToXY(const Point& p) {
+	Movement mv;
+	mv.type = MovementType::MOVEMENT_BUG;
+	mv.x = p.x;
+	mv.y = p.y;
+	movements.push_back(mv);
+	cv.notify_all();
+}
+
 void MC::MotionController::moveToPoint(const Point& p, PlannerMode mode) {
 	
 	if (mode == PlannerMode::CURRENT) {
@@ -225,7 +304,7 @@ void MC::MotionController::moveToPoint(const Point& p, PlannerMode mode) {
 		arcToXY(p.x, p.y);
 	}
 	else if (mode == PlannerMode::BUG_ALGORITHM){
-		//TODO
+		bugToXY(p);
 	}
 	else if (mode == PlannerMode::USE_MAP) {
 		planOnMap(p);

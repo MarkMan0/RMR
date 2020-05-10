@@ -6,14 +6,15 @@
 
 class BugStateMachine {
 
-private:
+public:
 	enum class State {
 		TO_TARGET,
 		WALL_ENCOUNTER,
 		FOLLOWING_WALL,
 	};
 
-	State state;
+private:
+	State state = State::TO_TARGET;
 	Point target;
 
 	void to_TargetState(const std::vector<lidar::LidarData>&);

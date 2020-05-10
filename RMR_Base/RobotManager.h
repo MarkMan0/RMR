@@ -51,7 +51,8 @@ private:
 	std::thread lidarThread;
 	void receiveLidarData();
 
-	
+	std::mutex lidarMtx;
+	std::vector<lidar::LidarData> lastMeasure;
 
 	void processRobot();
 	void processLidar();
@@ -90,5 +91,7 @@ public:
 	bool mapRdy() const {
 		return true;
 	}
+
+	std::vector<lidar::LidarData> getLastLidar();
 
 };

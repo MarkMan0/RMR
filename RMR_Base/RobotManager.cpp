@@ -121,15 +121,15 @@ void RobotManager::processLidar() {
 
 
 	if (mapMtx.try_lock()) {
-		map.rawData.clear();
-		map.rawData.reserve(lidarRaw.numberOfScans);
+		std::scoped_lock lck(lidarMtx);
+		lastMeasure.clear();
 		for (int i = 0; i < lidarRaw.numberOfScans; ++i) {
 			lidar::LidarData data;
 			data.angle = scaleAngle(lidarRaw.data[i].scanAngle);
 			data.dist = lidarRaw.data[i].scanDistance;
 			data.robPos = pos;
-			map.rawData.push_back(data);
 			map.addPoint(data);
+			lastMeasure.push_back(data);
 		}
 		map.filter();
 		mapMtx.unlock();
@@ -199,5 +199,11 @@ void RobotManager::arc2(int spd, double omega) {
 
 void RobotManager::stop() {
 	sendCmd(robot.getTranslationCmd(0));
+}
+
+std::vector<lidar::LidarData> RobotManager::getLastLidar()
+{
+	std::scoped_lock lck(lidarMtx);
+	return lastMeasure;
 }
 

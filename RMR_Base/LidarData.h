@@ -30,7 +30,6 @@ namespace lidar {
 	public:
 
 		const int threshold = 10;
-		std::vector<LidarData> rawData;
 		Map(int _spacing, int _min, int _max);
 		Map(int _spacing, int _minmax);
 		void addPoint(const LidarData& point);

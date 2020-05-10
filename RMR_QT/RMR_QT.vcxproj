@@ -93,6 +93,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\RMR_Base\BugStateMachine.cpp" />
     <ClCompile Include="..\RMR_Base\CKobuki.cpp" />
     <ClCompile Include="..\RMR_Base\LidarData.cpp" />
     <ClCompile Include="..\RMR_Base\MazeSolver.cpp" />
@@ -117,6 +118,7 @@
     <QtRcc Include="RMR_QT.qrc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\RMR_Base\BugStateMachine.h" />
     <ClInclude Include="..\RMR_Base\CKobuki.h" />
     <ClInclude Include="..\RMR_Base\Encoder.h" />
     <ClInclude Include="..\RMR_Base\ExitCondition.h" />
