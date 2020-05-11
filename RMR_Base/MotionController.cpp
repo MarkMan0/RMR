@@ -214,6 +214,7 @@ void MC::MotionController::bugBlocking(const Point& p) {
 	LoopRate rate(50);
 	ExitCondition cond(0, 100);
 	bool change = true;
+	bsm.setTarget(p);
 	while (!cond.check(getDist()) && !stopSignal) {
 
 		auto state = bsm.getState();
