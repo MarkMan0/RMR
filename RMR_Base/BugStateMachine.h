@@ -17,6 +17,8 @@ private:
 	State state = State::TO_TARGET;
 	Point target;
 
+	bool checkWall(const std::vector<lidar::LidarData>& data) const;
+
 	void to_TargetState(const std::vector<lidar::LidarData>&);
 	void wall_encounterState(const std::vector<lidar::LidarData>&);
 	void following_wallState(const std::vector<lidar::LidarData>&);

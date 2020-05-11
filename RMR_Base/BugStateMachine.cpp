@@ -2,18 +2,26 @@
 
 #include <cmath>
 
-void BugStateMachine::to_TargetState(const std::vector<lidar::LidarData>& data) {
-
+bool BugStateMachine::checkWall(const std::vector<lidar::LidarData>& data) const {
 	int cnt = 0;
 	for (const auto& d : data) {
 		if (std::abs(d.angle) < 30 && d.dist < 500) {
 			++cnt;
 		}
 	}
-
 	if (cnt > 5) {
+		return true;
+	}
+
+	return false;
+}
+
+void BugStateMachine::to_TargetState(const std::vector<lidar::LidarData>& data) {
+
+	if (checkWall(data)) {
 		state = State::WALL_ENCOUNTER;
 	}
+	
 }
 
 void BugStateMachine::wall_encounterState(const std::vector<lidar::LidarData>& data) {
@@ -27,6 +35,9 @@ void BugStateMachine::following_wallState(const std::vector<lidar::LidarData>& d
 	
 	if (abs(scaleAngle(pos.theta) - rad2deg(toTarget)) < 5) {
 		state = State::TO_TARGET;
+	}
+	if (checkWall(data)) {
+		state = State::WALL_ENCOUNTER;
 	}
 }
 
