@@ -117,7 +117,6 @@ void RobotManager::processLidar() {
 	
 	const auto pos = orientation.getPosition();
 
-	if (pos.v != 0 || pos.omega != 0) return;		//robot not still
 
 
 	if (mapMtx.try_lock()) {
@@ -128,7 +127,9 @@ void RobotManager::processLidar() {
 			data.angle = scaleAngle(lidarRaw.data[i].scanAngle);
 			data.dist = lidarRaw.data[i].scanDistance;
 			data.robPos = pos;
-			map.addPoint(data);
+			if (pos.v == 0 && pos.omega == 0) {
+				map.addPoint(data);
+			}
 			lastMeasure.push_back(data);
 		}
 		map.filter();
@@ -198,6 +199,8 @@ void RobotManager::arc2(int spd, double omega) {
 }
 
 void RobotManager::stop() {
+	sendCmd(robot.getRotationCmd(0));
+	std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	sendCmd(robot.getTranslationCmd(0));
 }
 
