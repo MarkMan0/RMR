@@ -116,8 +116,8 @@ void RMR_QT::on_pushButtonTurn_clicked() {
 
 void RMR_QT::on_pushButtonDiscover_clicked() {
 	auto mvPause = [this](double x, double y) {
-		mc.moveToPoint(Point(x, y));
-		mc.addPause(4000);
+		mc.moveToPoint(Point(x, y), MC::PlannerMode::LINEAR);
+		mc.addPause(5000);
 	};
 
 	mvPause(500, 1000);
