@@ -168,7 +168,9 @@ maze::MazeSolver::sol_t& maze::MazeSolver::dijkstra() {
 	auto pred = [](std::weak_ptr<Node> a, std::weak_ptr<Node> b) {
 		return (*(a.lock()) == *(b.lock()));
 	};
-
+	if (target.lock()->parent.expired()) {
+		throw std::runtime_error("No path found");
+	}
 	std::weak_ptr<Node> curr = target;
 	sol_t ret;
 	while (!pred(source, curr))

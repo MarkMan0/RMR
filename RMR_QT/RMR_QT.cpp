@@ -97,8 +97,8 @@ void RMR_QT::on_pushButtonPoint_clicked() {
 		double y = getNumFromLineEdit(ui.lineEdit_Y);
 		mc.moveToPoint(Point(x, y));
 	}
-	catch (const std::runtime_error&) {
-		setErrTxt("X/Y not a number");
+	catch (const std::runtime_error& e) {
+		setErrTxt(e.what());
 	}
 
 }
