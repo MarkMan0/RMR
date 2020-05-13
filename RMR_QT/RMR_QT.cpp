@@ -11,7 +11,7 @@ RMR_QT::RMR_QT(QWidget* parent)
 
 	ui.renderAreaCont->addWidget(area.get());
 	
-	this->setWindowTitle("aasfs");
+	this->setWindowTitle("RMR");
 }
 
 
