@@ -19,7 +19,7 @@ namespace MapTests {
 
 		TEST_METHOD(testGetScaledInd) {
 			const int spacing = 100;
-			lidar::Map map(spacing, 2000);
+			lidar::Map map(spacing);
 
 			Assert::AreEqual(0, map.getClosestCoord(0));
 			Assert::AreEqual(0, map.getClosestCoord(spacing / 2));

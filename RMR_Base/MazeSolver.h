@@ -36,8 +36,11 @@ namespace maze {
 		std::weak_ptr<Node> source;
 		std::weak_ptr<Node> target;
 		sol_t sol, solFull;
+
+		int minVal = 0, maxVal = 0, spacing = 0;
 	private:
 
+		int getInd(int x) const;
 
 	public:
 		void loadMaze(const lidar::Map&);

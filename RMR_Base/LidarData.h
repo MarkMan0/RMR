@@ -21,7 +21,6 @@ namespace lidar {
 	private:
 		map_type points;
 		
-		int centerInd;
 		point_t transform(const LidarData&) const;
 		int getClosestCoord(double d) const;
 		point_t getClosestPoint(const point_t& p) const;
@@ -30,15 +29,16 @@ namespace lidar {
 	public:
 
 		const int threshold = 10;
-		Map(int _spacing, int _min, int _max);
-		Map(int _spacing, int _minmax);
+		Map(int _spacing);
 		void addPoint(const LidarData& point);
 		std::vector<point_t> getNeighbors(const point_t& p) const;
 		void filter();
 		bool checkPoint(const Point& p, unsigned int th = 1) const;
 		const map_type& getPoints() const;
-		const int minVal, maxVal;
 		const int spacing;
 		void erase();
+
+		const Point& getMin() const;
+		const Point& getMax() const;
 	};
 }

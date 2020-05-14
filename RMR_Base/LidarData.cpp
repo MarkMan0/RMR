@@ -1,5 +1,7 @@
 #include "LidarData.h"
 
+#include <algorithm>
+
 lidar::point_t lidar::Map::transform(const LidarData& data) const {
 	point_t p;
 	p.x = data.robPos.x + data.dist * cos(deg2rad(data.robPos.theta + data.angle - 5));
@@ -8,20 +10,9 @@ lidar::point_t lidar::Map::transform(const LidarData& data) const {
 	return p;
 }
 
-lidar::Map::Map(int _spacing, int _min, int _max) : spacing(_spacing), minVal(_min), maxVal(_max) {
-	const int numData = (maxVal - minVal) / spacing;
-
-	centerInd = numData / 2;
-
-	for (int x = minVal; x < maxVal; x += spacing) {
-		for (int y = minVal; y < maxVal; y += spacing) {
-			point_t p(x, y);
-			points[p] = 0;
-		}
-	}
+lidar::Map::Map(int _spacing) : spacing(_spacing) {
 }
 
-lidar::Map::Map(int _spacing, int _minmax) : Map(spacing, -_minmax, _minmax) { }
 
 int lidar::Map::getClosestCoord(double d) const {
 	return spacing * (static_cast<int>(d) / spacing);
@@ -33,11 +24,10 @@ lidar::point_t lidar::Map::getClosestPoint(const point_t& p) const {
 
 void lidar::Map::addPoint(const LidarData& data) {
 	if (data.dist < 100 || data.dist > 5000) return;
-	
+	static int cnt = 0;
+	++cnt;
 	point_t p = transform(data);
 	
-	if (p.x < minVal || p.x > maxVal) return;
-	if (p.y < minVal || p.y > maxVal) return;
 
 	p = getClosestPoint(p);
 
@@ -51,7 +41,6 @@ std::vector<lidar::point_t> lidar::Map::getNeighbors(const point_t& p) const {
 		for (int dy = -1; dy <= 1; ++dy) {
 			double x = p.x + dx * spacing;
 			double y = p.y + dy * spacing;
-			if (x > maxVal || x < minVal || y > maxVal || y < minVal) continue;
 			ret.push_back(point_t(p.x + dx * spacing, p.y + dy * spacing));
 		}
 	}
@@ -106,3 +95,4 @@ void lidar::Map::erase() {
 		kv.second = 0;
 	}
 }
+

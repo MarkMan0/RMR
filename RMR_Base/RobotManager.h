@@ -62,7 +62,7 @@ private:
 public:
 	std::mutex mapMtx;
 
-	RobotManager(const std::string& _ipAddress) : orientation(), ipAddress(_ipAddress), map(50, -500, 7000) { }
+	RobotManager(const std::string& _ipAddress) : orientation(), ipAddress(_ipAddress), map(50) { }
 	~RobotManager();
 
 	void init();

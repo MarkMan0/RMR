@@ -2,25 +2,44 @@
 
 #include <set>
 #include <queue>
+#include <algorithm>
+
+int maze::MazeSolver::getInd(int x) const {
+	x += std::abs(minVal);
+	x = x / spacing;
+	x = clamp(x, 0, (int)nodes.size() - 1);
+	return x;
+}
 
 void maze::MazeSolver::loadMaze(const lidar::Map& data) {
 
 	const Point first = (*(data.getPoints().begin())).first,
 		last = (*(data.getPoints().rbegin())).first;
 
-	const int spacing = data.spacing / 2;
+	minVal = std::min(first.x, first.y);
+	maxVal = std::max(last.x, last.y),
+	spacing = data.spacing;
+	const int numVal = (maxVal - minVal) / spacing;
 	nodes.clear();
+	nodes.reserve(numVal);
+
 	//create nodes
-	for (int y = data.minVal; y < data.maxVal; y += spacing) {
+	for (int y = minVal; y < maxVal; y += spacing) {
 		nodes.emplace_back();
 		auto& row = *(nodes.rbegin());
-		for (int x = data.minVal; x < data.maxVal; x += spacing) {
+		row.reserve(numVal);
+		for (int x = minVal; x < maxVal; x += spacing) {
 			auto n = std::make_shared<Node>();
 			n->p = Point(x, y);
-			if (data.checkPoint(n->p, 10)) {
-				n->blocked = true;
-			}
 			row.push_back(std::move(n));
+		}
+	}
+
+	for (const auto& p : data.getPoints()) {
+		if (p.second > 10) {
+			int i = getInd(p.first.y);
+			int j = getInd(p.first.x);
+			nodes[i][j]->blocked = true;
 		}
 	}
 
@@ -111,7 +130,7 @@ bool maze::MazeSolver::astar() {
 
 
 maze::MazeSolver::sol_t& maze::MazeSolver::dijkstra() {
-	dilate(10);
+	dilate(5);
 	connectNodes();
 
 	auto cmp = [](std::weak_ptr<Node> l, std::weak_ptr<Node> r) {
